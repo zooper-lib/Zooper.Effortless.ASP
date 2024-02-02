@@ -28,7 +28,8 @@ jobs:
         
       # Restore NuGet packages
       - name: Restore NuGet packages
-        run: dotnet restore '**/*.csproj' --configfile ${{ env.nugetConfigPath }}
+        run: | 
+          find . -name '*.csproj' -exec dotnet restore {} \;
       
       # Build the project
       - name: Build
