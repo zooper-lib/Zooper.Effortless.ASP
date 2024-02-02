@@ -33,8 +33,10 @@ jobs:
       
       # Build the project
       - name: Build
-        run: dotnet build '**/*.csproj' --configuration ${{ env.buildConfiguration }} --no-restore
+        run: |
+          find . -name '*.csproj' -exec dotnet build {} --configuration ${{ env.buildConfiguration }} --no-restore \;
       
       # Run tests here if any exist
       - name: Run Unit Tests
-        run: dotnet test --no-restore --verbosity normal
+        run: |
+          find . -name '*.Test.csproj' -exec dotnet test {} --no-restore --verbosity normal \;
