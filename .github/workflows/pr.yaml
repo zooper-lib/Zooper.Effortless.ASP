@@ -1,0 +1,43 @@
+name: Pull-Request
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      buildConfiguration: 'Release'
+      nugetConfigPath: './nuget.config'
+
+    steps:
+
+      # Check out the code
+      - uses: actions/checkout@v2
+        
+      # Use the latest .Net version
+      - name: 'Use .NET Core sdk 8.0'
+        uses: actions/setup-dotnet@v1
+        with:
+          version: '8.0.x'
+          include-prerelease: true
+            
+      # Install NuGet client
+      - name: Install NuGet
+        run: dotnet tool install --global NuGet.CommandLine
+        
+      # Restore NuGet packages
+      - name: Restore NuGet packages
+        run: dotnet restore '**/*.csproj' --configfile ${{ env.nugetConfigPath }}
+      
+      # Build the project
+      - name: Build
+        run: dotnet build '**/*.csproj' --configuration ${{ env.buildConfiguration }} --no-restore
+      
+      # Run tests here if any exist
+      - name: Run Unit Tests
+        run: dotnet test --no-restore --verbosity normal
