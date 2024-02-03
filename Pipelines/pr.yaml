@@ -1,0 +1,30 @@
+trigger: none
+pr:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+  buildConfiguration: 'Release'
+  nugetConfigPath: '$(System.DefaultWorkingDirectory)/nuget.config'
+
+steps:
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core sdk 8.0'
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+      includePreviewVersions: true
+    
+  # Build the project
+  - template: Builds/template_restore_and_build_all_projects.yaml
+    parameters:
+      buildConfiguration: $(buildConfiguration)
+      nugetConfigPath: $(nugetConfigPath)
+  
+  # Run tests here if any exist
+  - script: dotnet test
+    displayName: 'Run Unit Tests'
