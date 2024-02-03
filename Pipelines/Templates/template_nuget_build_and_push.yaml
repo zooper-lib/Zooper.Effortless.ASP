@@ -15,18 +15,12 @@ parameters:
     type: string
     default: ''
 
-  - name: nugetConfigPath
-    type: string
-    default: ''
-
 steps:
   - task: DotNetCoreCLI@2
     displayName: 'NuGet restore'
     inputs:
       command: 'restore'
       projects: '**/${{ parameters.projectName }}.csproj'
-      feedsToUse: 'config'
-      nugetConfigPath: '${{ parameters.nugetConfigPath }}'
 
   - task: DotNetCoreCLI@2
     displayName: "Pack"
