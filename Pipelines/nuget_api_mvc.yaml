@@ -6,7 +6,7 @@ trigger:
     include:
       - main
 
-pool: Self-Hosted
+pool: ubuntu-latest
 
 variables:
   buildConfiguration: 'Release'
