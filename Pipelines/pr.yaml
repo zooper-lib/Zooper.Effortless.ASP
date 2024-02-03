@@ -19,11 +19,28 @@ steps:
       version: '8.0.x'
       includePreviewVersions: true
     
+    # Install Nuget
+  - task: NuGetToolInstaller@1
+    inputs:
+      versionSpec:
+      checkLatest: true
+
+  # Restore all projects Nuget packages
+  - task: DotNetCoreCLI@2
+    displayName: 'NuGet restore'
+    inputs:
+      command: 'restore'
+      projects: '**/*.csproj'
+      feedsToUse: 'config'
+      nugetConfigPath: '${{ parameters.nugetConfigPath }}'
+  
   # Build the project
-  - template: Builds/template_restore_and_build_all_projects.yaml
-    parameters:
-      buildConfiguration: $(buildConfiguration)
-      nugetConfigPath: $(nugetConfigPath)
+  - task: DotNetCoreCLI@2
+    displayName: 'Build all projects'
+    inputs:
+      command: 'build'
+      projects: '**/*.csproj'
+      arguments: '--configuration ${{ parameters.buildConfiguration }}'
   
   # Run tests here if any exist
   - script: dotnet test

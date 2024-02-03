@@ -1,0 +1,23 @@
+trigger:
+  paths:
+    include:
+      - Zooper.Effortless.ASP.Api.MVC/**
+  branches:
+    include:
+      - main
+
+pool: Self-Hosted
+
+variables:
+  buildConfiguration: 'Release'
+  majorMinorVersion: 1.0
+  semanticVersion: $[counter(variables['majorMinorVersion'], 0)]
+  projectName: 'Zooper.Effortless.ASP.Api.MVC'
+
+name: $(majorMinorVersion).$(Rev:r)
+
+extends:
+  template: Templates/template_nuget_build_and_push.yaml
+  parameters:
+    projectName: $(projectName)
+    buildConfiguration: $(buildConfiguration)
