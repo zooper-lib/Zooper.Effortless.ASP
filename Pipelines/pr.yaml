@@ -37,7 +37,7 @@ steps:
     inputs:
       command: 'build'
       projects: '**/*.csproj'
-      arguments: '--configuration ${{ parameters.buildConfiguration }}'
+      arguments: '--configuration $(buildConfiguration)'
   
   # Run tests here if any exist
   - script: dotnet test
