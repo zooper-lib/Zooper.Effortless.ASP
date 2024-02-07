@@ -47,7 +47,7 @@ public class HashicorpVaultConfigurationProvider(HashicorpVaultConfigurationSour
 					var newPath = string.IsNullOrEmpty(path) ? key : $"{path}{key}";
 
 					// If key is a folder, list secrets in the folder
-					if (key.EndsWith("/"))
+					if (key.EndsWith('/'))
 					{
 						await LoadRecursive(
 							client,
