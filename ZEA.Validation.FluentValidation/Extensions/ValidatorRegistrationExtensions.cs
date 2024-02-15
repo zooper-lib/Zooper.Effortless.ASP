@@ -10,15 +10,17 @@ namespace ZEA.Validation.FluentValidation.Extensions;
 // ReSharper disable once UnusedType.Global
 public static class ValidatorRegistrationExtensions
 {
-	public static void RegisterPipelineBehavior(this IServiceCollection services)
+	public static IServiceCollection RegisterPipelineBehavior(this IServiceCollection services)
 	{
 		services.AddTransient(
 			typeof(IPipelineBehavior<,>),
 			typeof(ValidationBehavior<,>)
 		);
+
+		return services;
 	}
 
-	public static void RegisterValidatorsFromAssemblies(
+	public static IServiceCollection RegisterValidatorsFromAssemblies(
 		this IServiceCollection services,
 		params Assembly[] assemblies)
 	{
@@ -48,6 +50,8 @@ public static class ValidatorRegistrationExtensions
 				type
 			);
 		}
+
+		return services;
 	}
 
 	private static bool IsSubclassOfRawGeneric(
