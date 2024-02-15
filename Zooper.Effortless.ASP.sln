@@ -18,29 +18,29 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Validation", "Validation", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{AB375879-6818-4CF5-8246-6CC49FD3ADA0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Data.Modelling", "Zooper.Effortless.ASP.Data.Modelling\Zooper.Effortless.ASP.Data.Modelling.csproj", "{27B9FD97-4B7C-4005-A65F-67B82F186DD8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Data.Modelling", "ZEA.Data.Modelling\ZEA.Data.Modelling.csproj", "{27B9FD97-4B7C-4005-A65F-67B82F186DD8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Secrets", "Secrets", "{CE57F3B7-8092-46AC-AE89-1C81CFF15170}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Secrets.Abstractions", "Zooper.Effortless.ASP.Secrets.Abstractions\Zooper.Effortless.ASP.Secrets.Abstractions.csproj", "{57B777D2-2737-431A-8305-0B064186B821}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Secrets.Abstractions", "ZEA.Secrets.Abstractions\ZEA.Secrets.Abstractions.csproj", "{57B777D2-2737-431A-8305-0B064186B821}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Secrets.AzureKeyVault", "Zooper.Effortless.ASP.Secrets.AzureKeyVault\Zooper.Effortless.ASP.Secrets.AzureKeyVault.csproj", "{E3D6B013-79EB-4060-AA66-1B06A7F11A69}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Secrets.AzureKeyVault", "ZEA.Secrets.AzureKeyVault\ZEA.Secrets.AzureKeyVault.csproj", "{E3D6B013-79EB-4060-AA66-1B06A7F11A69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Secrets.HashicorpVault", "Zooper.Effortless.ASP.Secrets.HashicorpVault\Zooper.Effortless.ASP.Secrets.HashicorpVault.csproj", "{2547F75F-AEB2-4E63-8A9E-B1F11B674AFC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Secrets.HashicorpVault", "ZEA.Secrets.HashicorpVault\ZEA.Secrets.HashicorpVault.csproj", "{2547F75F-AEB2-4E63-8A9E-B1F11B674AFC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Configurations", "Zooper.Effortless.ASP.Configurations\Zooper.Effortless.ASP.Configurations.csproj", "{00FA12F3-7A8E-4DA0-BC41-97BA188B8832}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations", "ZEA.Configurations\ZEA.Configurations.csproj", "{00FA12F3-7A8E-4DA0-BC41-97BA188B8832}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Communication.Abstractions", "Zooper.Effortless.ASP.Communication.Abstractions\Zooper.Effortless.ASP.Communication.Abstractions.csproj", "{040476AE-6779-45CF-B4CC-51829D4E6814}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Abstractions", "ZEA.Communication.Abstractions\ZEA.Communication.Abstractions.csproj", "{040476AE-6779-45CF-B4CC-51829D4E6814}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Api.MVC", "Zooper.Effortless.ASP.Api.MVC\Zooper.Effortless.ASP.Api.MVC.csproj", "{182A5A5F-1A60-41A4-A647-7E91502163E2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Api.MVC", "ZEA.Api.MVC\ZEA.Api.MVC.csproj", "{182A5A5F-1A60-41A4-A647-7E91502163E2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Communication.Refit", "Zooper.Effortless.ASP.Communication.Refit\Zooper.Effortless.ASP.Communication.Refit.csproj", "{611A2EF4-A81C-4B84-B1C2-D590C7BFF037}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Refit", "ZEA.Communication.Refit\ZEA.Communication.Refit.csproj", "{611A2EF4-A81C-4B84-B1C2-D590C7BFF037}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Serialization.Abstractions", "Zooper.Effortless.ASP.Serialization.Abstractions\Zooper.Effortless.ASP.Serialization.Abstractions.csproj", "{E42081FF-79B8-4B31-A5E0-DA4CEBB1B442}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Serialization.Abstractions", "ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj", "{E42081FF-79B8-4B31-A5E0-DA4CEBB1B442}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Serialization.NewtonsoftJson", "Zooper.Effortless.ASP.Serialization.NewtonsoftJson\Zooper.Effortless.ASP.Serialization.NewtonsoftJson.csproj", "{D76F7A5F-89F3-4B03-9F86-F34C29BD2BCA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Serialization.NewtonsoftJson", "ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj", "{D76F7A5F-89F3-4B03-9F86-F34C29BD2BCA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zooper.Effortless.ASP.Validation.FluentValidation", "Zooper.Effortless.ASP.Validation.FluentValidation\Zooper.Effortless.ASP.Validation.FluentValidation.csproj", "{65FD9A50-4120-4905-8E12-3F3C6827F603}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Validation.FluentValidation", "ZEA.Validation.FluentValidation\ZEA.Validation.FluentValidation.csproj", "{65FD9A50-4120-4905-8E12-3F3C6827F603}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
