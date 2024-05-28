@@ -1,7 +1,6 @@
 ﻿// ReSharper disable UnusedType.Global
 
 using FluentValidation;
-using IValidationRule = ZEA.Validation.FluentValidation.IValidationRule;
 
 namespace ZEA.Data.Modelling;
 
@@ -12,30 +11,31 @@ namespace ZEA.Data.Modelling;
 /// </summary>
 public abstract class ValueObject : IEquatable<ValueObject>
 {
-	private readonly List<IValidationRule> _validationRules = [];
-
 	protected ValueObject()
 	{
-		// ReSharper disable once VirtualMemberCallInConstructor
-		_validationRules.AddRange(GetValidationRules());
+		Validate();
 	}
 
-	protected void CheckRules()
+	private void Validate()
 	{
-		foreach (var rule in _validationRules.Where(rule => rule.IsValid() == false))
+		var context = new ValidationContext<ValueObject>(this);
+		var validator = GetValidator();
+		var validationResult = validator?.Validate(context);
+
+		if (validationResult is { IsValid: false })
 		{
-			throw new ValidationException(rule.Message);
+			throw new ValidationException(validationResult.Errors);
 		}
 	}
 
-	protected abstract IEnumerable<IValidationRule> GetValidationRules();
+	protected virtual IValidator? GetValidator() => null;
 
 	public bool Equals(ValueObject? other)
 	{
 		return Equals((object?)other);
 	}
 
-	protected abstract IEnumerable<object> GetEqualityComponents();
+	protected abstract IEnumerable<object?> GetEqualityComponents();
 
 	public override bool Equals(object? obj)
 	{
