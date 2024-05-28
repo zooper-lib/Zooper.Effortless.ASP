@@ -13,7 +13,7 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  majorMinorVersion: 1.0
+  majorMinorVersion: 1.1
   semanticVersion: $[counter(variables['majorMinorVersion'], 0)]
   projectName: ZEA.Data.Modelling
 
