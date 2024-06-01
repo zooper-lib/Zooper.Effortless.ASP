@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Serialization.Newtonsof
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Validation.FluentValidation", "ZEA.Validation.FluentValidation\ZEA.Validation.FluentValidation.csproj", "{65FD9A50-4120-4905-8E12-3F3C6827F603}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations.HashicorpVault", "ZEA.Configurations.HashicorpVault\ZEA.Configurations.HashicorpVault.csproj", "{A915E1F1-797E-407F-A362-EDEF20B05F03}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,7 @@ Global
 		{E42081FF-79B8-4B31-A5E0-DA4CEBB1B442} = {C83B1152-7609-4166-A2C7-D25F22E1BDD9}
 		{D76F7A5F-89F3-4B03-9F86-F34C29BD2BCA} = {C83B1152-7609-4166-A2C7-D25F22E1BDD9}
 		{65FD9A50-4120-4905-8E12-3F3C6827F603} = {59B49CBD-4E45-435B-94E6-F82FA4D6F556}
+		{A915E1F1-797E-407F-A362-EDEF20B05F03} = {330BD57F-24D2-4006-B30B-C92E409D92A2}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{27B9FD97-4B7C-4005-A65F-67B82F186DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -105,5 +108,9 @@ Global
 		{65FD9A50-4120-4905-8E12-3F3C6827F603}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65FD9A50-4120-4905-8E12-3F3C6827F603}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65FD9A50-4120-4905-8E12-3F3C6827F603}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A915E1F1-797E-407F-A362-EDEF20B05F03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A915E1F1-797E-407F-A362-EDEF20B05F03}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A915E1F1-797E-407F-A362-EDEF20B05F03}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A915E1F1-797E-407F-A362-EDEF20B05F03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

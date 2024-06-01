@@ -5,29 +5,14 @@ using ZEA.Communication.Refit.Stores;
 
 namespace ZEA.Communication.Refit.DelegatingHandler;
 
-public class AutoRefreshTokenDelegatingHandler : System.Net.Http.DelegatingHandler
+public class AutoRefreshTokenDelegatingHandler(
+	IAccessDataStore accessDataStore,
+	ILogger<AutoRefreshTokenDelegatingHandler> logger,
+	string clientId,
+	string clientSecret,
+	Uri tokenEndpoint)
+	: System.Net.Http.DelegatingHandler
 {
-	private readonly IAccessDataStore _accessDataStore;
-	private readonly string _clientId;
-	private readonly string _clientSecret;
-	private readonly ILogger<AutoRefreshTokenDelegatingHandler> _logger;
-
-	private readonly Uri _tokenEndpoint;
-
-	public AutoRefreshTokenDelegatingHandler(
-		IAccessDataStore accessDataStore,
-		ILogger<AutoRefreshTokenDelegatingHandler> logger,
-		string clientId,
-		string clientSecret,
-		Uri tokenEndpoint)
-	{
-		_accessDataStore = accessDataStore;
-		_logger = logger;
-		_clientId = clientId;
-		_clientSecret = clientSecret;
-		_tokenEndpoint = tokenEndpoint;
-	}
-
 	protected override async Task<HttpResponseMessage> SendAsync(
 		HttpRequestMessage request,
 		CancellationToken cancellationToken)
@@ -37,7 +22,7 @@ public class AutoRefreshTokenDelegatingHandler : System.Net.Http.DelegatingHandl
 		else if (await IsAccessTokenExpiredAsync(cancellationToken))
 			await RefreshAccessTokenAsync(cancellationToken);
 
-		var accessData = await _accessDataStore.GetAsync(cancellationToken);
+		var accessData = await accessDataStore.GetAsync(cancellationToken);
 		request.Headers.Authorization = new(
 			JwtBearerDefaults.AuthenticationScheme,
 			accessData?.AuthResponse.AccessToken
@@ -51,14 +36,14 @@ public class AutoRefreshTokenDelegatingHandler : System.Net.Http.DelegatingHandl
 
 	private async Task<bool> IsAuthenticated(CancellationToken cancellationToken)
 	{
-		var accessData = await _accessDataStore.GetAsync(cancellationToken);
+		var accessData = await accessDataStore.GetAsync(cancellationToken);
 
 		return accessData != null;
 	}
 
 	private async Task<bool> IsAccessTokenExpiredAsync(CancellationToken cancellationToken)
 	{
-		var accessData = await _accessDataStore.GetAsync(cancellationToken);
+		var accessData = await accessDataStore.GetAsync(cancellationToken);
 
 		if (accessData == null) return true;
 
@@ -67,13 +52,13 @@ public class AutoRefreshTokenDelegatingHandler : System.Net.Http.DelegatingHandl
 
 	private async Task RefreshAccessTokenAsync(CancellationToken cancellationToken)
 	{
-		var address = _tokenEndpoint + "connect/token";
+		var address = tokenEndpoint + "connect/token";
 
 		var tokenRequest = new ClientCredentialsTokenRequest
 		{
 			Address = address,
-			ClientId = _clientId,
-			ClientSecret = _clientSecret,
+			ClientId = clientId,
+			ClientSecret = clientSecret,
 			GrantType = "client_credentials"
 		};
 
@@ -84,7 +69,7 @@ public class AutoRefreshTokenDelegatingHandler : System.Net.Http.DelegatingHandl
 
 		if (tokenResponse.IsError)
 		{
-			_logger.LogCritical(
+			logger.LogCritical(
 				"Failed to obtain token from {TokenEndpoint}: {TokenResponseError}",
 				address,
 				tokenResponse.Error
@@ -94,7 +79,7 @@ public class AutoRefreshTokenDelegatingHandler : System.Net.Http.DelegatingHandl
 
 
 		// Cache the new Access Token
-		await _accessDataStore.SetAsync(
+		await accessDataStore.SetAsync(
 			new()
 			{
 				AuthResponse = tokenResponse,
