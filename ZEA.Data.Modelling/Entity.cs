@@ -13,7 +13,7 @@ namespace ZEA.Data.Modelling;
 /// </summary>
 public abstract class Entity<TId> : IEquatable<Entity<TId>> where TId : notnull
 {
-	public TId Id { get; protected set; }
+	public required TId Id { get; init; }
 
 #pragma warning disable CS8618
 	protected Entity() { }
