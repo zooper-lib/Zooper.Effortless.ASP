@@ -11,7 +11,7 @@ namespace ZEA.Data.Modelling;
 /// </summary>
 public abstract class ValueObject : IEquatable<ValueObject>
 {
-	private void Validate()
+	public void Validate()
 	{
 		var context = new ValidationContext<ValueObject>(this);
 		var validator = GetValidator();
