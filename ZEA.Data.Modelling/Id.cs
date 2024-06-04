@@ -1,9 +1,9 @@
+using ZEA.Data.Modelling.Records;
+
 namespace ZEA.Data.Modelling;
 
-public abstract class Id<T>(T value) : ValueObject
+public abstract record Id<T>(T Value) : ValueObjectRecord
 {
-	private T Value { get; } = value;
-
 	protected override IEnumerable<object?> GetEqualityComponents()
 	{
 		yield return Value;
