@@ -9,11 +9,11 @@ namespace ZEA.Data.Modelling;
 ///     They are often used to represent descriptors, like quantities, dates, or money.
 ///     Two Value Objects with the same properties can be considered equal.
 /// </summary>
-public abstract class ValueObject : IEquatable<ValueObject>
+public abstract class ValueObjectClass : IEquatable<ValueObjectClass>
 {
 	public void Validate()
 	{
-		var context = new ValidationContext<ValueObject>(this);
+		var context = new ValidationContext<ValueObjectClass>(this);
 		var validator = GetValidator();
 		var validationResult = validator?.Validate(context);
 
@@ -25,7 +25,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
 	protected virtual IValidator? GetValidator() => null;
 
-	public bool Equals(ValueObject? other)
+	public bool Equals(ValueObjectClass? other)
 	{
 		return Equals((object?)other);
 	}
@@ -36,7 +36,7 @@ public abstract class ValueObject : IEquatable<ValueObject>
 	{
 		if (obj is null || obj.GetType() != GetType()) return false;
 
-		var valueObject = (ValueObject)obj;
+		var valueObject = (ValueObjectClass)obj;
 
 		return GetEqualityComponents()
 			.SequenceEqual(valueObject.GetEqualityComponents());
@@ -54,8 +54,8 @@ public abstract class ValueObject : IEquatable<ValueObject>
 	}
 
 	public static bool operator ==(
-		ValueObject a,
-		ValueObject b)
+		ValueObjectClass a,
+		ValueObjectClass b)
 	{
 		return Equals(
 			a,
@@ -64,8 +64,8 @@ public abstract class ValueObject : IEquatable<ValueObject>
 	}
 
 	public static bool operator !=(
-		ValueObject a,
-		ValueObject b)
+		ValueObjectClass a,
+		ValueObjectClass b)
 	{
 		return !Equals(
 			a,

@@ -8,9 +8,10 @@ namespace ZEA.Data.Modelling;
 ///     It's responsible for enforcing the invariants (rules) of the Aggregate and encapsulates
 ///     access to its members.
 /// </summary>
-public abstract class AggregateRoot<TId> : Entity<TId> where TId : notnull
+public abstract class AggregateRootClass<TId> : EntityClass<TId> where TId : notnull
 {
-	protected AggregateRoot() { }
+	protected AggregateRootClass() { }
 
-	protected AggregateRoot(TId id) : base(id) { }
+	protected AggregateRootClass(TId id) : base(id) { }
 }
+
