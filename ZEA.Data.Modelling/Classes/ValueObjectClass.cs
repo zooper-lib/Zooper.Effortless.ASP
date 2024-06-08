@@ -2,7 +2,7 @@
 
 using FluentValidation;
 
-namespace ZEA.Data.Modelling;
+namespace ZEA.Data.Modelling.Classes;
 
 /// <summary>
 ///     A Value Object is an immutable object that contains attributes but has no conceptual identity.

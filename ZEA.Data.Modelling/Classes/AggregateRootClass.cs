@@ -1,7 +1,7 @@
 ﻿// ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedType.Global
 
-namespace ZEA.Data.Modelling;
+namespace ZEA.Data.Modelling.Classes;
 
 /// <summary>
 ///     The Aggregate Root is the primary entity through which we interact with the Aggregate.
