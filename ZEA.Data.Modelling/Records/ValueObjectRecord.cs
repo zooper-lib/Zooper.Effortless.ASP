@@ -4,6 +4,7 @@ namespace ZEA.Data.Modelling.Records;
 
 public abstract record ValueObjectRecord
 {
+	// ReSharper disable once UnusedMember.Global
 	public void Validate()
 	{
 		var context = new ValidationContext<ValueObjectRecord>(this);
@@ -16,6 +17,7 @@ public abstract record ValueObjectRecord
 		}
 	}
 
+	// ReSharper disable once VirtualMemberNeverOverridden.Global
 	protected virtual IValidator? GetValidator() => null;
 
 	protected abstract IEnumerable<object?> GetEqualityComponents();

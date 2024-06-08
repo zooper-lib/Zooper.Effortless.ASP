@@ -4,7 +4,7 @@
 // ReSharper disable AutoPropertyCanBeMadeGetOnly.Global
 
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
-namespace ZEA.Data.Modelling;
+namespace ZEA.Data.Modelling.Classes;
 
 /// <summary>
 ///     An Entity (or Entity Object) is a business object that has a unique identity.
