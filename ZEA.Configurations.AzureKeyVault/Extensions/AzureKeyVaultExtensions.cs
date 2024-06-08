@@ -37,6 +37,26 @@ public static class AzureKeyVaultExtensions
 		);
 	}
 
+	public static IHostBuilder AddAzureKeyVault(
+		this IHostBuilder builder,
+		string tenantId,
+		string url,
+		string clientId,
+		string clientSecret)
+	{
+		return builder.ConfigureAppConfiguration(
+			configurationBuilder =>
+			{
+				configurationBuilder.AddAzureKeyVault(
+					tenantId,
+					url,
+					clientId,
+					clientSecret
+				);
+			}
+		);
+	}
+
 	// ReSharper disable once MemberCanBePrivate.Global
 	public static IConfigurationBuilder AddAzureKeyVault(
 		this IConfigurationBuilder builder,
