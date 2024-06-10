@@ -50,6 +50,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.PubSub.Abs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations.AzureKeyVault", "ZEA.Configurations.AzureKeyVault\ZEA.Configurations.AzureKeyVault.csproj", "{CD9D9EBC-C1E6-4D44-8819-ECB178356C03}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Messaging.Abstractions", "ZEA.Communication.Messaging.Abstractions\ZEA.Communication.Messaging.Abstractions.csproj", "{1F5A6C3C-489E-459B-B86F-2994B167FEA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Messaging.MassTransit", "ZEA.Communication.Messaging.MassTransit\ZEA.Communication.Messaging.MassTransit.csproj", "{9DDFAA2E-D9F5-4BC7-BEFF-59080F8A85F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +75,8 @@ Global
 		{F508669F-69A2-4F06-8F52-E445D5784BA9} = {125FA61A-3BBB-4EE8-8103-3BACACC0201D}
 		{E5E4040A-7D36-4B62-AA94-187651B60F98} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 		{CD9D9EBC-C1E6-4D44-8819-ECB178356C03} = {330BD57F-24D2-4006-B30B-C92E409D92A2}
+		{1F5A6C3C-489E-459B-B86F-2994B167FEA5} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
+		{9DDFAA2E-D9F5-4BC7-BEFF-59080F8A85F6} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{27B9FD97-4B7C-4005-A65F-67B82F186DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -133,5 +139,13 @@ Global
 		{CD9D9EBC-C1E6-4D44-8819-ECB178356C03}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD9D9EBC-C1E6-4D44-8819-ECB178356C03}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD9D9EBC-C1E6-4D44-8819-ECB178356C03}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F5A6C3C-489E-459B-B86F-2994B167FEA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F5A6C3C-489E-459B-B86F-2994B167FEA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F5A6C3C-489E-459B-B86F-2994B167FEA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F5A6C3C-489E-459B-B86F-2994B167FEA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DDFAA2E-D9F5-4BC7-BEFF-59080F8A85F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DDFAA2E-D9F5-4BC7-BEFF-59080F8A85F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DDFAA2E-D9F5-4BC7-BEFF-59080F8A85F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DDFAA2E-D9F5-4BC7-BEFF-59080F8A85F6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
