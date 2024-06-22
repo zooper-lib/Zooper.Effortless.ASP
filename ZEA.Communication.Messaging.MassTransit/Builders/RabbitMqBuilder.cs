@@ -12,6 +12,8 @@ public class RabbitMqBuilder(
 {
 	private readonly List<Assembly> _consumerAssemblies = [];
 	private readonly List<Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>> _endpointConfigurations = [];
+	private Action<IRetryConfigurator>? _retryConfigurator;
+	private Action<IRedeliveryConfigurator>? _redeliveryConfigurator;
 
 	/// <summary>
 	///     Adds the specified consumer assemblies to the builder.
@@ -56,6 +58,18 @@ public class RabbitMqBuilder(
 								cfg,
 								context
 							);
+
+						// Configure the retry policy
+						if (_retryConfigurator != null)
+						{
+							cfg.UseMessageRetry(_retryConfigurator);
+						}
+
+						// Configure the redelivery policy
+						if (_redeliveryConfigurator != null)
+						{
+							cfg.UseDelayedRedelivery(_redeliveryConfigurator);
+						}
 					}
 				);
 			}
@@ -185,6 +199,28 @@ public class RabbitMqBuilder(
 				}
 			);
 
+		return this;
+	}
+
+	/// <summary>
+	///     Sets a retry configuration.
+	/// </summary>
+	/// <param name="configureRetry">The retry configuration action.</param>
+	/// <returns>The current builder instance.</returns>
+	public ITransportBuilder UseRetry(Action<IRetryConfigurator> configureRetry)
+	{
+		_retryConfigurator = configureRetry;
+		return this;
+	}
+
+	/// <summary>
+	///		Sets a redelivery configuration.
+	/// </summary>
+	/// <param name="configureRedelivery"></param>
+	/// <returns></returns>
+	public ITransportBuilder UseRedelivery(Action<IRedeliveryConfigurator> configureRedelivery)
+	{
+		_redeliveryConfigurator = configureRedelivery;
 		return this;
 	}
 }
