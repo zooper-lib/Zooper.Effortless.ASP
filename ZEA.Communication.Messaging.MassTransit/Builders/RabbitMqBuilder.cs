@@ -5,6 +5,12 @@ using ZEA.Communication.Messaging.MassTransit.Attributes;
 
 namespace ZEA.Communication.Messaging.MassTransit.Builders;
 
+/// <summary>
+///     A builder class for configuring MassTransit with RabbitMQ.
+/// </summary>
+/// <param name="host">The RabbitMQ host address.</param>
+/// <param name="username">The RabbitMQ username.</param>
+/// <param name="password">The RabbitMQ password.</param>
 public class RabbitMqBuilder(
 	string host,
 	string username,
@@ -20,6 +26,7 @@ public class RabbitMqBuilder(
 	/// </summary>
 	/// <param name="consumerAssemblies">The consumer assemblies to add.</param>
 	/// <returns>The current builder instance.</returns>
+	/// /// <exception cref="ArgumentNullException">Thrown when no consumer assemblies are provided.</exception>
 	public ITransportBuilder AddConsumerAssemblies(params Assembly[] consumerAssemblies)
 	{
 		// There must at least be one consumer assembly.
@@ -33,6 +40,7 @@ public class RabbitMqBuilder(
 	/// <summary>
 	///     Builds the MassTransit configuration and registers it with the service collection.
 	/// </summary>
+	/// /// <param name="services">The service collection to register the configuration with.</param>
 	public void Build(IServiceCollection services)
 	{
 		services.AddMassTransit(
