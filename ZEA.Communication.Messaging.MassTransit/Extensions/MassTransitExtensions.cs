@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
-using ZEA.Communication.Messaging.MassTransit.Attributes;
 using ZEA.Communication.Messaging.MassTransit.Builders;
 
 namespace ZEA.Communication.Messaging.MassTransit.Extensions;
@@ -64,12 +63,41 @@ public static class MassTransitExtensions
 
 		foreach (var consumerType in consumerTypes)
 		{
-			var subscriptionAttributes = consumerType.GetCustomAttributes<ConsumerSubscriptionAttribute>();
+			var messageTypes = GetMessageTypes(consumerType);
 
-			foreach (var subscriptionAttribute in subscriptionAttributes)
+			foreach (var messageType in messageTypes)
 			{
-				configurator.ReceiveEndpoint(subscriptionAttribute.SubscriptionName, e => { e.ConfigureConsumer(context, consumerType); });
+				var subscriptionName = GenerateSubscriptionName(messageType);
+				configurator.ReceiveEndpoint(subscriptionName, e => { e.ConfigureConsumer(context, consumerType); });
 			}
 		}
+	}
+
+	private static IEnumerable<Type> GetMessageTypes(Type consumerType)
+	{
+		return consumerType.GetInterfaces()
+			.Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IConsumer<>))
+			.Select(i => i.GetGenericArguments()[0]);
+	}
+
+	private static string GenerateSubscriptionName(Type messageType)
+	{
+		// Remove common suffixes if present
+		var typeName = messageType.Name;
+		string[] suffixesToRemove =
+		{
+			"Message", "Command", "Event", "Query", "Notification"
+		};
+
+		foreach (var suffix in suffixesToRemove)
+		{
+			if (!typeName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)) continue;
+
+			typeName = typeName[..^suffix.Length];
+			break;
+		}
+
+		// Convert to kebab-case
+		return string.Concat(typeName.Select((x, i) => i > 0 && char.IsUpper(x) ? "-" + x : x.ToString())).ToLower();
 	}
 }
