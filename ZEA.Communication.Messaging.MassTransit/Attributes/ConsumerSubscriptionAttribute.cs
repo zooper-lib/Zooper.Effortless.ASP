@@ -5,7 +5,4 @@ namespace ZEA.Communication.Messaging.MassTransit.Attributes;
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 // ReSharper disable once ClassNeverInstantiated.Global
-public class ConsumerSubscriptionAttribute(string topicName) : Attribute
-{
-	public string TopicName { get; } = topicName;
-}
+public class ConsumerSubscriptionAttribute : Attribute;
