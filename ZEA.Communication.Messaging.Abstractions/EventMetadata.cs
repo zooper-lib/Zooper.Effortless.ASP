@@ -5,7 +5,7 @@ namespace ZEA.Communication.Messaging.Abstractions;
 /// </summary>
 public sealed class EventMetadata(Guid id, DateTime createdAt)
 {
-	public static EventMetadata Create(Guid id, DateTime createdAt) => new(id, createdAt);
+	public static EventMetadata Create() => new(Guid.NewGuid(), DateTime.UtcNow);
 
 	/// <summary>
 	/// Gets the unique identifier for the event.
