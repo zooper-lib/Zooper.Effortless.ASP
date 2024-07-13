@@ -2,6 +2,7 @@
 using System.Text;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using ZEA.Communication.Messaging.MassTransit.Attributes;
 using ZEA.Communication.Messaging.MassTransit.Builders;
 
 namespace ZEA.Communication.Messaging.MassTransit.Extensions;
@@ -22,7 +23,9 @@ public static class MassTransitExtensions
 	/// </summary>
 	/// <param name="configurator">The MassTransit registration configurator.</param>
 	/// <param name="assembliesToScan">Assemblies to scan for consumers. If none specified, scans all loaded assemblies.</param>
-	public static void AddConsumersFromAssemblies(this IRegistrationConfigurator configurator, params Assembly[] assembliesToScan)
+	public static void AddConsumersFromAssemblies(
+		this IRegistrationConfigurator configurator,
+		params Assembly[] assembliesToScan)
 	{
 		if (assembliesToScan.Length == 0)
 		{
@@ -95,8 +98,14 @@ public static class MassTransitExtensions
 				// Generate standardized names for topics and subscriptions.
 				// This ensures a consistent naming convention across the entire messaging system.
 				var topicName = GenerateTopicName(messageType);
-				var queueName = GenerateQueueName(formattedServiceName, messageType);
-				var subscriptionName = GenerateSubscriptionName(formattedServiceName, messageType);
+				//var queueName = GenerateQueueName(formattedServiceName, messageType);
+
+				// Check for custom subscription name from attribute
+				var customSubscriptionName = consumerType.GetCustomAttributes(typeof(ConsumerSubscriptionAttribute), true)
+					.OfType<ConsumerSubscriptionAttribute>()
+					.FirstOrDefault(attr => attr.SubscriptionName != null)?.SubscriptionName;
+
+				var subscriptionName = customSubscriptionName ?? GenerateSubscriptionName(formattedServiceName, messageType);
 
 				configurator.SubscriptionEndpoint(
 					subscriptionName,
@@ -212,24 +221,26 @@ public static class MassTransitExtensions
 		return $"{kebabCase}-topic";
 	}
 
-	private static string GenerateQueueName(string serviceName, Type messageType)
-	{
-		var typeName = messageType.Name;
-		string[] suffixesToRemove =
-		[
-			"Message", "Command", "Event", "Query", "Notification", "DomainEvent"
-		];
-
-		foreach (var suffix in suffixesToRemove)
-		{
-			if (!typeName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)) continue;
-
-			typeName = typeName[..^suffix.Length];
-			break;
-		}
-
-		return $"{serviceName}-{ConvertToKebabCase(typeName)}-queue";
-	}
+	// private static string GenerateQueueName(
+	// 	string serviceName,
+	// 	Type messageType)
+	// {
+	// 	var typeName = messageType.Name;
+	// 	string[] suffixesToRemove =
+	// 	[
+	// 		"Message", "Command", "Event", "Query", "Notification", "DomainEvent"
+	// 	];
+	//
+	// 	foreach (var suffix in suffixesToRemove)
+	// 	{
+	// 		if (!typeName.EndsWith(suffix, StringComparison.OrdinalIgnoreCase)) continue;
+	//
+	// 		typeName = typeName[..^suffix.Length];
+	// 		break;
+	// 	}
+	//
+	// 	return $"{serviceName}-{ConvertToKebabCase(typeName)}-queue";
+	// }
 
 	/// <summary>
 	/// Generates a standardized subscription name for a given message type.
@@ -237,7 +248,9 @@ public static class MassTransitExtensions
 	/// <param name="serviceName"></param>
 	/// <param name="messageType">The type of the message.</param>
 	/// <returns>A kebab-case subscription name.</returns>
-	private static string GenerateSubscriptionName(string serviceName, Type messageType)
+	private static string GenerateSubscriptionName(
+		string serviceName,
+		Type messageType)
 	{
 		var typeName = messageType.Name;
 		string[] suffixesToRemove =
