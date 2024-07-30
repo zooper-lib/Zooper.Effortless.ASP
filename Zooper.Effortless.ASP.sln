@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.RailwayOri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Modularization", "ZEA.Architecture.Modularization\ZEA.Architecture.Modularization.csproj", "{49A4E43F-0738-4492-8335-C3AC29079623}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.EventSourcing", "ZEA.Architecture.EventSourcing\ZEA.Architecture.EventSourcing.csproj", "{391B2B1C-CC0D-4132-97A7-92D926A115FD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,7 @@ Global
 		{9DDFAA2E-D9F5-4BC7-BEFF-59080F8A85F6} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
 		{337BDE33-4A54-4FB0-94D3-0359BF626764} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 		{49A4E43F-0738-4492-8335-C3AC29079623} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
+		{391B2B1C-CC0D-4132-97A7-92D926A115FD} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{27B9FD97-4B7C-4005-A65F-67B82F186DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -161,5 +164,9 @@ Global
 		{49A4E43F-0738-4492-8335-C3AC29079623}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49A4E43F-0738-4492-8335-C3AC29079623}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49A4E43F-0738-4492-8335-C3AC29079623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{391B2B1C-CC0D-4132-97A7-92D926A115FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{391B2B1C-CC0D-4132-97A7-92D926A115FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{391B2B1C-CC0D-4132-97A7-92D926A115FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{391B2B1C-CC0D-4132-97A7-92D926A115FD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
