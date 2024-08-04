@@ -12,11 +12,10 @@ public static class ModuleExtensions
 	{
 		foreach (var moduleType in moduleTypes)
 		{
-			if (Activator.CreateInstance(moduleType) is AppModule module)
-			{
-				module.ConfigureServices(builder);
-				builder.Services.AddSingleton(module);
-			}
+			if (Activator.CreateInstance(moduleType) is not AppModule module) continue;
+
+			module.ConfigureServices(builder);
+			builder.Services.AddSingleton(module);
 		}
 
 		return builder;
