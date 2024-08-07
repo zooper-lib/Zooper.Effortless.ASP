@@ -1,4 +1,4 @@
-﻿using ZEA.Communication.Messaging.Abstractions;
+﻿using ZEA.Architecture.DDD.Interfaces;
 
 namespace ZEA.Architecture.EventSourcing.Interfaces;
 
@@ -7,10 +7,10 @@ namespace ZEA.Architecture.EventSourcing.Interfaces;
 /// This is used for implementing "Event Sourcing", and you will need to implement this interface for each Aggregate.
 /// </summary>
 /// <typeparam name="TAggregate">The Aggregate we are processing</typeparam>
-public interface IEventProcessor<TAggregate>
+public interface IDomainEventProcessor<TAggregate>
 {
 	/// <summary>
-	/// Processes the Event and returns the updated Aggregate.
+	/// Processes the <see cref="IDomainEvent"/> and returns the updated Aggregate.
 	/// You can pass the Aggregate as null if it is a new Aggregate, probably when a "create" Event is processed.
 	/// </summary>
 	/// <param name="aggregate">The Aggregate, or null</param>
@@ -18,5 +18,5 @@ public interface IEventProcessor<TAggregate>
 	/// <returns>The updated Aggregate</returns>
 	TAggregate ProcessEvent(
 		TAggregate? aggregate,
-		IEvent @event);
+		IDomainEvent @event);
 }

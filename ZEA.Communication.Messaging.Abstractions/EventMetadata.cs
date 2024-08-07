@@ -3,7 +3,7 @@ namespace ZEA.Communication.Messaging.Abstractions;
 /// <summary>
 /// The metadata for an event.
 /// </summary>
-public sealed class EventMetadata(Guid id, DateTime createdAt)
+public class EventMetadata(Guid id, DateTime createdAt)
 {
 	public static EventMetadata Create() => new(Guid.NewGuid(), DateTime.UtcNow);
 

@@ -1,4 +1,7 @@
 // ReSharper disable UnusedType.Global
+
+using ZEA.Architecture.DDD.Interfaces;
+
 namespace ZEA.Communication.Messaging.Abstractions;
 
 /// <summary>
