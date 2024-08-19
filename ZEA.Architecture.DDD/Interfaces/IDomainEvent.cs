@@ -5,7 +5,7 @@ namespace ZEA.Architecture.DDD.Interfaces;
 /// </summary>
 public interface IDomainEvent : IEvent;
 
-public interface IDomainEvent<out TMetadata> : IEvent
+public interface IDomainEvent<out TMetadata> : IDomainEvent
 {
 	TMetadata Metadata { get; }
 }
