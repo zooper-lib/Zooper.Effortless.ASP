@@ -12,5 +12,7 @@ namespace ZEA.Architecture.RailwayOrientedProgramming.Interfaces;
 /// <typeparam name="TError">An object of a OneOf type which holds all the possible errors</typeparam>
 public interface IStep<TContext, TError> where TError : IOneOf
 {
-	Task<OneOf<TContext, TError>> ExecuteAsync(TContext context);
+	Task<OneOf<TContext, TError>> ExecuteAsync(
+		TContext context,
+		CancellationToken cancellationToken);
 }
