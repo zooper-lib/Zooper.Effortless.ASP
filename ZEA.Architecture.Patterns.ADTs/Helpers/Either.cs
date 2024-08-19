@@ -8,7 +8,7 @@ namespace ZEA.Architecture.Patterns.ADTs.Helpers;
 /// </summary>
 /// <typeparam name="TLeft">The type of the Left value.</typeparam>
 /// <typeparam name="TRight">The type of the Right value.</typeparam>
-public sealed class Either<TLeft, TRight>
+public class Either<TLeft, TRight>
 {
 	/// <summary>
 	/// Gets the Left value if it exists; otherwise, returns null.
