@@ -1,6 +1,6 @@
 using OneOf;
 
-namespace ZEA.Architecture.RailwayOrientedProgramming.Interfaces;
+namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Interfaces;
 
 /// <summary>
 /// <para>Represents a step in the Railway Oriented Programming (ROP) pattern.</para>
