@@ -34,7 +34,7 @@ public class Either<TLeft, TRight>
 	/// Initializes a new instance of the <see cref="Either{TLeft, TRight}"/> class with a Left value.
 	/// </summary>
 	/// <param name="left">The Left value to initialize.</param>
-	private Either(TLeft? left)
+	protected Either(TLeft left)
 	{
 		Left = left;
 	}
@@ -43,7 +43,7 @@ public class Either<TLeft, TRight>
 	/// Initializes a new instance of the <see cref="Either{TLeft, TRight}"/> class with a Right value.
 	/// </summary>
 	/// <param name="right">The Right value to initialize.</param>
-	private Either(TRight? right)
+	protected Either(TRight right)
 	{
 		Right = right;
 	}
@@ -53,14 +53,14 @@ public class Either<TLeft, TRight>
 	/// </summary>
 	/// <param name="left">The Left value to wrap.</param>
 	/// <returns>An <see cref="Either{TLeft, TRight}"/> instance containing the Left value.</returns>
-	public static Either<TLeft?, TRight> FromLeft(TLeft left) => new(left);
+	public static Either<TLeft, TRight> FromLeft(TLeft left) => new(left);
 
 	/// <summary>
 	/// Creates a new <see cref="Either{TLeft, TRight}"/> instance from a Right value.
 	/// </summary>
 	/// <param name="right">The Right value to wrap.</param>
 	/// <returns>An <see cref="Either{TLeft, TRight}"/> instance containing the Right value.</returns>
-	public static Either<TLeft, TRight?> FromRight(TRight right) => new(right);
+	public static Either<TLeft, TRight> FromRight(TRight right) => new(right);
 
 	/// <summary>
 	/// Matches the current value to one of two possible functions and returns the result of the matched function.
