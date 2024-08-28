@@ -11,7 +11,7 @@
       <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.2.3" />
       <PackageReference Include="MassTransit.Newtonsoft" Version="8.2.3" />
       <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.3" />
-      <PackageReference Include="ZEA.Communication.Messaging.Abstractions" Version="1.0.6" />
+      <PackageReference Include="ZEA.Communication.Messaging.Abstractions" Version="1.0.7" />
     </ItemGroup>
 
 </Project>
