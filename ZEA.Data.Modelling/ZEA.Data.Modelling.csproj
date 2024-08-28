@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ZEA.Validation.FluentValidation\ZEA.Validation.FluentValidation.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\ZEA.Validation.FluentValidation\ZEA.Validation.FluentValidation.csproj" />
     </ItemGroup>
 
 </Project>

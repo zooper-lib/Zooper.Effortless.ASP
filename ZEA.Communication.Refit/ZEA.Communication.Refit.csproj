@@ -16,8 +16,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ZEA.Communication.Abstractions\ZEA.Communication.Abstractions.csproj" PrivateAssets="All"/>
-        <ProjectReference Include="..\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\ZEA.Communication.Abstractions\ZEA.Communication.Abstractions.csproj" />
+        <ProjectReference Include="..\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj" />
     </ItemGroup>
 
 </Project>
