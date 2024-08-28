@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ZEA.Architecture.DDD\ZEA.Architecture.DDD.csproj" PrivateAssets="All"/>
-        <ProjectReference Include="..\ZEA.Communication.Messaging.Abstractions\ZEA.Communication.Messaging.Abstractions.csproj" PrivateAssets="All"/>
+        <ProjectReference Include="..\ZEA.Architecture.DDD\ZEA.Architecture.DDD.csproj" />
+        <ProjectReference Include="..\ZEA.Communication.Messaging.Abstractions\ZEA.Communication.Messaging.Abstractions.csproj" />
     </ItemGroup>
 
 </Project>
