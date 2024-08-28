@@ -7,8 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ZEA.Architecture.DDD\ZEA.Architecture.DDD.csproj" />
-        <ProjectReference Include="..\ZEA.Communication.Messaging.Abstractions\ZEA.Communication.Messaging.Abstractions.csproj" />
+      <PackageReference Include="ZEA.Architecture.DDD" Version="1.0.4" />
+      <PackageReference Include="ZEA.Communication.Messaging.Abstractions" Version="1.0.6" />
     </ItemGroup>
 
 </Project>

@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ZEA.Architecture.DDD\ZEA.Architecture.DDD.csproj" />
+      <PackageReference Include="ZEA.Architecture.DDD" Version="1.0.4" />
     </ItemGroup>
 
 </Project>
