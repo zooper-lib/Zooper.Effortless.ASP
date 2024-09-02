@@ -3,10 +3,7 @@ namespace ZEA.Architecture.DDD.Interfaces;
 /// <summary>
 /// Represents a domain event that is used for indicating state changes within a domain (aka. Service).
 /// </summary>
-public interface IDomainEvent : IEvent;
-
-/// <inheritdoc />
-public interface IDomainEvent<out TMetadata> : IDomainEvent
+public interface IDomainEvent : IEvent
 {
-	TMetadata Metadata { get; }
+	string EventName { get; }
 }
