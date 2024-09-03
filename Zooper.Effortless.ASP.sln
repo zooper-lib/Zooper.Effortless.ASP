@@ -66,6 +66,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.DDD", "ZEA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.ADTs", "ZEA.Architecture.Patterns.ADTs\ZEA.Architecture.Patterns.ADTs.csproj", "{60056376-6BB2-4D9D-B56E-2B2DA95FED46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Hexagonal", "ZEA.Architecture.Hexagonal\ZEA.Architecture.Hexagonal.csproj", "{B97A2AC5-EFFC-413B-935D-441B36FEF70B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,7 @@ Global
 		{A4621DC0-3FC8-4767-9C18-ED0639411873} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
 		{BBF64021-15C3-465E-BA77-FC02B61F2342} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 		{60056376-6BB2-4D9D-B56E-2B2DA95FED46} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
+		{B97A2AC5-EFFC-413B-935D-441B36FEF70B} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{27B9FD97-4B7C-4005-A65F-67B82F186DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -189,5 +192,9 @@ Global
 		{60056376-6BB2-4D9D-B56E-2B2DA95FED46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60056376-6BB2-4D9D-B56E-2B2DA95FED46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{60056376-6BB2-4D9D-B56E-2B2DA95FED46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B97A2AC5-EFFC-413B-935D-441B36FEF70B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B97A2AC5-EFFC-413B-935D-441B36FEF70B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B97A2AC5-EFFC-413B-935D-441B36FEF70B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B97A2AC5-EFFC-413B-935D-441B36FEF70B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
