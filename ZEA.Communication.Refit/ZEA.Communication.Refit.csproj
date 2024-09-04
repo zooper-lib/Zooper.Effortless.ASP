@@ -8,13 +8,13 @@
 
     <ItemGroup>
         <PackageReference Include="IdentityModel" Version="7.0.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.8" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0"/>
         <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0"/>
-        <PackageReference Include="Refit" Version="7.1.0"/>
-        <PackageReference Include="Refit.Newtonsoft.Json" Version="7.1.0"/>
+        <PackageReference Include="Refit" Version="7.1.2" />
+        <PackageReference Include="Refit.Newtonsoft.Json" Version="7.1.2" />
         <PackageReference Include="ZEA.Communication.Abstractions" Version="1.0.10" />
-        <PackageReference Include="ZEA.Serialization.NewtonsoftJson" Version="1.0.8" />
+        <PackageReference Include="ZEA.Serialization.NewtonsoftJson" Version="1.0.9" />
     </ItemGroup>
 
 </Project>
