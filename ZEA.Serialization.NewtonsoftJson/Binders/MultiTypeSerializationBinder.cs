@@ -27,7 +27,7 @@ public sealed class MultiTypeSerializationBinder : ISerializationBinder
 		Assembly[]? assemblies = null)
 	{
 		// If no assemblies are provided, scan all loaded assemblies in the current application domain.
-		assemblies = assemblies?.Length == 0 ? AppDomain.CurrentDomain.GetAssemblies() : assemblies;
+		assemblies = assemblies is { Length: > 0 } ? assemblies : AppDomain.CurrentDomain.GetAssemblies();
 
 		// Cache all types that implement the provided base types, ensuring they are neither interfaces nor abstract classes.
 		_typeCache = assemblies!
