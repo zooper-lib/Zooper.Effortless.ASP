@@ -67,3 +67,75 @@ This class is optimized for scenarios where types are well-known and implement o
 are ambiguous or prone to conflicts, additional strategies for disambiguation may be needed.
 Ensure that the type name is unique within the application domain, as only the name (and not the namespace or assembly)
 is used to identify types.
+
+## MultiTypeSerializationBinder
+
+### Overview
+
+The `MultiTypeSerializationBinder` is an extension of the `TypeSerializationBinder` designed to handle more complex
+scenarios where objects from multiple type hierarchies need to be serialized and deserialized. It allows you to provide
+multiple base types (or interfaces) across different assemblies, making it ideal for systems where different types, such
+as IEvent, IMetadata, etc., need to be handled simultaneously.
+
+Like the TypeSerializationBinder, this binder maps type names to their corresponding Type objects at runtime, ensuring
+flexibility in scenarios where assembly names or versions might differ.
+
+### Features
+
+- Multiple Base Types: Supports multiple base types or interfaces, allowing types from different hierarchies to be
+  serialized and deserialized.
+- Type Name-Based Serialization: Serializes objects by recording only their type names, ignoring assembly names and
+  versions.
+- Cross-Assembly Deserialization: Supports deserialization of objects based on their type name across multiple
+  assemblies,
+  making it possible to deserialize objects even if the assembly name or version has changed.
+- Automatic Type Caching: Automatically caches all types that implement or derive from the specified base types across
+  the
+  given assemblies.
+- Exception Handling: Provides clear exceptions when the specified type name cannot be found in the cache, aiding in
+  debugging serialization issues.
+
+### Example Usage
+
+```csharp
+// Create an instance of the binder for multiple base types (e.g., IEvent, IMetadata)
+var binder = new MultiTypeSerializationBinder(new[] { typeof(IEvent), typeof(IMetadata) });
+
+// Serializing an object
+var myObject = new MyConcreteEvent();
+var serializedData = JsonConvert.SerializeObject(myObject, new JsonSerializerSettings
+{
+    TypeNameHandling = TypeNameHandling.Objects,
+    SerializationBinder = binder
+});
+
+// Deserializing an object
+var deserializedObject = JsonConvert.DeserializeObject<IEvent>(serializedData, new JsonSerializerSettings
+{
+    TypeNameHandling = TypeNameHandling.Objects,
+    SerializationBinder = binder
+});
+```
+
+### Use Cases
+
+The `MultiTypeSerializationBinder` is particularly useful in:
+
+- Event Sourcing Systems: Where different event types and metadata need to be handled seamlessly across multiple
+  assemblies.
+- Distributed Systems: In scenarios where types from different type hierarchies (e.g., IEvent, IMetadata) are serialized
+  in one service and deserialized in another.
+- Versioned APIs: Useful for maintaining backward compatibility across different versions of your application, where
+  assembly names might change, but the core type structure remains the same.
+
+### Exception Handling
+
+If the BindToType method cannot find the type name in its cache, a TypeLoadException is thrown with a detailed message,
+making it easier to identify serialization and deserialization issues.
+
+### Considerations
+
+Ensure that the assemblies provided are properly loaded when instantiating the binder. If none are provided, it defaults
+to scanning all assemblies in the current application domain.
+Make sure that the type names are unique within the application domain, as only the name (and not the namespace or
+assembly) is used to identify types.
