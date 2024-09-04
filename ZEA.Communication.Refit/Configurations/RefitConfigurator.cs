@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Newtonsoft.Json;
 using Refit;
-using ZEA.Serialization.NewtonsoftJson;
+using ZEA.Serialization.NewtonsoftJson.Binders;
 
 namespace ZEA.Communication.Refit.Configurations;
 
