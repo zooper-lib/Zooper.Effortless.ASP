@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Serialization;
 
-namespace ZEA.Serialization.NewtonsoftJson;
+namespace ZEA.Serialization.NewtonsoftJson.Binders;
 
 public class KnownTypesBinder(IList<Type> knownTypes) : ISerializationBinder
 {
