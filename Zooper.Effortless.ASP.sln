@@ -6,10 +6,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Architecture", "Architectur
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{330BD57F-24D2-4006-B30B-C92E409D92A2}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CQRS", "CQRS", "{00977847-B4F7-4E0D-B061-9C1F9B28E85F}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Persistence", "Persistence", "{6235A14E-D4B3-475E-A913-286C50171DC5}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Communication", "Communication", "{76494949-86B3-4F74-A135-A9F66F4CBFAF}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serialization", "Serialization", "{C83B1152-7609-4166-A2C7-D25F22E1BDD9}"
@@ -68,6 +64,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.A
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Hexagonal", "ZEA.Architecture.Hexagonal\ZEA.Architecture.Hexagonal.csproj", "{B97A2AC5-EFFC-413B-935D-441B36FEF70B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes", "ZEA.Architecture.Patterns.StrongTypes\ZEA.Architecture.Patterns.StrongTypes.csproj", "{B825F283-FE80-4EE1-9037-04BC55889EE3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Validation.Abstractions", "ZEA.Validation.Abstractions\ZEA.Validation.Abstractions.csproj", "{AD247310-3227-492C-9E3A-3D830C505DBC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -98,6 +98,8 @@ Global
 		{BBF64021-15C3-465E-BA77-FC02B61F2342} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 		{60056376-6BB2-4D9D-B56E-2B2DA95FED46} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 		{B97A2AC5-EFFC-413B-935D-441B36FEF70B} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
+		{B825F283-FE80-4EE1-9037-04BC55889EE3} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
+		{AD247310-3227-492C-9E3A-3D830C505DBC} = {59B49CBD-4E45-435B-94E6-F82FA4D6F556}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{27B9FD97-4B7C-4005-A65F-67B82F186DD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -196,5 +198,13 @@ Global
 		{B97A2AC5-EFFC-413B-935D-441B36FEF70B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B97A2AC5-EFFC-413B-935D-441B36FEF70B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B97A2AC5-EFFC-413B-935D-441B36FEF70B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B825F283-FE80-4EE1-9037-04BC55889EE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B825F283-FE80-4EE1-9037-04BC55889EE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B825F283-FE80-4EE1-9037-04BC55889EE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B825F283-FE80-4EE1-9037-04BC55889EE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD247310-3227-492C-9E3A-3D830C505DBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD247310-3227-492C-9E3A-3D830C505DBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD247310-3227-492C-9E3A-3D830C505DBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD247310-3227-492C-9E3A-3D830C505DBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
