@@ -1,7 +1,7 @@
 ﻿namespace ZEA.Architecture.Patterns.StrongTypes.Interfaces;
 
 public abstract class StrongTypeClass<TValue, T>(TValue value)
-	where TValue : struct, IComparable<TValue>, IEquatable<TValue>
+	where TValue : IComparable<TValue>, IEquatable<TValue>
 	where T : StrongTypeClass<TValue, T>, new()
 {
 	// ReSharper disable once MemberCanBePrivate.Global
