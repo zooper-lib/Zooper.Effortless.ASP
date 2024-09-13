@@ -22,5 +22,9 @@
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.3.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj" />
+    </ItemGroup>
+
 
 </Project>

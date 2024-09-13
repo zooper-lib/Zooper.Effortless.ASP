@@ -7,12 +7,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj" />
         <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator\ZEA.Architecture.Patterns.StrongTypes.Generator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
     </ItemGroup>
 
     <ItemGroup>
         <None Remove="DDD.UbiquitousLanguageRegistry.txt"/>
         <AdditionalFiles Include="DDD.UbiquitousLanguageRegistry.txt"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+      <PackageReference Include="ZEA.Architecture.Patterns.StrongTypes" Version="1.0.3" />
     </ItemGroup>
 
 </Project>
