@@ -1,7 +1,7 @@
 trigger:
   paths:
     include:
-      - ZEA.Architecture.Patterns.StrongTypes.Generators/ZEA.Architecture.Patterns.StrongTypes.Generator/**
+      - ZEA.Architecture.Patterns.StrongTypes.Generators/**
   branches:
     include:
       - main
@@ -15,7 +15,7 @@ variables:
   buildConfiguration: 'Release'
   majorMinorVersion: 1.0
   semanticVersion: $[counter(variables['majorMinorVersion'], 0)]
-  projectName: ZEA.Architecture.Patterns.StrongTypes.Generators/ZEA.Architecture.Patterns.StrongTypes.Generator
+  projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
 
 name: $(majorMinorVersion).$(Rev:r)
 
