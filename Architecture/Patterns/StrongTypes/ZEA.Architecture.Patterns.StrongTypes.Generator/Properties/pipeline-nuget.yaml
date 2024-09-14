@@ -34,7 +34,7 @@ steps:
       packagesToPack: '**/${{ variables.projectName }}.csproj'
       versionSuffix: '${{ variables.semanticVersion }}'
       versioningScheme: byBuildNumber
-      includeReferencedProjects: true
+      includeReferencedProjects: false
       outputDir: '$(Build.ArtifactStagingDirectory)'
 
   - task: NuGetCommand@2

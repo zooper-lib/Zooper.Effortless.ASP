@@ -12,6 +12,8 @@
 
         <IsPackable>true</IsPackable>
         <PackageId>ZEA.Architecture.Patterns.StrongTypes.Generator</PackageId>
+
+        <IncludeProjectReferences>false</IncludeProjectReferences>
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,7 +26,15 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj" />
+        <Content Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\bin\$(Configuration)\$(TargetFramework)\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.dll">
+            <Pack>true</Pack>
+            <PackagePath>lib\$(TargetFramework)\</PackagePath>
+            <Visible>false</Visible>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj"/>
     </ItemGroup>
 
 
