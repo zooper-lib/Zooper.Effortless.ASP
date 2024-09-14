@@ -17,6 +17,7 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="ZEA.Architecture.Patterns.StrongTypes" Version="1.0.3" />
     </ItemGroup>
 
     <ItemGroup>
