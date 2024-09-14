@@ -10,6 +10,8 @@
         <IsRoslynComponent>true</IsRoslynComponent>
 
         <RootNamespace>ZEA.Architecture.Patterns.StrongTypes.Generator</RootNamespace>
+
+        <IsPackable>true</IsPackable>
         <PackageId>ZEA.Architecture.Patterns.StrongTypes.Generator</PackageId>
     </PropertyGroup>
 
