@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>ZEA.Architecture.Patterns.StrongTypes.Generator.Sample</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj"/>
+        <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator\ZEA.Architecture.Patterns.StrongTypes.Generator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Remove="DDD.UbiquitousLanguageRegistry.txt"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
+        <PackageReference Include="ZEA.Architecture.Patterns.StrongTypes" Version="1.0.3"/>
+        <PackageReference Include="ZEA.Serialization.Abstractions" Version="1.0.6"/>
+        <PackageReference Include="ZEA.Serialization.NewtonsoftJson" Version="1.0.14"/>
+    </ItemGroup>
+
+</Project>
