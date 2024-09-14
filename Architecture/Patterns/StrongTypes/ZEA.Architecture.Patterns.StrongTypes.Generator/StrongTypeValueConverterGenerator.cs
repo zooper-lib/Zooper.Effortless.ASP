@@ -327,7 +327,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		sourceBuilder.Append(
 			$$"""
 			  
-			      public sealed class {{recordName}}ValueConverter : ValueConverter<{{recordName}}, {{encapsulatedType}}>
+			      public partial class {{recordName}}ValueConverter : ValueConverter<{{recordName}}, {{encapsulatedType}}>
 			      {
 			          public {{recordName}}ValueConverter() 
 			              : base(e => e.Value, e => new {{recordName}}(e)) { }
@@ -347,7 +347,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		sourceBuilder.Append(
 			$$"""
 			  
-			      public sealed class {{recordName}}JsonConverter : {{baseConverter}}<{{recordName}}>
+			      public partial class {{recordName}}NewtonsoftJsonConverter : {{baseConverter}}<{{recordName}}>
 			      {
 			          protected override {{recordName}} CreateInstance({{encapsulatedType}} value) => new(value);
 			          protected override {{encapsulatedType}} GetValue({{recordName}} instance) => instance.Value;
@@ -366,7 +366,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		sourceBuilder.Append(
 			$$"""
 			  
-			      public sealed class {{recordName}}TypeConverter : TypeSafeConverter<{{recordName}}, {{encapsulatedType}}>
+			      public partial class {{recordName}}TypeConverter : TypeSafeConverter<{{recordName}}, {{encapsulatedType}}>
 			      {
 			          protected override {{recordName}} ConvertFromType({{encapsulatedType}} value) => {{recordName}}.Create(value);
 			          protected override {{encapsulatedType}} ConvertToType({{recordName}} value) => value.Value;

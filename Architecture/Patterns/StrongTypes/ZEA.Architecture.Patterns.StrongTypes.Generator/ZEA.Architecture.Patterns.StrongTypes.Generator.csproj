@@ -27,9 +27,11 @@
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" />
+        <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs">
+            <Visible>False</Visible>
+        </None>
     </ItemGroup>
-    
+
     <ItemGroup>
         <Content Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\bin\$(Configuration)\$(TargetFramework)\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.dll">
             <Pack>true</Pack>
