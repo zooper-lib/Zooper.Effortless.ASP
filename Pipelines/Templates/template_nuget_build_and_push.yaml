@@ -31,6 +31,7 @@ steps:
       versionSuffix: '${{ parameters.semanticVersion }}'
       versioningScheme: byBuildNumber
       includeReferencedProjects: true
+      outputDir: '$(Build.ArtifactStagingDirectory)'
 
   - task: NuGetCommand@2
     displayName: "Nuget push"
