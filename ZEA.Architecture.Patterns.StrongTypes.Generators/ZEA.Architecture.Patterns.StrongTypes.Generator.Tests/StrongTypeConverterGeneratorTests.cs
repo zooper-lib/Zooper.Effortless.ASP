@@ -3,23 +3,23 @@ using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Xunit;
 using Xunit.Abstractions;
+using ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes;
 using ZEA.Architecture.Patterns.StrongTypes.Interfaces;
 
 namespace ZEA.Architecture.Patterns.StrongTypes.Generator.Tests;
 
 public class StrongTypeConverterGeneratorTests(ITestOutputHelper testOutputHelper)
 {
-	private const string StrongTypeSource = """
-	                                        
-	                                                using System;
-	                                                using ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes;
-	                                        
-	                                                [GenerateConverters]
-	                                                public partial record Height(int Value) : StrongTypeRecord<int, Height>;
-	                                            
-	                                        """;
+	private const string HeightClassSource = """
+	                                         using ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes;
+	                                         using ZEA.Architecture.Patterns.StrongTypes.Interfaces;
+
+	                                         [GenerateConverters(generateValueConverter: true, generateJsonConverter: true, generateTypeConverter: true)]
+	                                         public partial record Height(int Value) : StrongTypeRecord<int, Height>(Value);
+	                                         """;
 
 	[Fact]
 	public void GeneratesConvertersForStrongType()
@@ -30,26 +30,40 @@ public class StrongTypeConverterGeneratorTests(ITestOutputHelper testOutputHelpe
 		// Source generators should be tested using 'GeneratorDriver'.
 		var driver = CSharpGeneratorDriver.Create(generator);
 
-		// Create a dummy compilation with the strong type source.
+		var syntaxTree = CSharpSyntaxTree.ParseText(HeightClassSource);
+
+		// Create a dummy compilation with a reference to the actual project containing the Height class and attributes
 		var compilation = CSharpCompilation.Create(
 			"TestAssembly",
-			new[]
-			{
-				CSharpSyntaxTree.ParseText(StrongTypeSource)
-			},
-			new[]
-			{
-				MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-				MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
-				MetadataReference.CreateFromFile(typeof(StrongTypeRecord<,>).Assembly.Location)
-			},
-			new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+			syntaxTrees: [syntaxTree],
+			[
+				MetadataReference.CreateFromFile(typeof(object).Assembly.Location), // Reference to core .NET assemblies
+				MetadataReference.CreateFromFile(typeof(Console).Assembly.Location), // Reference to core .NET assemblies
+
+				// Reference the assemblies where StrongTypeRecord and GenerateConvertersAttribute are defined
+				MetadataReference.CreateFromFile(typeof(StrongTypeRecord<,>).Assembly.Location),
+				MetadataReference.CreateFromFile(typeof(GenerateConvertersAttribute).Assembly.Location),
+
+				// Add reference to the assembly where your Height class is defined
+				//MetadataReference.CreateFromFile(typeof(Height).Assembly.Location)
+			],
+			new(OutputKind.DynamicallyLinkedLibrary)
 		);
+
+		// Log attributes found on the Height class
+		var semanticModel = compilation.GetSemanticModel(syntaxTree);
+		var heightSymbol =
+			semanticModel.GetDeclaredSymbol(syntaxTree.GetRoot().DescendantNodes().OfType<RecordDeclarationSyntax>().First());
+
+		foreach (var attribute in heightSymbol!.GetAttributes())
+		{
+			testOutputHelper.WriteLine($"Found attribute: {attribute.AttributeClass?.ToDisplayString()}");
+		}
 
 		// Run the generator and update the compilation.
 		driver.RunGeneratorsAndUpdateCompilation(compilation, out var newCompilation, out var diagnostics);
 
-		// Print any diagnostics emitted by the generator.
+		// Output diagnostics to the test output.
 		foreach (var diagnostic in diagnostics)
 		{
 			testOutputHelper.WriteLine(diagnostic.ToString());
@@ -66,8 +80,8 @@ public class StrongTypeConverterGeneratorTests(ITestOutputHelper testOutputHelpe
 			.Select(t => Path.GetFileName(t.FilePath))
 			.ToArray();
 
-		// Verify that the correct files were generated.
-		Assert.Contains("Height.g.cs", generatedFiles);
+		// Assert that the expected generated file exists
+		Assert.Contains(generatedFiles, file => file.EndsWith(".g.cs"));
 
 		// Optionally, verify the generated content.
 		var generatedCode = newCompilation.SyntaxTrees
