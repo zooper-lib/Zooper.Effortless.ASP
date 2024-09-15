@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
 
@@ -32,19 +32,19 @@
         </None>
     </ItemGroup>
 
-<!--    <ItemGroup>-->
-<!--        <Content Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\bin\$(Configuration)\$(TargetFramework)\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.dll">-->
-<!--            <Pack>true</Pack>-->
-<!--            <PackagePath>lib\$(TargetFramework)\</PackagePath>-->
-<!--            <Visible>False</Visible>-->
-<!--        </Content>-->
-<!--    </ItemGroup>-->
+    <!--    <ItemGroup>-->
+    <!--        <Content Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\bin\$(Configuration)\$(TargetFramework)\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.dll">-->
+    <!--            <Pack>true</Pack>-->
+    <!--            <PackagePath>lib\$(TargetFramework)\</PackagePath>-->
+    <!--            <Visible>False</Visible>-->
+    <!--        </Content>-->
+    <!--    </ItemGroup>-->
 
-<!--    <ItemGroup>-->
-<!--        <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj">-->
-<!--            <PrivateAssets>All</PrivateAssets>-->
-<!--            <IncludeAssets>None</IncludeAssets>-->
-<!--            <ExcludeAssets>All</ExcludeAssets>-->
-<!--        </ProjectReference>-->
-<!--    </ItemGroup>-->
+    <!--    <ItemGroup>-->
+    <!--        <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj">-->
+    <!--            <PrivateAssets>All</PrivateAssets>-->
+    <!--            <IncludeAssets>None</IncludeAssets>-->
+    <!--            <ExcludeAssets>All</ExcludeAssets>-->
+    <!--        </ProjectReference>-->
+    <!--    </ItemGroup>-->
 </Project>

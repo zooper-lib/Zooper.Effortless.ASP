@@ -4,12 +4,32 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using ZEA.Serialization.NewtonsoftJson.Converters;
 
 namespace ZEA.Architecture.Patterns.StrongTypes.Generator;
 
 [Generator]
-public class StrongTypeConverterGenerator : ISourceGenerator
+public sealed class StrongTypeConverterGenerator : ISourceGenerator
 {
+	private readonly static Dictionary<SpecialType, Type> ConverterTypeMap = new()
+	{
+		{
+			SpecialType.System_Int32, typeof(IntJsonConverter<>)
+		},
+		{
+			SpecialType.System_Int64, typeof(LongJsonConverter<>)
+		},
+		{
+			SpecialType.System_Double, typeof(DoubleJsonConverter<>)
+		},
+		{
+			SpecialType.System_String, typeof(StringJsonConverter<>)
+		},
+		{
+			SpecialType.System_Boolean, typeof(BoolJsonConverter<>)
+		}
+	};
+
 	public void Initialize(GeneratorInitializationContext context)
 	{
 		context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
@@ -176,7 +196,13 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 				)
 			);
 
-			var generatedSource = GenerateConvertersClass(symbol, generateValueConverter, generateJsonConverter, generateTypeConverter);
+			var generatedSource = GenerateConvertersClass(
+				symbol,
+				generateValueConverter,
+				generateJsonConverter,
+				generateTypeConverter,
+				context
+			);
 			context.AddSource($"{symbol.Name}.g.cs", generatedSource);
 		}
 	}
@@ -273,11 +299,12 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		INamedTypeSymbol recordSymbol,
 		bool generateValueConverter,
 		bool generateJsonConverter,
-		bool generateTypeConverter)
+		bool generateTypeConverter,
+		GeneratorExecutionContext context)
 	{
 		var recordName = recordSymbol.Name;
 		var encapsulatedType = GetEncapsulatedType(recordSymbol);
-		var baseConverter = GetBaseJsonConverterType(encapsulatedType);
+		var baseConverter = GetBaseJsonConverterType(encapsulatedType, context.Compilation);
 		var namespaceName = recordSymbol.ContainingNamespace.ToDisplayString();
 
 		var sourceBuilder = new StringBuilder(
@@ -294,7 +321,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 			  public partial record {{recordName}}
 			  {
 			      // Automatically generated static Create method
-			      public static {{recordName}} Create({{encapsulatedType}} value) => new(value);
+			      public static {{recordName}} Create({{encapsulatedType.ToDisplayString()}} value) => new(value);
 			      
 			  """
 		);
@@ -321,7 +348,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 	// Append the ValueConverter code
 	private static void AppendValueConverter(
 		string recordName,
-		string encapsulatedType,
+		ITypeSymbol encapsulatedType,
 		StringBuilder sourceBuilder)
 	{
 		sourceBuilder.Append(
@@ -340,8 +367,8 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 	// Append the JsonConverter code based on the encapsulated type
 	private static void AppendJsonConverter(
 		string recordName,
-		string encapsulatedType,
-		string baseConverter,
+		ITypeSymbol encapsulatedType,
+		INamedTypeSymbol baseConverter,
 		StringBuilder sourceBuilder)
 	{
 		sourceBuilder.Append(
@@ -360,7 +387,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 	// Append the TypeConverter code with correct inheritance from TypeSafeConverter
 	private static void AppendTypeConverter(
 		string recordName,
-		string encapsulatedType,
+		ITypeSymbol encapsulatedType,
 		StringBuilder sourceBuilder)
 	{
 		sourceBuilder.Append(
@@ -377,24 +404,114 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 	}
 
 	// Get the encapsulated type from the StrongTypeRecord or StrongTypeClass
-	private static string GetEncapsulatedType(INamedTypeSymbol recordSymbol)
+	private static ITypeSymbol GetEncapsulatedType(INamedTypeSymbol recordSymbol)
 	{
-		var baseType = recordSymbol.BaseType;
-		return baseType is { TypeArguments.Length: > 0 }
-			? baseType.TypeArguments[0].ToDisplayString()
-			: "int"; // Fallback if the encapsulated type can't be determined
+		var baseType = recordSymbol.BaseType ??
+		               throw new InvalidOperationException($"Record {recordSymbol.Name} does not have a base type.");
+
+		if (baseType.TypeArguments.Length > 0)
+		{
+			return baseType.TypeArguments[0];
+		}
+
+		throw new InvalidOperationException($"Could not determine encapsulated type for {recordSymbol.Name}");
 	}
 
-	// Determine the appropriate base JsonConverter based on the encapsulated type
-	private static string GetBaseJsonConverterType(string encapsulatedType)
+	private static INamedTypeSymbol GetConverterTypeSymbol(Compilation compilation, Type converterGenericType)
 	{
-		return encapsulatedType switch
+		var converterTypeName = converterGenericType.FullName;
+
+		if (converterGenericType.IsGenericTypeDefinition)
 		{
-			"int" => "IntJsonConverter",
-			"double" => "DoubleJsonConverter",
-			"DateTime" => "DateTimeJsonConverter",
-			_ => throw new InvalidOperationException($"No JsonConverter defined for type {encapsulatedType}")
-		};
+			// Handle generic type definition (e.g., IntJsonConverter<>)
+			var backtickIndex = converterTypeName.IndexOf('`');
+			if (backtickIndex > 0)
+			{
+				converterTypeName = converterTypeName.Substring(0, backtickIndex);
+			}
+		}
+
+		converterTypeName = converterTypeName.Replace('+', '.'); // Handle nested types if needed
+
+		// Get the type symbol from the compilation
+		var converterTypeSymbol = compilation.GetTypeByMetadataName(converterTypeName);
+		if (converterTypeSymbol == null)
+		{
+			throw new InvalidOperationException($"Converter type {converterTypeName} not found in the compilation.");
+		}
+
+		return converterTypeSymbol;
+	}
+
+	private static INamedTypeSymbol? GetConverterForSpecialType(ITypeSymbol encapsulatedType, Compilation compilation)
+	{
+		if (ConverterTypeMap.TryGetValue(encapsulatedType.SpecialType, out var converterType))
+		{
+			return GetConverterTypeSymbol(compilation, converterType);
+		}
+
+		return null; // Type not found in the map
+	}
+
+	private static INamedTypeSymbol GetBaseJsonConverterType(
+		ITypeSymbol encapsulatedType,
+		Compilation compilation)
+	{
+		// Handle nullable types
+		if (encapsulatedType is INamedTypeSymbol
+		    {
+			    IsGenericType: true, OriginalDefinition.SpecialType: SpecialType.System_Nullable_T
+		    } namedTypeSymbol)
+		{
+			encapsulatedType = namedTypeSymbol.TypeArguments[0];
+		}
+
+		INamedTypeSymbol? converterTypeSymbol = null;
+
+		// Obtain type symbols for types not covered by SpecialType
+		var guidType = compilation.GetTypeByMetadataName("System.Guid");
+		var dateTimeOffsetType = compilation.GetTypeByMetadataName("System.DateTimeOffset");
+		var uint16Type = compilation.GetTypeByMetadataName("System.UInt16");
+		var uint32Type = compilation.GetTypeByMetadataName("System.UInt32");
+		var uint64Type = compilation.GetTypeByMetadataName("System.UInt64");
+
+		// Map types to converter type symbols
+		if (SymbolEqualityComparer.Default.Equals(encapsulatedType, guidType))
+		{
+			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(GuidJsonConverter<>));
+		}
+		else if (SymbolEqualityComparer.Default.Equals(encapsulatedType, dateTimeOffsetType))
+		{
+			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(DateTimeOffsetJsonConverter<>));
+		}
+		else if (SymbolEqualityComparer.Default.Equals(encapsulatedType, uint16Type))
+		{
+			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(UInt16JsonConverter<>));
+		}
+		else if (SymbolEqualityComparer.Default.Equals(encapsulatedType, uint32Type))
+		{
+			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(UInt32JsonConverter<>));
+		}
+		else if (SymbolEqualityComparer.Default.Equals(encapsulatedType, uint64Type))
+		{
+			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(UInt64JsonConverter<>));
+		}
+		else if (encapsulatedType.TypeKind == TypeKind.Enum)
+		{
+			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(EnumJsonConverter<>));
+		}
+		else
+		{
+			// Handle types covered by SpecialType
+			converterTypeSymbol = GetConverterForSpecialType(encapsulatedType, compilation);
+		}
+
+		if (converterTypeSymbol == null)
+		{
+			throw new InvalidOperationException($"No JsonConverter defined for type {encapsulatedType.ToDisplayString()}");
+		}
+
+		return converterTypeSymbol;
 	}
 
 	// Syntax receiver to collect record declarations that have the GenerateConverters attribute

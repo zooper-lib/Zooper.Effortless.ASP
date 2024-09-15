@@ -18,7 +18,7 @@ public class StrongTypeConverterGeneratorTests(ITestOutputHelper testOutputHelpe
 	                                         using ZEA.Architecture.Patterns.StrongTypes.Interfaces;
 
 	                                         [GenerateConverters(generateValueConverter: true, generateJsonConverter: true, generateTypeConverter: true)]
-	                                         public partial record Height(int Value) : StrongTypeRecord<int, Height>(Value);
+	                                         public partial record IntStrongType(int Value) : StrongTypeRecord<int, IntStrongType>(Value);
 	                                         """;
 
 	//[Fact]
@@ -32,7 +32,7 @@ public class StrongTypeConverterGeneratorTests(ITestOutputHelper testOutputHelpe
 
 		var syntaxTree = CSharpSyntaxTree.ParseText(HeightClassSource);
 
-		// Create a dummy compilation with a reference to the actual project containing the Height class and attributes
+		// Create a dummy compilation with a reference to the actual project containing the IntStrongType class and attributes
 		var compilation = CSharpCompilation.Create(
 			"TestAssembly",
 			syntaxTrees: [syntaxTree],
@@ -44,13 +44,13 @@ public class StrongTypeConverterGeneratorTests(ITestOutputHelper testOutputHelpe
 				MetadataReference.CreateFromFile(typeof(StrongTypeRecord<,>).Assembly.Location),
 				MetadataReference.CreateFromFile(typeof(GenerateConvertersAttribute).Assembly.Location),
 
-				// Add reference to the assembly where your Height class is defined
-				//MetadataReference.CreateFromFile(typeof(Height).Assembly.Location)
+				// Add reference to the assembly where your IntStrongType class is defined
+				//MetadataReference.CreateFromFile(typeof(IntStrongType).Assembly.Location)
 			],
 			new(OutputKind.DynamicallyLinkedLibrary)
 		);
 
-		// Log attributes found on the Height class
+		// Log attributes found on the IntStrongType class
 		var semanticModel = compilation.GetSemanticModel(syntaxTree);
 		var heightSymbol =
 			semanticModel.GetDeclaredSymbol(syntaxTree.GetRoot().DescendantNodes().OfType<RecordDeclarationSyntax>().First());
@@ -85,7 +85,7 @@ public class StrongTypeConverterGeneratorTests(ITestOutputHelper testOutputHelpe
 
 		// Optionally, verify the generated content.
 		var generatedCode = newCompilation.SyntaxTrees
-			.FirstOrDefault(t => t.FilePath.EndsWith("Height.g.cs"))
+			.FirstOrDefault(t => t.FilePath.EndsWith("IntStrongType.g.cs"))
 			?.ToString();
 
 		Assert.NotNull(generatedCode);

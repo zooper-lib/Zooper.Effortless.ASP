@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\..\Serialization\ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj" />
+        <ProjectReference Include="..\..\..\..\Serialization\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj" />
         <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator\ZEA.Architecture.Patterns.StrongTypes.Generator.csproj"
                           OutputItemType="Analyzer"/>
     </ItemGroup>
