@@ -47,4 +47,16 @@
     <!--            <ExcludeAssets>All</ExcludeAssets>-->
     <!--        </ProjectReference>-->
     <!--    </ItemGroup>-->
+
+    <ItemGroup>
+        <Content Include="..\..\..\..\Serialization\ZEA.Serialization.NewtonsoftJson\bin\$(Configuration)\$(TargetFramework)\ZEA.Serialization.NewtonsoftJson.dll">
+            <Pack>true</Pack>
+            <PackagePath>lib\$(TargetFramework)\</PackagePath>
+            <Visible>False</Visible>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\..\Serialization\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj"/>
+    </ItemGroup>
 </Project>

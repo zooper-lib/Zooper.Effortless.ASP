@@ -8,26 +8,26 @@
 /// <typeparam name="T">The type of the derived class itself, used for enforcing the strong type pattern.</typeparam>
 public abstract class StrongTypeClass<TValue, T>(TValue value)
 	where TValue : IEquatable<TValue>
-	where T : StrongTypeClass<TValue, T>, new()
+	where T : StrongTypeClass<TValue, T>
 {
 	/// <summary>
 	/// Gets the encapsulated value.
 	/// </summary>
 	// ReSharper disable once MemberCanBeProtected.Global
-	public TValue Value { get; private init; } = value;
+	public TValue Value { get; } = value;
 
 	/// <summary>
-	/// Creates an instance of the strong type by calling the default constructor.
+	/// Creates a new instance of the strong type by invoking the provided constructor.
 	/// </summary>
-	/// <param name="value">The value to encapsulate.</param>
-	/// <returns>A new instance of the strong type <typeparamref name="T"/> encapsulating <paramref name="value"/>.</returns>
+	/// <param name="value">The value to encapsulate in the strong type.</param>
+	/// <param name="constructor">A delegate that constructs the specific type <typeparamref name="T"/>.</param>
+	/// <returns>A new instance of <typeparamref name="T"/> encapsulating the provided <paramref name="value"/>.</returns>
 	// ReSharper disable once UnusedMember.Global
-	public static T Create(TValue value)
+	protected static T Create(
+		TValue value,
+		Func<TValue, T> constructor)
 	{
-		return new T
-		{
-			Value = value
-		};
+		return constructor(value);
 	}
 
 	/// <inheritdoc />

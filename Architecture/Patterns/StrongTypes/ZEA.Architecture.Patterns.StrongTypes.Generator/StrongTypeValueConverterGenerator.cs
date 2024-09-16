@@ -4,220 +4,132 @@ using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using ZEA.Serialization.NewtonsoftJson.Converters;
 
 namespace ZEA.Architecture.Patterns.StrongTypes.Generator;
 
 [Generator]
-public sealed class StrongTypeConverterGenerator : ISourceGenerator
+public class StrongTypeConverterGenerator : ISourceGenerator
 {
-	private readonly static Dictionary<SpecialType, Type> ConverterTypeMap = new()
-	{
-		{
-			SpecialType.System_Int32, typeof(IntJsonConverter<>)
-		},
-		{
-			SpecialType.System_Int64, typeof(LongJsonConverter<>)
-		},
-		{
-			SpecialType.System_Double, typeof(DoubleJsonConverter<>)
-		},
-		{
-			SpecialType.System_String, typeof(StringJsonConverter<>)
-		},
-		{
-			SpecialType.System_Boolean, typeof(BoolJsonConverter<>)
-		}
-	};
-
 	public void Initialize(GeneratorInitializationContext context)
 	{
+		// Register a syntax receiver that will be created for each generation pass
 		context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
 	}
 
 	public void Execute(GeneratorExecutionContext context)
 	{
-		context.ReportDiagnostic(
-			Diagnostic.Create(
-				new(
-					"GEN001",
-					"Generator Debug",
-					"Source generator running",
-					"Generator",
-					DiagnosticSeverity.Info,
-					true
-				),
-				Location.None
-			)
-		);
-
 		if (context.SyntaxReceiver is not SyntaxReceiver receiver)
 		{
-			context.ReportDiagnostic(
-				Diagnostic.Create(
-					new(
-						"GEN002",
-						"Generator Debug",
-						"Syntax receiver is null",
-						"Generator",
-						DiagnosticSeverity.Warning,
-						true
-					),
-					Location.None
-				)
-			);
-
 			return;
 		}
 
-		if (receiver.CandidateRecords.Count == 0)
+		if (receiver.CandidateTypes.Count == 0)
 		{
-			context.ReportDiagnostic(
-				Diagnostic.Create(
-					new(
-						"GEN002",
-						"Generator Debug",
-						"Syntax receiver has no candidate records",
-						"Generator",
-						DiagnosticSeverity.Warning,
-						true
-					),
-					Location.None
-				)
-			);
-
 			return;
 		}
 
-		foreach (var recordDeclaration in receiver.CandidateRecords)
-		{
-			context.ReportDiagnostic(
-				Diagnostic.Create(
-					new(
-						"GEN003",
-						"Generator Debug",
-						"Record found",
-						"Generator",
-						DiagnosticSeverity.Info,
-						true
-					),
-					Location.None
-				)
-			);
+		// Retrieve the GenerateConvertersAttribute symbol using the corrected helper method
+		var generateConvertersAttributeSymbol = FindTypeByName(context.Compilation, "GenerateConvertersAttribute");
 
+		if (generateConvertersAttributeSymbol == null)
+		{
+			context.ReportDiagnostic(DiagnosticDescriptors.GenerateConvertersAttributeNotFound);
+			return;
+		}
+
+		// Retrieve symbols for StrongTypeRecord and StrongTypeClass using the corrected helper method
+		var strongTypeRecordSymbol = FindTypeByName(context.Compilation, "StrongTypeRecord");
+		var strongTypeClassSymbol = FindTypeByName(context.Compilation, "StrongTypeClass");
+
+		if (strongTypeRecordSymbol == null && strongTypeClassSymbol == null)
+		{
+			context.ReportDiagnostic(DiagnosticDescriptors.BaseClassNotFound);
+			return;
+		}
+
+		foreach (var recordDeclaration in receiver.CandidateTypes)
+		{
 			var semanticModel = context.Compilation.GetSemanticModel(recordDeclaration.SyntaxTree);
 
 			if (semanticModel.GetDeclaredSymbol(recordDeclaration) is not INamedTypeSymbol symbol)
 			{
-				context.ReportDiagnostic(
-					Diagnostic.Create(
-						new(
-							"GEN002",
-							"Generator Debug",
-							"Record symbol could not be determined",
-							"Generator",
-							DiagnosticSeverity.Warning,
-							true
-						),
-						Location.None
-					)
-				);
+				context.ReportDiagnostic(DiagnosticDescriptors.SymbolCannotBeDetermined);
 				continue;
 			}
 
-			context.ReportDiagnostic(
-				Diagnostic.Create(
-					new(
-						"GEN003",
-						"Generator Debug",
-						$"Found record: {symbol.Name}",
-						"Generator",
-						DiagnosticSeverity.Info,
-						true
-					),
-					Location.None
-				)
-			);
-
 			// Ensure the class inherits from StrongTypeRecord or StrongTypeClass
-			if (!InheritsFromStrongType(symbol))
+			if (!InheritsFromStrongType(symbol, strongTypeRecordSymbol, strongTypeClassSymbol))
 			{
-				context.ReportDiagnostic(
-					Diagnostic.Create(
-						new(
-							"GEN002",
-							"Generator Debug",
-							$"{symbol.Name} does not inherit from StrongTypeRecord or StrongTypeClass",
-							"Generator",
-							DiagnosticSeverity.Warning,
-							true
-						),
-						Location.None
-					)
-				);
+				context.ReportDiagnostic(DiagnosticDescriptors.StrongTypeMustExtendBaseClass);
 				continue;
 			}
 
 			if (!TryGetConvertersFromAttribute(
 				    symbol,
-				    context,
+				    generateConvertersAttributeSymbol,
 				    out var generateValueConverter,
 				    out var generateJsonConverter,
 				    out var generateTypeConverter
 			    ))
 			{
-				context.ReportDiagnostic(
-					Diagnostic.Create(
-						new(
-							"GEN006",
-							"Generator Debug",
-							$"{symbol.Name} does not have GenerateConverters attribute",
-							"Generator",
-							DiagnosticSeverity.Warning,
-							true
-						),
-						Location.None
-					)
-				);
+				context.ReportDiagnostic(DiagnosticDescriptors.GenerateConvertersAttributeNotFound);
 				continue;
 			}
 
-			context.ReportDiagnostic(
-				Diagnostic.Create(
-					new(
-						"GEN003",
-						"Generator Debug",
-						$"Generating converters for {symbol.Name}",
-						"Generator",
-						DiagnosticSeverity.Info,
-						true
-					),
-					Location.None
-				)
-			);
-
-			var generatedSource = GenerateConvertersClass(
-				symbol,
-				generateValueConverter,
-				generateJsonConverter,
-				generateTypeConverter,
-				context
-			);
+			var generatedSource = GenerateConvertersClass(symbol, generateValueConverter, generateJsonConverter, generateTypeConverter);
 			context.AddSource($"{symbol.Name}.g.cs", generatedSource);
 		}
 	}
 
+	/// <summary>
+	/// Recursively searches the global namespace for a type with the specified name.
+	/// </summary>
+	private static INamedTypeSymbol? FindTypeByName(
+		Compilation compilation,
+		string typeName)
+	{
+		var globalNamespace = compilation.GlobalNamespace;
+		var queue = new Queue<INamespaceSymbol>();
+		queue.Enqueue(globalNamespace);
+
+		while (queue.Count > 0)
+		{
+			var currentNamespace = queue.Dequeue();
+
+			foreach (var member in currentNamespace.GetMembers())
+			{
+				switch (member)
+				{
+					case INamespaceSymbol namespaceMember:
+						queue.Enqueue(namespaceMember);
+						break;
+					case INamedTypeSymbol typeMember when typeMember.Name == typeName:
+						return typeMember;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	// Ensure the class inherits from StrongTypeRecord or StrongTypeClass
-	private static bool InheritsFromStrongType(INamedTypeSymbol symbol)
+	private static bool InheritsFromStrongType(
+		INamedTypeSymbol symbol,
+		INamedTypeSymbol? strongTypeRecordSymbol,
+		INamedTypeSymbol? strongTypeClassSymbol)
 	{
 		var baseType = symbol.BaseType;
 
 		while (baseType != null)
 		{
-			if (baseType.Name is "StrongTypeRecord" or "StrongTypeClass")
-			{
+			// Get the original definition if the base type is generic
+			var baseTypeDefinition = baseType.IsGenericType ? baseType.OriginalDefinition : baseType;
+
+			if (strongTypeRecordSymbol != null && SymbolEqualityComparer.Default.Equals(baseTypeDefinition, strongTypeRecordSymbol))
 				return true;
-			}
+
+			if (strongTypeClassSymbol != null && SymbolEqualityComparer.Default.Equals(baseTypeDefinition, strongTypeClassSymbol))
+				return true;
 
 			baseType = baseType.BaseType;
 		}
@@ -228,7 +140,7 @@ public sealed class StrongTypeConverterGenerator : ISourceGenerator
 	// Extract converter options from the GenerateConvertersAttribute
 	private static bool TryGetConvertersFromAttribute(
 		INamedTypeSymbol symbol,
-		GeneratorExecutionContext context,
+		INamedTypeSymbol generateConvertersAttributeSymbol,
 		out bool generateValueConverter,
 		out bool generateJsonConverter,
 		out bool generateTypeConverter)
@@ -237,58 +149,15 @@ public sealed class StrongTypeConverterGenerator : ISourceGenerator
 		generateJsonConverter = false;
 		generateTypeConverter = false;
 
-		// Get the symbol of the GenerateConvertersAttribute from the entire compilation
-		var generateConvertersAttributeSymbol = context.Compilation.GetTypeByMetadataName(
-			"ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.GenerateConvertersAttribute"
-		);
-
-		if (generateConvertersAttributeSymbol == null)
+		foreach (var attribute in symbol.GetAttributes()
+			         .Where(attribute => SymbolEqualityComparer.Default.Equals(attribute.AttributeClass, generateConvertersAttributeSymbol))
+			         .Where(attribute => attribute.ConstructorArguments.Length == 3))
 		{
-			context.ReportDiagnostic(
-				Diagnostic.Create(
-					new(
-						"GEN002",
-						"Generator Debug",
-						"GenerateConvertersAttribute not found",
-						"Generator",
-						DiagnosticSeverity.Warning,
-						true
-					),
-					Location.None
-				)
-			);
+			generateValueConverter = attribute.ConstructorArguments[0].Value is true;
+			generateJsonConverter = attribute.ConstructorArguments[1].Value is true;
+			generateTypeConverter = attribute.ConstructorArguments[2].Value is true;
 
-			return false; // Attribute not found
-		}
-
-		// Perform the actual comparison using SymbolEqualityComparer
-		foreach (var attribute in symbol.GetAttributes())
-		{
-			var attributeName = attribute.AttributeClass?.ToDisplayString();
-			var expectedName = generateConvertersAttributeSymbol.ToDisplayString();
-
-			context.ReportDiagnostic(
-				Diagnostic.Create(
-					new DiagnosticDescriptor(
-						"GEN008",
-						"Generator Debug",
-						$"Comparing attribute: {attributeName} with expected: {expectedName}",
-						"Generator",
-						DiagnosticSeverity.Info,
-						true
-					),
-					Location.None
-				)
-			);
-
-			if (attributeName == expectedName && attribute.ConstructorArguments.Length == 3)
-			{
-				generateValueConverter = attribute.ConstructorArguments[0].Value as bool? ?? false;
-				generateJsonConverter = attribute.ConstructorArguments[1].Value as bool? ?? false;
-				generateTypeConverter = attribute.ConstructorArguments[2].Value as bool? ?? false;
-
-				return true; // Return if the attribute was successfully matched and processed
-			}
+			return true;
 		}
 
 		return false;
@@ -296,239 +165,175 @@ public sealed class StrongTypeConverterGenerator : ISourceGenerator
 
 	// Generate the selected converters
 	private static string GenerateConvertersClass(
-		INamedTypeSymbol recordSymbol,
+		INamedTypeSymbol typeSymbol,
 		bool generateValueConverter,
 		bool generateJsonConverter,
-		bool generateTypeConverter,
-		GeneratorExecutionContext context)
+		bool generateTypeConverter)
 	{
-		var recordName = recordSymbol.Name;
-		var encapsulatedType = GetEncapsulatedType(recordSymbol);
-		var baseConverter = GetBaseJsonConverterType(encapsulatedType, context.Compilation);
-		var namespaceName = recordSymbol.ContainingNamespace.ToDisplayString();
+		var typeName = typeSymbol.Name;
+		var encapsulatedType = GetEncapsulatedType(typeSymbol);
+		var baseConverter = GetBaseJsonConverterType(encapsulatedType);
+		var namespaceName = typeSymbol.ContainingNamespace.IsGlobalNamespace ? null : typeSymbol.ContainingNamespace.ToDisplayString();
 
-		var sourceBuilder = new StringBuilder(
+		var typeKind = typeSymbol.IsRecord ? "record" : "class";
+
+		var sourceBuilder = new StringBuilder();
+
+		// Write the usings
+		sourceBuilder.AppendLine(
+			"""
+			using System;
+			using System.ComponentModel;
+			using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+			using Newtonsoft.Json;
+			using ZEA.Serialization.Abstractions.Interfaces;
+			using ZEA.Serialization.NewtonsoftJson.Converters;
+			"""
+		);
+
+		// Write namespace if applicable
+		if (!string.IsNullOrEmpty(namespaceName))
+		{
+			sourceBuilder.AppendLine();
+			sourceBuilder.AppendLine($"namespace {namespaceName};");
+		}
+
+		// Write the record declaration
+		sourceBuilder.AppendLine();
+		sourceBuilder.AppendLine(
 			$$"""
-			  using System;
-			  using System.ComponentModel;
-			  using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-			  using Newtonsoft.Json;
-			  using ZEA.Serialization.Abstractions.Interfaces;
-			  using ZEA.Serialization.NewtonsoftJson.Converters;
-
-			  namespace {{namespaceName}};
-
-			  public partial record {{recordName}}
+			  public partial {{typeKind}} {{typeName}}
 			  {
 			      // Automatically generated static Create method
-			      public static {{recordName}} Create({{encapsulatedType.ToDisplayString()}} value) => new(value);
-			      
+			      public static {{typeName}} Create({{encapsulatedType}} value) => new(value);
 			  """
 		);
 
 		if (generateValueConverter)
 		{
-			AppendValueConverter(recordName, encapsulatedType, sourceBuilder);
+			AppendValueConverter(typeName, encapsulatedType, sourceBuilder);
 		}
 
 		if (generateJsonConverter)
 		{
-			AppendJsonConverter(recordName, encapsulatedType, baseConverter, sourceBuilder);
+			AppendJsonConverter(typeName, encapsulatedType, baseConverter, sourceBuilder);
 		}
 
 		if (generateTypeConverter)
 		{
-			AppendTypeConverter(recordName, encapsulatedType, sourceBuilder);
+			AppendTypeConverter(typeName, encapsulatedType, sourceBuilder);
 		}
 
-		sourceBuilder.Append("}\n");
+		sourceBuilder.Append('}');
 		return sourceBuilder.ToString();
 	}
 
 	// Append the ValueConverter code
 	private static void AppendValueConverter(
 		string recordName,
-		ITypeSymbol encapsulatedType,
+		string encapsulatedType,
 		StringBuilder sourceBuilder)
 	{
-		sourceBuilder.Append(
+		sourceBuilder.AppendLine();
+		sourceBuilder.AppendLine(
 			$$"""
-			  
 			      partial class {{recordName}}ValueConverter : ValueConverter<{{recordName}}, {{encapsulatedType}}>
 			      {
 			          public {{recordName}}ValueConverter() 
 			              : base(e => e.Value, e => new {{recordName}}(e)) { }
 			      }
-
 			  """
 		);
 	}
 
-	// Append the JsonConverter code based on the encapsulated type
+	/// <summary>
+	/// Appends the TypeConverter code to the source builder.
+	/// <param name="recordName">The records name</param>
+	/// </summary>
 	private static void AppendJsonConverter(
 		string recordName,
-		ITypeSymbol encapsulatedType,
-		INamedTypeSymbol baseConverter,
+		string encapsulatedType,
+		string baseConverter,
 		StringBuilder sourceBuilder)
 	{
-		sourceBuilder.Append(
+		sourceBuilder.AppendLine();
+		sourceBuilder.AppendLine(
 			$$"""
-			  
 			      partial class {{recordName}}NewtonsoftJsonConverter : {{baseConverter}}<{{recordName}}>
 			      {
 			          protected override {{recordName}} CreateInstance({{encapsulatedType}} value) => new(value);
 			          protected override {{encapsulatedType}} GetValue({{recordName}} instance) => instance.Value;
 			      }
-
 			  """
 		);
 	}
 
-	// Append the TypeConverter code with correct inheritance from TypeSafeConverter
+	/// <summary>
+	/// Appends the TypeConverter code to the source builder.
+	/// </summary>
+	/// <param name="recordName">The name of the record.</param>
+	/// <param name="encapsulatedType">The type encapsulated by the record.</param>
+	/// <param name="sourceBuilder">The StringBuilder to append the code to.</param>
 	private static void AppendTypeConverter(
 		string recordName,
-		ITypeSymbol encapsulatedType,
+		string encapsulatedType,
 		StringBuilder sourceBuilder)
 	{
-		sourceBuilder.Append(
+		sourceBuilder.AppendLine();
+		sourceBuilder.AppendLine(
 			$$"""
-			  
 			      partial class {{recordName}}TypeConverter : TypeSafeConverter<{{recordName}}, {{encapsulatedType}}>
 			      {
 			          protected override {{recordName}} ConvertFromType({{encapsulatedType}} value) => {{recordName}}.Create(value);
 			          protected override {{encapsulatedType}} ConvertToType({{recordName}} value) => value.Value;
 			      }
-
 			  """
 		);
 	}
 
-	// Get the encapsulated type from the StrongTypeRecord or StrongTypeClass
-	private static ITypeSymbol GetEncapsulatedType(INamedTypeSymbol recordSymbol)
+	/// <summary>
+	/// Retrieves the encapsulated type from the StrongTypeRecord or StrongTypeClass.
+	/// </summary>
+	private static string GetEncapsulatedType(INamedTypeSymbol recordSymbol)
 	{
-		var baseType = recordSymbol.BaseType ??
-		               throw new InvalidOperationException($"Record {recordSymbol.Name} does not have a base type.");
-
-		if (baseType.TypeArguments.Length > 0)
-		{
-			return baseType.TypeArguments[0];
-		}
-
-		throw new InvalidOperationException($"Could not determine encapsulated type for {recordSymbol.Name}");
+		var baseType = recordSymbol.BaseType;
+		return baseType is { TypeArguments.Length: > 0 }
+			? baseType.TypeArguments[0].ToDisplayString()
+			: "int"; // Fallback if the encapsulated type can't be determined
 	}
 
-	private static INamedTypeSymbol GetConverterTypeSymbol(Compilation compilation, Type converterGenericType)
+	// Determine the appropriate base JsonConverter based on the encapsulated type
+	private static string GetBaseJsonConverterType(string encapsulatedType)
 	{
-		var converterTypeName = converterGenericType.FullName;
-
-		if (converterGenericType.IsGenericTypeDefinition)
+		return encapsulatedType switch
 		{
-			// Handle generic type definition (e.g., IntJsonConverter<>)
-			var backtickIndex = converterTypeName.IndexOf('`');
-			if (backtickIndex > 0)
-			{
-				converterTypeName = converterTypeName.Substring(0, backtickIndex);
-			}
-		}
-
-		converterTypeName = converterTypeName.Replace('+', '.'); // Handle nested types if needed
-
-		// Get the type symbol from the compilation
-		var converterTypeSymbol = compilation.GetTypeByMetadataName(converterTypeName);
-		if (converterTypeSymbol == null)
-		{
-			throw new InvalidOperationException($"Converter type {converterTypeName} not found in the compilation.");
-		}
-
-		return converterTypeSymbol;
-	}
-
-	private static INamedTypeSymbol? GetConverterForSpecialType(ITypeSymbol encapsulatedType, Compilation compilation)
-	{
-		if (ConverterTypeMap.TryGetValue(encapsulatedType.SpecialType, out var converterType))
-		{
-			return GetConverterTypeSymbol(compilation, converterType);
-		}
-
-		return null; // Type not found in the map
-	}
-
-	private static INamedTypeSymbol GetBaseJsonConverterType(
-		ITypeSymbol encapsulatedType,
-		Compilation compilation)
-	{
-		// Handle nullable types
-		if (encapsulatedType is INamedTypeSymbol
-		    {
-			    IsGenericType: true, OriginalDefinition.SpecialType: SpecialType.System_Nullable_T
-		    } namedTypeSymbol)
-		{
-			encapsulatedType = namedTypeSymbol.TypeArguments[0];
-		}
-
-		INamedTypeSymbol? converterTypeSymbol = null;
-
-		// Obtain type symbols for types not covered by SpecialType
-		var guidType = compilation.GetTypeByMetadataName("System.Guid");
-		var dateTimeOffsetType = compilation.GetTypeByMetadataName("System.DateTimeOffset");
-		var uint16Type = compilation.GetTypeByMetadataName("System.UInt16");
-		var uint32Type = compilation.GetTypeByMetadataName("System.UInt32");
-		var uint64Type = compilation.GetTypeByMetadataName("System.UInt64");
-
-		// Map types to converter type symbols
-		if (SymbolEqualityComparer.Default.Equals(encapsulatedType, guidType))
-		{
-			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(GuidJsonConverter<>));
-		}
-		else if (SymbolEqualityComparer.Default.Equals(encapsulatedType, dateTimeOffsetType))
-		{
-			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(DateTimeOffsetJsonConverter<>));
-		}
-		else if (SymbolEqualityComparer.Default.Equals(encapsulatedType, uint16Type))
-		{
-			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(UInt16JsonConverter<>));
-		}
-		else if (SymbolEqualityComparer.Default.Equals(encapsulatedType, uint32Type))
-		{
-			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(UInt32JsonConverter<>));
-		}
-		else if (SymbolEqualityComparer.Default.Equals(encapsulatedType, uint64Type))
-		{
-			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(UInt64JsonConverter<>));
-		}
-		else if (encapsulatedType.TypeKind == TypeKind.Enum)
-		{
-			converterTypeSymbol = GetConverterTypeSymbol(compilation, typeof(EnumJsonConverter<>));
-		}
-		else
-		{
-			// Handle types covered by SpecialType
-			converterTypeSymbol = GetConverterForSpecialType(encapsulatedType, compilation);
-		}
-
-		if (converterTypeSymbol == null)
-		{
-			throw new InvalidOperationException($"No JsonConverter defined for type {encapsulatedType.ToDisplayString()}");
-		}
-
-		return converterTypeSymbol;
+			"int" => "IntJsonConverter",
+			"double" => "DoubleJsonConverter",
+			"System.DateTime" => "DateTimeJsonConverter",
+			"string" => "StringJsonConverter",
+			"bool" => "BoolJsonConverter",
+			"System.Guid" => "GuidJsonConverter",
+			_ => throw new InvalidOperationException($"No JsonConverter defined for type {encapsulatedType}")
+		};
 	}
 
 	// Syntax receiver to collect record declarations that have the GenerateConverters attribute
 	private class SyntaxReceiver : ISyntaxReceiver
 	{
-		public List<RecordDeclarationSyntax> CandidateRecords { get; } = [];
+		public List<TypeDeclarationSyntax> CandidateTypes { get; } = [];
 
 		public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
 		{
-			if (syntaxNode is RecordDeclarationSyntax recordDeclaration &&
-			    recordDeclaration.AttributeLists
+			// Check if the node is a class or a record
+			if (syntaxNode is TypeDeclarationSyntax typeDeclaration &&
+			    (typeDeclaration is ClassDeclarationSyntax || typeDeclaration is RecordDeclarationSyntax) &&
+			    typeDeclaration.AttributeLists
 				    .Any(
 					    attrList => attrList.Attributes
 						    .Any(attr => attr.Name.ToString().Contains("GenerateConverters"))
 				    ))
 			{
-				CandidateRecords.Add(recordDeclaration);
+				CandidateTypes.Add(typeDeclaration);
 			}
 		}
 	}
