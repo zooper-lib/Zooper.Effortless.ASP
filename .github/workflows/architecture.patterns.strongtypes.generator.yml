@@ -13,7 +13,7 @@ on:
 env:
   projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
   projectPath: ZEA.Architecture.Patterns.StrongTypes.Generator
-  csprojFile: '**/${{ env.projectPath }}.csproj'
+  csprojFile: '**/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
 
 jobs:
   extract-version:
