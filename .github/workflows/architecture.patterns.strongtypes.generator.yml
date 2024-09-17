@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - develop
+      - feature/workflows
     paths:
       - '**/ZEA.Architecture.Patterns.StrongTypes.Generator/**'
   workflow_dispatch:
@@ -23,7 +24,7 @@ jobs:
           file: 'Architecture/Patterns/StrongTypes/ZEA.Architecture.Patterns.StrongTypes.Generator/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
 
       - name: Call NuGet Build and Push Template
-        uses: ./.github/workflows/nuget_build_and_push.yml
+        uses: ./.github/workflows/nuget_build_and_push.yml@feature/workflows
         with:
           projectPath: 'Architecture/Patterns/StrongTypes/ZEA.Architecture.Patterns.StrongTypes.Generator/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
           semanticVersion: ${{ steps.get_version.outputs.version }}
