@@ -58,6 +58,7 @@ jobs:
             fi
           else
             echo "PACKAGE_VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
+          fi
 
       # Build the project with the correct versioning
       - name: Build the project
