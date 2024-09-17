@@ -38,6 +38,6 @@ jobs:
     with:
       projectPath: '**/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
       buildConfiguration: Release
-      semanticVersion: ${{ steps.get_version.outputs.VERSION }}
+      semanticVersion: ${{ needs.extract-version.outputs.VERSION }}
       isPreRelease: ${{ github.ref != 'refs/heads/main' }}
       buildVersion: ${{ github.run_number }}
