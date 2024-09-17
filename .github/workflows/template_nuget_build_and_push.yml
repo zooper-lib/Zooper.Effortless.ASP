@@ -38,6 +38,7 @@ jobs:
       - name: Set package version
         id: versioning
         run: |
+          echo "Base semantic version: ${{ inputs.semanticVersion }}"
           if [ "${{ inputs.isPreRelease }}" == "true" ]; then
             if [[ "${{ inputs.semanticVersion }}" == *"-"* ]]; then
               # If semanticVersion already contains a pre-release suffix, append only the build number
