@@ -37,6 +37,8 @@ jobs:
           if [ -z "$VERSION" ]; then
             echo "No <Version> tag found in the .csproj file!"
             exit 1
+          else
+            echo "Extracted version: $VERSION"
           fi
           
           echo "VERSION=$VERSION" >> $GITHUB_ENV  # Save the version in the environment file
