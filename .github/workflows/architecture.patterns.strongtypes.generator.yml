@@ -7,28 +7,34 @@ on:
       - develop
     paths:
       - '**/ZEA.Architecture.Patterns.StrongTypes.Generator/**'
-      
+  
   workflow_dispatch:  # Allows manual triggering of the workflow
-      
+
 env:
   projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
   projectPath: ZEA.Architecture.Patterns.StrongTypes.Generator
   csprojFile: '**/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
-  
+
 jobs:
   extract-version:
     runs-on: ubuntu-latest
     env:
-      csprojFile: '**/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
+      csprojFile: ${{ env.csprojFile }}  # Dynamically reference project csproj file
     steps:
       - uses: actions/checkout@v3
 
       - name: Extract version from .csproj
         id: get_version
         run: |
-          VERSION=$(grep '<Version>' ${{ env.csprojFile }} | sed -e 's/.*<Version>\(.*\)<\/Version>.*/\1/')
-          echo "::set-output name=VERSION::$VERSION"
-          
+          # Use 'find' to locate the .csproj file dynamically, in case it's not in the root
+          csproj_file=$(find . -name "${{ env.projectName }}.csproj")
+          if [ -z "$csproj_file" ]; then
+            echo "No .csproj file found!"
+            exit 1
+          fi
+          VERSION=$(grep '<Version>' "$csproj_file" | sed -e 's/.*<Version>\(.*\)<\/Version>.*/\1/')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV  # Write the version to the environment file for later use
+    
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
 
@@ -36,7 +42,7 @@ jobs:
     needs: extract-version
     uses: ./.github/workflows/template_nuget_build_and_push.yml
     with:
-      projectPath: '**/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
+      projectPath: '**/${{ env.projectName }}.csproj'  # Dynamically reference project path
       buildConfiguration: Release
       semanticVersion: ${{ needs.extract-version.outputs.VERSION }}
       isPreRelease: ${{ github.ref != 'refs/heads/main' }}
