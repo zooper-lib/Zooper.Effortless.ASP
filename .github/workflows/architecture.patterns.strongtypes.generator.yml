@@ -20,15 +20,27 @@ jobs:
 
       - name: Extract version from .csproj
         id: get_version
+        env:
+          projectName: ZEA.Architecture.Patterns.StrongTypes.Generator  # Pass the project name as env variable
         run: |
-          # Use 'find' to locate the .csproj file dynamically, in case it's not in the root
-          csproj_file=$(find . -name "${{ env.projectName }}.csproj")
+          # Use 'find' to locate the correct .csproj file dynamically by project name
+          csproj_file=$(find . -name "*${{ env.projectName }}.csproj" | head -n 1)  # Ensure you target the correct project
           if [ -z "$csproj_file" ]; then
-            echo "No .csproj file found!"
+            echo "No .csproj file matching '${{ env.projectName }}' found!"
             exit 1
           fi
+          echo "Found .csproj file: $csproj_file"
+          
+          # Extract version from the .csproj file
           VERSION=$(grep '<Version>' "$csproj_file" | sed -e 's/.*<Version>\(.*\)<\/Version>.*/\1/')
-          echo "VERSION=$VERSION" >> $GITHUB_ENV  # Write the version to the environment file for later use
+          
+          if [ -z "$VERSION" ]; then
+            echo "No <Version> tag found in the .csproj file!"
+            exit 1
+          fi
+          
+          echo "VERSION=$VERSION" >> $GITHUB_ENV  # Save the version in the environment file
+          echo "PROJECT_PATH=$csproj_file" >> $GITHUB_ENV  # Save the project path for use in subsequent steps
     
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
