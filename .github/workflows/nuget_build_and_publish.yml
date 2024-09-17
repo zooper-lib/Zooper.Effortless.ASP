@@ -1,0 +1,67 @@
+name: NuGet Build and Publish
+
+on:
+  workflow_call:
+    inputs:
+      projectPath:
+        type: string
+        required: true
+      buildConfiguration:
+        type: string
+        default: 'Release'
+      isPreRelease:
+        type: boolean
+        required: true
+    secrets:
+      NUGET_API_KEY:
+        required: true
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      # Extract version from the .csproj file
+      - name: Get .csproj Version
+        id: get_version
+        uses: KageKirin/get-csproj-version@v0
+        with:
+          file: ${{ inputs.projectPath }}
+
+      # Set package version
+      - name: Set package version
+        id: versioning
+        run: |
+          echo "Base semantic version: ${{ steps.get_version.outputs.version }}"
+          if [ "${{ inputs.isPreRelease }}" == "true" ]; then
+            if [[ "${{ steps.get_version.outputs.version }}" == *"-"* ]]; then
+              echo "PACKAGE_VERSION=${{ steps.get_version.outputs.version }}.${{ github.run_number }}" >> $GITHUB_ENV
+            else
+              echo "PACKAGE_VERSION=${{ steps.get_version.outputs.version }}-preview.${{ github.run_number }}" >> $GITHUB_ENV
+            fi
+          else
+            echo "PACKAGE_VERSION=${{ steps.get_version.outputs.version }}" >> $GITHUB_ENV
+          fi
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.x'
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore ${{ inputs.projectPath }}
+
+      # Build the project with the correct versioning
+      - name: Build the project
+        run: dotnet build ${{ inputs.projectPath }} --configuration ${{ inputs.buildConfiguration }} /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
+      # Pack the NuGet package
+      - name: Pack the NuGet package
+        run: dotnet pack ${{ inputs.projectPath }} --configuration ${{ inputs.buildConfiguration }} /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
+      # Publish the NuGet package
+      - name: Publish to NuGet
+        run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
