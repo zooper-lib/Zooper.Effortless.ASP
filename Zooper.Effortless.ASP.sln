@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Validation", "Validation", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{AB375879-6818-4CF5-8246-6CC49FD3ADA0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Secrets", "Secrets", "{CE57F3B7-8092-46AC-AE89-1C81CFF15170}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patterns", "Patterns", "{C4890210-4F82-46C1-8610-EC56CAB61CB4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StrongTypes", "StrongTypes", "{1E863AB8-8964-49F8-861B-515C7F1CC10B}"
@@ -27,8 +25,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes", "Architecture\Patterns\StrongTypes\ZEA.Architecture.Patterns.StrongTypes\ZEA.Architecture.Patterns.StrongTypes.csproj", "{61FDBBA0-4259-4DCF-9056-2B0BE011AC36}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes.Generator", "Architecture\Patterns\StrongTypes\ZEA.Architecture.Patterns.StrongTypes.Generator\ZEA.Architecture.Patterns.StrongTypes.Generator.csproj", "{9F3AAC22-084E-464B-9AEB-DC0EA008D4A1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes", "Architecture\Patterns\StrongTypes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj", "{8EBE1B5B-F3AA-4492-AFB2-7231066E1F97}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes.Generator.Sample", "Architecture\Patterns\StrongTypes\ZEA.Architecture.Patterns.StrongTypes.Generator.Sample\ZEA.Architecture.Patterns.StrongTypes.Generator.Sample.csproj", "{1AEF4144-8416-4DC4-9C78-0E5D6ED3A32F}"
 EndProject
@@ -58,19 +54,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Messaging
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Refit", "Communication\ZEA.Communication.Refit\ZEA.Communication.Refit.csproj", "{F57A7136-B9C5-43E5-AFC2-CF19145AA2EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations", "Configuration\ZEA.Configurations\ZEA.Configurations.csproj", "{34D14B2B-5BE4-4586-A9AD-A8B95CD1C787}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configuration.Abstractions", "Configuration\ZEA.Configuration.Abstractions\ZEA.Configuration.Abstractions.csproj", "{34D14B2B-5BE4-4586-A9AD-A8B95CD1C787}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations.AzureKeyVault", "Configuration\ZEA.Configurations.AzureKeyVault\ZEA.Configurations.AzureKeyVault.csproj", "{2B120967-A556-4097-BF37-85033C49C4A6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configuration.AzureKeyVault", "Configuration\ZEA.Configuration.AzureKeyVault\ZEA.Configuration.AzureKeyVault.csproj", "{2B120967-A556-4097-BF37-85033C49C4A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations.HashicorpVault", "Configuration\ZEA.Configurations.HashicorpVault\ZEA.Configurations.HashicorpVault.csproj", "{444B16A5-0088-42F2-96CB-768B5E4E2DF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configuration.HashicorpVault", "Configuration\ZEA.Configuration.HashicorpVault\ZEA.Configuration.HashicorpVault.csproj", "{444B16A5-0088-42F2-96CB-768B5E4E2DF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Data.Modelling", "Data\ZEA.Data.Modelling\ZEA.Data.Modelling.csproj", "{6C91E378-E71F-4273-B433-CE8C77F0A3C8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Secrets.Abstractions", "Secrets\ZEA.Secrets.Abstractions\ZEA.Secrets.Abstractions.csproj", "{B4776FFE-5101-4CA7-BD68-920E9DB5DA3A}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Secrets.AzureKeyVault", "Secrets\ZEA.Secrets.AzureKeyVault\ZEA.Secrets.AzureKeyVault.csproj", "{9BAA1181-DFAF-4C96-8C75-55A2B882E9AD}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Secrets.HashicorpVault", "Secrets\ZEA.Secrets.HashicorpVault\ZEA.Secrets.HashicorpVault.csproj", "{230C216D-0137-4D17-98A1-07F1CDEA1AE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Serialization.Abstractions", "Serialization\ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj", "{F33407AB-E9B9-4C5A-9009-348742AFC46C}"
 EndProject
@@ -92,7 +82,6 @@ Global
 		{34849AFC-1495-452D-8698-67798F7758F7} = {125FA61A-3BBB-4EE8-8103-3BACACC0201D}
 		{61FDBBA0-4259-4DCF-9056-2B0BE011AC36} = {1E863AB8-8964-49F8-861B-515C7F1CC10B}
 		{9F3AAC22-084E-464B-9AEB-DC0EA008D4A1} = {1E863AB8-8964-49F8-861B-515C7F1CC10B}
-		{8EBE1B5B-F3AA-4492-AFB2-7231066E1F97} = {1E863AB8-8964-49F8-861B-515C7F1CC10B}
 		{1AEF4144-8416-4DC4-9C78-0E5D6ED3A32F} = {1E863AB8-8964-49F8-861B-515C7F1CC10B}
 		{1302D388-1562-4479-B9EB-E9C9710D8CCA} = {1E863AB8-8964-49F8-861B-515C7F1CC10B}
 		{300E91D9-941B-401D-9BB1-48B6F47E1183} = {C4890210-4F82-46C1-8610-EC56CAB61CB4}
@@ -111,9 +100,6 @@ Global
 		{2B120967-A556-4097-BF37-85033C49C4A6} = {330BD57F-24D2-4006-B30B-C92E409D92A2}
 		{444B16A5-0088-42F2-96CB-768B5E4E2DF5} = {330BD57F-24D2-4006-B30B-C92E409D92A2}
 		{6C91E378-E71F-4273-B433-CE8C77F0A3C8} = {AB375879-6818-4CF5-8246-6CC49FD3ADA0}
-		{B4776FFE-5101-4CA7-BD68-920E9DB5DA3A} = {CE57F3B7-8092-46AC-AE89-1C81CFF15170}
-		{9BAA1181-DFAF-4C96-8C75-55A2B882E9AD} = {CE57F3B7-8092-46AC-AE89-1C81CFF15170}
-		{230C216D-0137-4D17-98A1-07F1CDEA1AE0} = {CE57F3B7-8092-46AC-AE89-1C81CFF15170}
 		{F33407AB-E9B9-4C5A-9009-348742AFC46C} = {C83B1152-7609-4166-A2C7-D25F22E1BDD9}
 		{18C38947-B215-43CF-A6CA-C947C6098A04} = {C83B1152-7609-4166-A2C7-D25F22E1BDD9}
 		{71DE90B7-918F-4677-8D9C-EA6EC6B41A10} = {59B49CBD-4E45-435B-94E6-F82FA4D6F556}
@@ -136,10 +122,6 @@ Global
 		{9F3AAC22-084E-464B-9AEB-DC0EA008D4A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F3AAC22-084E-464B-9AEB-DC0EA008D4A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F3AAC22-084E-464B-9AEB-DC0EA008D4A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EBE1B5B-F3AA-4492-AFB2-7231066E1F97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EBE1B5B-F3AA-4492-AFB2-7231066E1F97}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EBE1B5B-F3AA-4492-AFB2-7231066E1F97}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EBE1B5B-F3AA-4492-AFB2-7231066E1F97}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1AEF4144-8416-4DC4-9C78-0E5D6ED3A32F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1AEF4144-8416-4DC4-9C78-0E5D6ED3A32F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1AEF4144-8416-4DC4-9C78-0E5D6ED3A32F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -212,18 +194,6 @@ Global
 		{6C91E378-E71F-4273-B433-CE8C77F0A3C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6C91E378-E71F-4273-B433-CE8C77F0A3C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6C91E378-E71F-4273-B433-CE8C77F0A3C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B4776FFE-5101-4CA7-BD68-920E9DB5DA3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B4776FFE-5101-4CA7-BD68-920E9DB5DA3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B4776FFE-5101-4CA7-BD68-920E9DB5DA3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B4776FFE-5101-4CA7-BD68-920E9DB5DA3A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9BAA1181-DFAF-4C96-8C75-55A2B882E9AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9BAA1181-DFAF-4C96-8C75-55A2B882E9AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9BAA1181-DFAF-4C96-8C75-55A2B882E9AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9BAA1181-DFAF-4C96-8C75-55A2B882E9AD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{230C216D-0137-4D17-98A1-07F1CDEA1AE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{230C216D-0137-4D17-98A1-07F1CDEA1AE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{230C216D-0137-4D17-98A1-07F1CDEA1AE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{230C216D-0137-4D17-98A1-07F1CDEA1AE0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F33407AB-E9B9-4C5A-9009-348742AFC46C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F33407AB-E9B9-4C5A-9009-348742AFC46C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F33407AB-E9B9-4C5A-9009-348742AFC46C}.Release|Any CPU.ActiveCfg = Release|Any CPU

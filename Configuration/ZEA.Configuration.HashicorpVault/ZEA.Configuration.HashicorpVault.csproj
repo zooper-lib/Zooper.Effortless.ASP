@@ -14,7 +14,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Scrutor" Version="4.2.*" />
+      <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.*" />
+      <PackageReference Include="VaultSharp" Version="1.13.*" />
     </ItemGroup>
 
 </Project>
