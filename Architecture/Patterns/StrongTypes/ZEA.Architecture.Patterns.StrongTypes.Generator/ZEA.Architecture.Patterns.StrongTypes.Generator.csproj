@@ -24,38 +24,13 @@
 
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>
+        <PackageReference Include="ZEA.Serialization.NewtonsoftJson" Version="1.*"/>
     </ItemGroup>
 
+    <!-- This is required to include the analyzer in the package -->
     <ItemGroup>
         <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs">
             <Visible>False</Visible>
-        </None>
-    </ItemGroup>
-
-    <!--    <ItemGroup>-->
-    <!--        <Content Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\bin\$(Configuration)\$(TargetFramework)\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.dll">-->
-    <!--            <Pack>true</Pack>-->
-    <!--            <PackagePath>lib\$(TargetFramework)\</PackagePath>-->
-    <!--            <Visible>False</Visible>-->
-    <!--        </Content>-->
-    <!--    </ItemGroup>-->
-
-    <!--    <ItemGroup>-->
-    <!--        <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes\ZEA.Architecture.Patterns.StrongTypes.Generator.Attributes.csproj">-->
-    <!--            <PrivateAssets>All</PrivateAssets>-->
-    <!--            <IncludeAssets>None</IncludeAssets>-->
-    <!--            <ExcludeAssets>All</ExcludeAssets>-->
-    <!--        </ProjectReference>-->
-    <!--    </ItemGroup>-->
-
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\..\Serialization\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Update="..\..\..\..\Serialization\ZEA.Serialization.NewtonsoftJson\bin\$(Configuration)\$(TargetFramework)\ZEA.Serialization.NewtonsoftJson.dll">
-            <Pack>true</Pack>
-            <PackagePath>lib\$(TargetFramework)\</PackagePath>
         </None>
     </ItemGroup>
 </Project>
