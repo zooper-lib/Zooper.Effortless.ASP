@@ -19,7 +19,8 @@ jobs:
   extract-version:
     runs-on: ubuntu-latest
     env:
-      csprojFile: ${{ env.csprojFile }}  # Dynamically reference project csproj file
+      csprojFile: ${{ env.csprojFile }}  # Reference env variable inside steps
+      projectName: ${{ env.projectName }}
     steps:
       - uses: actions/checkout@v3
 
