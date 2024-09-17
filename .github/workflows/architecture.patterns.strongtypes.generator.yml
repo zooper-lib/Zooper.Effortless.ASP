@@ -10,17 +10,11 @@ on:
   
   workflow_dispatch:  # Allows manual triggering of the workflow
 
-env:
-  projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
-  projectPath: ZEA.Architecture.Patterns.StrongTypes.Generator
-  csprojFile: '**/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
-
 jobs:
   extract-version:
     runs-on: ubuntu-latest
     env:
-      csprojFile: ${{ env.csprojFile }}  # Reference env variable inside steps
-      projectName: ${{ env.projectName }}
+      projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
     steps:
       - uses: actions/checkout@v3
 
