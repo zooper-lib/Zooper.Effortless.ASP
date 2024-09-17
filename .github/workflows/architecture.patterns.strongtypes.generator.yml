@@ -1,20 +1,139 @@
-name: Publish NuGet Package
+name: Build and Publish Projects
 
 on:
   push:
     branches:
       - main
       - develop
-    paths:
-      - '**/ZEA.Architecture.Patterns.StrongTypes.Generator/**'
-      
   workflow_dispatch:
 
 jobs:
-  publish-package:
-    uses: ./.github/workflows/nuget_build_and_publish.yml
-    with:
-      projectPath: 'Architecture/Patterns/StrongTypes/ZEA.Architecture.Patterns.StrongTypes.Generator/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
-      isPreRelease: ${{ github.ref != 'refs/heads/main' }}
-    secrets:
-      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+  determine-changed-projects:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.generate-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Get list of all projects (.csproj files)
+        id: list_projects
+        run: |
+          # Find all .csproj files and store them in an array
+          csproj_files=$(find . -type f -name "*.csproj")
+          echo "Found .csproj files:"
+          echo "$csproj_files"
+          echo "csproj_files<<EOF" >> $GITHUB_ENV
+          echo "$csproj_files" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Get list of changed files
+        id: changed_files
+        run: |
+          # Get list of files changed in the commit or PR
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            git fetch origin ${{ github.base_ref }} --depth=1
+            CHANGED_FILES=$(git diff --name-only HEAD origin/${{ github.base_ref }})
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1)
+          fi
+          echo "Changed files:"
+          echo "$CHANGED_FILES"
+          echo "changed_files<<EOF" >> $GITHUB_ENV
+          echo "$CHANGED_FILES" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Determine projects with changes
+        id: generate-matrix
+        run: |
+          echo "Generating matrix of changed projects..."
+          declare -A projects_with_changes
+          while read -r csproj_file; do
+            if [ -z "$csproj_file" ]; then
+              continue
+            fi
+            # Get the directory of the project
+            project_dir=$(dirname "$csproj_file")
+            # Check if any changed files are within this project directory
+            while read -r changed_file; do
+              if [[ "$changed_file" == "$project_dir"* ]]; then
+                project_name=$(basename "$csproj_file" .csproj)
+                projects_with_changes["$project_name"]="$csproj_file"
+                break
+              fi
+            done <<< "${{ env.changed_files }}"
+          done <<< "${{ env.csproj_files }}"
+
+          # Build the JSON matrix
+          matrix="{\"include\":["
+          first=true
+          for project_name in "${!projects_with_changes[@]}"; do
+            if [ "$first" = true ]; then
+              first=false
+            else
+              matrix+=","
+            fi
+            project_path=${projects_with_changes[$project_name]}
+            # Escape double quotes
+            project_name_escaped=$(printf '%s' "$project_name" | sed 's/"/\\"/g')
+            project_path_escaped=$(printf '%s' "$project_path" | sed 's/"/\\"/g')
+            matrix+="{\"projectName\":\"$project_name_escaped\",\"projectPath\":\"$project_path_escaped\"}"
+          done
+          matrix+="]}"
+          echo "Matrix: $matrix"
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
+
+  build-and-publish:
+    needs: determine-changed-projects
+    if: ${{ needs.determine-changed-projects.outputs.matrix != '{"include":[]}' }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix: ${{ fromJson(needs.determine-changed-projects.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v3
+
+      # Extract version
+      - name: Get project version
+        id: get-version
+        uses: KageKirin/get-csproj-version@v0
+        with:
+          file: ${{ matrix.projectPath }}
+
+      # Set package version
+      - name: Set package version
+        run: |
+          echo "Extracted version: ${{ steps.get-version.outputs.version }}"
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            if [[ "${{ steps.get-version.outputs.version }}" == *"-"* ]]; then
+              PACKAGE_VERSION="${{ steps.get-version.outputs.version }}.${{ github.run_number }}"
+            else
+              PACKAGE_VERSION="${{ steps.get-version.outputs.version }}-preview.${{ github.run_number }}"
+            fi
+          else
+            PACKAGE_VERSION="${{ steps.get-version.outputs.version }}"
+          fi
+          echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+          echo "PACKAGE_VERSION set to $PACKAGE_VERSION"
+
+      # Setup .NET
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '6.x'  # Adjust to your required .NET version
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore ${{ matrix.projectPath }}
+
+      # Build project
+      - name: Build project
+        run: dotnet build ${{ matrix.projectPath }} --configuration Release /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
+      # Pack project
+      - name: Pack project
+        run: dotnet pack ${{ matrix.projectPath }} --configuration Release /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
+      # Publish to NuGet
+      - name: Publish to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push **/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json
