@@ -28,6 +28,9 @@ jobs:
         run: |
           VERSION=$(grep '<Version>' ${{ env.csprojFile }} | sed -e 's/.*<Version>\(.*\)<\/Version>.*/\1/')
           echo "::set-output name=VERSION::$VERSION"
+          
+    outputs:
+      VERSION: ${{ steps.get_version.outputs.VERSION }}
 
   call-template:
     needs: extract-version
