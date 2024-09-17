@@ -43,10 +43,16 @@ jobs:
           
           echo "VERSION=$VERSION" >> $GITHUB_ENV  # Save the version in the environment file
           echo "PROJECT_PATH=$csproj_file" >> $GITHUB_ENV  # Save the project path for use in subsequent steps
+          
+      - name: Echo the semantic version
+        run: |
+          echo "Semantic version being passed: ${{ needs.extract-version.outputs.VERSION }}"
     
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
       PROJECT_PATH: ${{ steps.get_version.outputs.PROJECT_PATH }}
+      
+    
 
   call-template:
     needs: extract-version
@@ -57,3 +63,5 @@ jobs:
       semanticVersion: ${{ needs.extract-version.outputs.VERSION }}
       isPreRelease: ${{ github.ref != 'refs/heads/main' }}
       buildVersion: ${{ github.run_number }}
+      
+    
