@@ -39,7 +39,13 @@ jobs:
         id: versioning
         run: |
           if [ "${{ inputs.isPreRelease }}" == "true" ]; then
-            echo "::set-output name=PACKAGE_VERSION::${{ inputs.semanticVersion }}-preview.${{ inputs.buildVersion }}"
+            if [[ "${{ inputs.semanticVersion }}" == *"-"* ]]; then
+              # If semanticVersion already contains a pre-release suffix, append only the build number
+              echo "::set-output name=PACKAGE_VERSION::${{ inputs.semanticVersion }}.${{ inputs.buildVersion }}"
+            else
+              # Otherwise, append -preview and the build number
+              echo "::set-output name=PACKAGE_VERSION::${{ inputs.semanticVersion }}-preview.${{ inputs.buildVersion }}"
+            fi
           else
             echo "::set-output name=PACKAGE_VERSION::${{ inputs.semanticVersion }}"
           fi
