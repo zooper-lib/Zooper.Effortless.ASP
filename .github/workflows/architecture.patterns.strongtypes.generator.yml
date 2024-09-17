@@ -32,7 +32,7 @@ jobs:
           echo "Found .csproj file: $csproj_file"
           
           # Extract version from the .csproj file
-          VERSION=$(grep '<Version>' "$csproj_file" | sed -e 's/.*<Version>\(.*\)<\/Version>.*/\1/')
+          VERSION=$(xmllint --xpath "string(//Project/PropertyGroup/Version)" "$csproj_file")
           
           if [ -z "$VERSION" ]; then
             echo "No <Version> tag found in the .csproj file!"
