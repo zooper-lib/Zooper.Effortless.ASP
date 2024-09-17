@@ -1,0 +1,19 @@
+name: Publish ProjectA NuGet Package
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**/ZEA.Architecture.DDD/**'
+  workflow_dispatch:
+
+jobs:
+  publish-package:
+    uses: ./.github/workflows/template.nuget.publish.yml
+    with:
+      projectName: 'ZEA.Architecture.DDD'
+      isPreRelease: ${{ github.ref != 'refs/heads/main' }}
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
