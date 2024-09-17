@@ -8,6 +8,8 @@ on:
     paths:
       - '**/ZEA.Architecture.Patterns.StrongTypes.Generator/**'
       
+  workflow_dispatch:  # Allows manual triggering of the workflow
+      
 env:
   projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
   projectPath: ZEA.Architecture.Patterns.StrongTypes.Generator
