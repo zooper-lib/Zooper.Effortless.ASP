@@ -17,32 +17,13 @@ jobs:
       projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
     steps:
       - uses: actions/checkout@v3
-
-      - name: Extract version from .csproj
+        
+      # Use the get-csproj-version action to extract the version
+      - name: Get .csproj Version
         id: get_version
-        env:
-          projectName: ZEA.Architecture.Patterns.StrongTypes.Generator  # Pass the project name as env variable
-        run: |
-          # Use 'find' to locate the correct .csproj file dynamically by project name
-          csproj_file=$(find . -name "*${{ env.projectName }}.csproj" | head -n 1)  # Ensure you target the correct project
-          if [ -z "$csproj_file" ]; then
-            echo "No .csproj file matching '${{ env.projectName }}' found!"
-            exit 1
-          fi
-          echo "Found .csproj file: $csproj_file"
-          
-          # Extract version from the .csproj file
-          VERSION=$(grep -oP '(?<=<Version>)[^<]+' "$csproj_file")
-          
-          if [ -z "$VERSION" ]; then
-            echo "No <Version> tag found in the .csproj file!"
-            exit 1
-          else
-            echo "Extracted version: $VERSION"
-          fi
-          
-          echo "::set-output name=VERSION::$VERSION"
-          echo "::set-output name=PROJECT_PATH::$csproj_file"
+        uses: KageKirin/get-csproj-version@v0
+        with:
+          file: '**/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'  # Path to the specific .csproj file
           
       - name: Echo the semantic version
         run: |
@@ -50,9 +31,7 @@ jobs:
     
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
-      PROJECT_PATH: ${{ steps.get_version.outputs.PROJECT_PATH }}
-      
-    
+      PROJECT_PATH: '**/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
 
   call-template:
     needs: extract-version
