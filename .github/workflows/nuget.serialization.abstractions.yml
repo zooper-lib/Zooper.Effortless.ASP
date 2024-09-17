@@ -1,4 +1,4 @@
-name: Publish ProjectA NuGet Package
+name: Publish NuGet Package
 
 on:
   push:
