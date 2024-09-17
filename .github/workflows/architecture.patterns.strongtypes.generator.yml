@@ -33,12 +33,43 @@ jobs:
           echo "VERSION=${{ steps.get_version.outputs.version }}" >> $GITHUB_ENV
           echo "PROJECT_PATH=Architecture/Patterns/StrongTypes/ZEA.Architecture.Patterns.StrongTypes.Generator/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj" >> $GITHUB_ENV
 
-      # Call the reusable NuGet Build and Push workflow
-      - name: Call NuGet Build and Push Template
-        uses: ./.github/workflows/template_nuget_build_and_push.yml@feature/workflows
+      # Set up .NET Core
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v3
         with:
-          projectPath: ${{ env.PROJECT_PATH }}
-          buildConfiguration: Release
-          semanticVersion: ${{ env.VERSION }}
-          isPreRelease: ${{ github.ref != 'refs/heads/main' }}
-          buildVersion: ${{ github.run_number }}
+          dotnet-version: '8.x'
+
+      # Restore dependencies
+      - name: Restore dependencies
+        run: dotnet restore ${{ env.PROJECT_PATH }}
+
+      # Set package version
+      - name: Set package version
+        id: versioning
+        run: |
+          echo "Base semantic version: ${{ env.VERSION }}"
+          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
+            if [[ "${{ env.VERSION }}" == *"-"* ]]; then
+              # If semanticVersion already contains a pre-release suffix, append only the build number
+              echo "PACKAGE_VERSION=${{ env.VERSION }}.${{ github.run_number }}" >> $GITHUB_ENV
+            else
+              # Otherwise, append -preview and the build number
+              echo "PACKAGE_VERSION=${{ env.VERSION }}-preview.${{ github.run_number }}" >> $GITHUB_ENV
+            fi
+          else
+            echo "PACKAGE_VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
+
+      # Build the project with the correct versioning
+      - name: Build the project
+        run: |
+          dotnet build ${{ env.PROJECT_PATH }} --configuration Release /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
+      # Pack the NuGet package
+      - name: Pack the NuGet package
+        run: |
+          dotnet pack ${{ env.PROJECT_PATH }} --configuration Release /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
+      # Publish the NuGet package (Only if the package version is unique)
+      - name: Publish to NuGet
+        run: |
+          dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
