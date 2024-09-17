@@ -35,7 +35,7 @@ jobs:
 
       # Call the reusable NuGet Build and Push workflow
       - name: Call NuGet Build and Push Template
-        uses: ./.github/workflows/template_nuget_build_and_push.yml@develop
+        uses: ./.github/workflows/template_nuget_build_and_push.yml@feature/workflows
         with:
           projectPath: ${{ env.PROJECT_PATH }}
           buildConfiguration: Release
