@@ -32,12 +32,13 @@ jobs:
     
     outputs:
       VERSION: ${{ steps.get_version.outputs.VERSION }}
+      PROJECT_PATH: ${{ steps.get_version.outputs.PROJECT_PATH }}
 
   call-template:
     needs: extract-version
     uses: ./.github/workflows/template_nuget_build_and_push.yml
     with:
-      projectPath: '**/${{ env.projectName }}.csproj'  # Dynamically reference project path
+      projectPath: ${{ needs.extract-version.outputs.PROJECT_PATH }}
       buildConfiguration: Release
       semanticVersion: ${{ needs.extract-version.outputs.VERSION }}
       isPreRelease: ${{ github.ref != 'refs/heads/main' }}
