@@ -17,12 +17,12 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="ZEA.Architecture.Patterns.StrongTypes" Version="1.0.3" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator.Sample\ZEA.Architecture.Patterns.StrongTypes.Generator.Sample.csproj" />
         <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator\ZEA.Architecture.Patterns.StrongTypes.Generator.csproj"/>
+        <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes\ZEA.Architecture.Patterns.StrongTypes.csproj" />
     </ItemGroup>
 
 
