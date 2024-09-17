@@ -41,27 +41,19 @@ jobs:
           echo "Base semantic version: ${{ inputs.semanticVersion }}"
           if [ "${{ inputs.isPreRelease }}" == "true" ]; then
             if [[ "${{ inputs.semanticVersion }}" == *"-"* ]]; then
-              # If semanticVersion already contains a pre-release suffix, append only the build number
-              echo "::set-output name=PACKAGE_VERSION::${{ inputs.semanticVersion }}.${{ inputs.buildVersion }}"
+              echo "PACKAGE_VERSION=${{ inputs.semanticVersion }}.${{ inputs.buildVersion }}" >> $GITHUB_ENV
             else
-              # Otherwise, append -preview and the build number
-              echo "::set-output name=PACKAGE_VERSION::${{ inputs.semanticVersion }}-preview.${{ inputs.buildVersion }}"
+              echo "PACKAGE_VERSION=${{ inputs.semanticVersion }}-preview.${{ inputs.buildVersion }}" >> $GITHUB_ENV
             fi
           else
-            echo "::set-output name=PACKAGE_VERSION::${{ inputs.semanticVersion }}"
+            echo "PACKAGE_VERSION=${{ inputs.semanticVersion }}" >> $GITHUB_ENV
           fi
 
-      # Build the project with the correct versioning
       - name: Build the project
-        run: |
-          dotnet build ${{ inputs.projectPath }} --configuration ${{ inputs.buildConfiguration }} /p:PackageVersion=${{ steps.versioning.outputs.PACKAGE_VERSION }}
-      
-      # Pack the NuGet package
+        run: dotnet build ${{ inputs.projectPath }} --configuration ${{ inputs.buildConfiguration }} /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
       - name: Pack the NuGet package
-        run: |
-          dotnet pack ${{ inputs.projectPath }} --configuration ${{ inputs.buildConfiguration }} /p:PackageVersion=${{ steps.versioning.outputs.PACKAGE_VERSION }}
-      
-      # Publish the NuGet package (Only if the package version is unique)
+        run: dotnet pack ${{ inputs.projectPath }} --configuration ${{ inputs.buildConfiguration }} /p:PackageVersion=${{ env.PACKAGE_VERSION }}
+
       - name: Publish to NuGet
-        run: |
-          dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json

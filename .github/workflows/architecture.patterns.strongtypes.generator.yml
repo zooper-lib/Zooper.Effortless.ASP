@@ -1,4 +1,4 @@
-name: Publish NuGet Package for ZEA.Architecture.Patterns.StrongTypes.Generator
+name: Publish NuGet Package
 
 on:
   push:
@@ -7,70 +7,25 @@ on:
       - develop
     paths:
       - '**/ZEA.Architecture.Patterns.StrongTypes.Generator/**'
-
-  workflow_dispatch:  # Allows manual triggering of the workflow
+  workflow_dispatch:
 
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
-    env:
-      projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
-
     steps:
       - uses: actions/checkout@v3
 
-      # Use the get-csproj-version action to extract the version
+      # Get the version from the csproj file
       - name: Get .csproj Version
         id: get_version
         uses: KageKirin/get-csproj-version@v0
         with:
           file: 'Architecture/Patterns/StrongTypes/ZEA.Architecture.Patterns.StrongTypes.Generator/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
 
-      # Echo the semantic version to verify it's correct
-      - name: Echo the semantic version
-        run: |
-          echo "Extracted Semantic version: ${{ steps.get_version.outputs.version }}"
-          echo "VERSION=${{ steps.get_version.outputs.version }}" >> $GITHUB_ENV
-          echo "PROJECT_PATH=Architecture/Patterns/StrongTypes/ZEA.Architecture.Patterns.StrongTypes.Generator/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj" >> $GITHUB_ENV
-
-      # Set up .NET Core
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v3
+      - name: Call NuGet Build and Push Template
+        uses: ./.github/workflows/nuget_build_and_push.yml
         with:
-          dotnet-version: '8.x'
-
-      # Restore dependencies
-      - name: Restore dependencies
-        run: dotnet restore ${{ env.PROJECT_PATH }}
-
-      # Set package version
-      - name: Set package version
-        id: versioning
-        run: |
-          echo "Base semantic version: ${{ env.VERSION }}"
-          if [ "${{ github.ref }}" != "refs/heads/main" ]; then
-            if [[ "${{ env.VERSION }}" == *"-"* ]]; then
-              # If semanticVersion already contains a pre-release suffix, append only the build number
-              echo "PACKAGE_VERSION=${{ env.VERSION }}.${{ github.run_number }}" >> $GITHUB_ENV
-            else
-              # Otherwise, append -preview and the build number
-              echo "PACKAGE_VERSION=${{ env.VERSION }}-preview.${{ github.run_number }}" >> $GITHUB_ENV
-            fi
-          else
-            echo "PACKAGE_VERSION=${{ env.VERSION }}" >> $GITHUB_ENV
-          fi
-
-      # Build the project with the correct versioning
-      - name: Build the project
-        run: |
-          dotnet build ${{ env.PROJECT_PATH }} --configuration Release /p:PackageVersion=${{ env.PACKAGE_VERSION }}
-
-      # Pack the NuGet package
-      - name: Pack the NuGet package
-        run: |
-          dotnet pack ${{ env.PROJECT_PATH }} --configuration Release /p:PackageVersion=${{ env.PACKAGE_VERSION }}
-
-      # Publish the NuGet package
-      - name: Publish to NuGet
-        run: |
-          dotnet nuget push **/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+          projectPath: 'Architecture/Patterns/StrongTypes/ZEA.Architecture.Patterns.StrongTypes.Generator/ZEA.Architecture.Patterns.StrongTypes.Generator.csproj'
+          semanticVersion: ${{ steps.get_version.outputs.version }}
+          isPreRelease: ${{ github.ref != 'refs/heads/main' }}
+          buildVersion: ${{ github.run_number }}
