@@ -1,0 +1,39 @@
+name: Publish NuGet Package for ZEA.Architecture.Patterns.StrongTypes.Generator
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - '*'
+    paths:
+      - '**/${{ env.projectPath }}/**'
+      
+  workflow_dispatch:  # Enables manual triggering of the workflow
+
+env:
+  projectName: ZEA.Architecture.Patterns.StrongTypes.Generator
+  projectPath: ZEA.Architecture.Patterns.StrongTypes.Generator
+  csprojFile: '**/${{ env.projectPath }}.csproj'
+
+jobs:
+  extract-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Extract version from .csproj
+        id: get_version
+        run: |
+          VERSION=$(grep '<Version>' ${{ env.csprojFile }} | sed -e 's/.*<Version>\(.*\)<\/Version>.*/\1/')
+          echo "::set-output name=VERSION::$VERSION"
+
+  call-template:
+    needs: extract-version
+    uses: ./.github/workflows/template_nuget_build_and_push.yml
+    with:
+      projectPath: ${{ env.csprojFile }}
+      buildConfiguration: Release
+      semanticVersion: ${{ steps.get_version.outputs.VERSION }}
+      isPreRelease: ${{ github.ref != 'refs/heads/main' }}
+      buildVersion: ${{ github.run_number }}

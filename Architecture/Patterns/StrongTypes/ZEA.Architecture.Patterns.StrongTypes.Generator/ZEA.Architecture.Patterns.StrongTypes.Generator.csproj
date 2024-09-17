@@ -1,0 +1,47 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>1.0.0</Version>
+        <PackageVersion>$(Version)</PackageVersion>
+        <AssemblyVersion>$(Version).0</AssemblyVersion>
+        <FileVersion>$(Version).0</FileVersion>
+
+        <!-- Conditionally append '-preview' or '-dev' suffix for non-official releases -->
+        <PackageVersion Condition="'$(IsPreRelease)' == 'true'">$(Version)-preview.$(BuildVersion)</PackageVersion>
+        <FileVersion Condition="'$(IsPreRelease)' == 'true'">$(Version).$(BuildVersion)</FileVersion>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+
+        <RootNamespace>ZEA.Architecture.Patterns.StrongTypes.Generator</RootNamespace>
+        <PackageId>ZEA.Architecture.Patterns.StrongTypes.Generator</PackageId>
+
+        <IncludeProjectReferences>false</IncludeProjectReferences>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.9.2"/>
+
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>
+        <PackageReference Include="ZEA.Serialization.NewtonsoftJson" Version="1.*"/>
+    </ItemGroup>
+
+    <!-- This is required to include the analyzer in the package -->
+    <ItemGroup>
+        <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs">
+            <Visible>False</Visible>
+        </None>
+    </ItemGroup>
+</Project>
