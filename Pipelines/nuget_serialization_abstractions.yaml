@@ -1,7 +1,7 @@
 trigger:
   paths:
     include:
-      - ZEA.Serialization.Abstractions/**
+      - /**/ZEA.Serialization.Abstractions/**
   branches:
     include:
       - main
@@ -24,3 +24,4 @@ extends:
   parameters:
     projectName: $(projectName)
     buildConfiguration: $(buildConfiguration)
+    semanticVersion: $(semanticVersion)

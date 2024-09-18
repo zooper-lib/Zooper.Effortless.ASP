@@ -30,7 +30,8 @@ steps:
       packagesToPack: '**/${{ parameters.projectName }}.csproj'
       versionSuffix: '${{ parameters.semanticVersion }}'
       versioningScheme: byBuildNumber
-      includeReferencedProjects: true
+      includeReferencedProjects: false
+      outputDir: '$(Build.ArtifactStagingDirectory)'
 
   - task: NuGetCommand@2
     displayName: "Nuget push"

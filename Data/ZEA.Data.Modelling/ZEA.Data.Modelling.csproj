@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <Version>2.0.0</Version>
+        <PackageVersion>$(Version)</PackageVersion>
+        <AssemblyVersion>$(Version).0</AssemblyVersion>
+        <FileVersion>$(Version).0</FileVersion>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.9.*" />
+        <PackageReference Include="ZEA.Validation.FluentValidation" Version="*" />
+    </ItemGroup>
+
+</Project>

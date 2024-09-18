@@ -1,0 +1,19 @@
+name: Publish ZEA.Api.Swagger
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**/ZEA.Api.Swagger/**'
+  workflow_dispatch:
+
+jobs:
+  publish-package:
+    uses: ./.github/workflows/template.nuget.publish.yml
+    with:
+      projectName: 'ZEA.Api.Swagger'
+      isPreRelease: ${{ github.ref != 'refs/heads/main' }}
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

@@ -1,0 +1,19 @@
+name: Publish ZEA.Configuration.AzureKeyVault
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**/ZEA.Configuration.AzureKeyVault/**'
+  workflow_dispatch:
+
+jobs:
+  publish-package:
+    uses: ./.github/workflows/template.nuget.publish.yml
+    with:
+      projectName: 'ZEA.Configuration.AzureKeyVault'
+      isPreRelease: ${{ github.ref != 'refs/heads/main' }}
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

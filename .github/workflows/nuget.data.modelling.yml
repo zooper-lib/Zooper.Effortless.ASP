@@ -1,0 +1,19 @@
+name: Publish ZEA.Data.Modelling
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**/ZEA.Data.Modelling/**'
+  workflow_dispatch:
+
+jobs:
+  publish-package:
+    uses: ./.github/workflows/template.nuget.publish.yml
+    with:
+      projectName: 'ZEA.Data.Modelling'
+      isPreRelease: ${{ github.ref != 'refs/heads/main' }}
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
