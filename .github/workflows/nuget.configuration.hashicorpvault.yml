@@ -1,4 +1,4 @@
-name: Publish NuGet Package
+name: Publish ZEA.Configuration.HashicorpVault
 
 on:
   push:
