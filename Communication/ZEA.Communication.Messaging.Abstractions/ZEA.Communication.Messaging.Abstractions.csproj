@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="ZEA.Architecture.DDD" Version="1.0.*" />
+      <PackageReference Include="ZEA.Architecture.DDD" Version="*" />
     </ItemGroup>
 
 </Project>

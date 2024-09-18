@@ -20,8 +20,8 @@
         <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.*"/>
         <PackageReference Include="Refit" Version="7.1.*" />
         <PackageReference Include="Refit.Newtonsoft.Json" Version="7.1.*" />
-        <PackageReference Include="ZEA.Communication.Abstractions" Version="1.0.*" />
-        <PackageReference Include="ZEA.Serialization.NewtonsoftJson" Version="1.0.*" />
+        <PackageReference Include="ZEA.Communication.Abstractions" Version="*" />
+        <PackageReference Include="ZEA.Serialization.NewtonsoftJson" Version="*" />
     </ItemGroup>
 
 </Project>

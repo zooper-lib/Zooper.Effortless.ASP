@@ -15,7 +15,7 @@
 
     <ItemGroup>
         <PackageReference Include="OneOf" Version="3.0.*"/>
-        <PackageReference Include="ZEA.Architecture.Patterns.ADTs" Version="1.*"/>
+        <PackageReference Include="ZEA.Architecture.Patterns.ADTs" Version="*"/>
     </ItemGroup>
 
 </Project>
