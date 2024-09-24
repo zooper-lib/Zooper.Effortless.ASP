@@ -1,26 +1,25 @@
 using MediatR;
 using Moq;
 using Xunit;
-using ZEA.Architecture.PubSub.Mediat;
-using ZEA.Architecture.PubSub.MediatR.Tests.Samples;
+using ZEA.Architecture.PubSub.MediatrWrapper.Tests.Samples;
 
-namespace ZEA.Architecture.PubSub.MediatR.Tests;
+namespace ZEA.Architecture.PubSub.MediatrWrapper.Tests;
 
-public class MediatRMediatorAdapterTests
+public class MediatrMediatorAdapterTests
 {
 	[Fact]
 	public async Task SendAsync_ForwardsRequestToMediatR()
 	{
 		// Arrange
 		var mediatorMock = new Mock<IMediator>();
-		var adapter = new MediatRMediatorAdapter(mediatorMock.Object);
+		var adapter = new MediatrMediatorAdapter(mediatorMock.Object);
 		var request = new SampleRequest
 		{
 			Data = "Test data"
 		};
 		var expectedResponse = "Processed data: Test data";
 
-		MediatRRequestAdapter<SampleRequest, string> capturedRequest = null;
+		MediatrRequestAdapter<SampleRequest, string> capturedRequest = null;
 
 		mediatorMock
 			.Setup(m => m.Send(It.IsAny<IRequest<string>>(), It.IsAny<CancellationToken>()))
@@ -29,7 +28,7 @@ public class MediatRMediatorAdapterTests
 					req,
 					_) =>
 				{
-					capturedRequest = req as MediatRRequestAdapter<SampleRequest, string>;
+					capturedRequest = req as MediatrRequestAdapter<SampleRequest, string>;
 				}
 			)
 			.ReturnsAsync(expectedResponse);
@@ -45,7 +44,7 @@ public class MediatRMediatorAdapterTests
 		);
 
 		Assert.NotNull(capturedRequest);
-		Assert.IsType<MediatRRequestAdapter<SampleRequest, string>>(capturedRequest);
+		Assert.IsType<MediatrRequestAdapter<SampleRequest, string>>(capturedRequest);
 		Assert.Equal(request, capturedRequest.InnerRequest);
 	}
 }

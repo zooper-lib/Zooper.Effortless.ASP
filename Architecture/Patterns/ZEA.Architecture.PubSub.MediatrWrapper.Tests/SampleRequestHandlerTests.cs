@@ -1,7 +1,7 @@
 using Xunit;
-using ZEA.Architecture.PubSub.MediatR.Tests.Samples;
+using ZEA.Architecture.PubSub.MediatrWrapper.Tests.Samples;
 
-namespace ZEA.Architecture.PubSub.MediatR.Tests;
+namespace ZEA.Architecture.PubSub.MediatrWrapper.Tests;
 
 public class SampleRequestHandlerTests
 {

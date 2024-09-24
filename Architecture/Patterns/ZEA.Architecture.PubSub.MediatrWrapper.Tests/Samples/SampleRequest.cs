@@ -1,6 +1,6 @@
 using ZEA.Architecture.PubSub.Abstractions.Interfaces;
 
-namespace ZEA.Architecture.PubSub.MediatR.Tests.Samples;
+namespace ZEA.Architecture.PubSub.MediatrWrapper.Tests.Samples;
 
 public class SampleRequest : IRequest<string>
 {

@@ -72,9 +72,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Validation.FluentValida
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PubSub", "PubSub", "{EA13C9E1-C56C-4057-8CEA-5340C97CF04C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.PubSub.MediatR", "Architecture\Patterns\ZEA.Architecture.PubSub.MediatR\ZEA.Architecture.PubSub.MediatR.csproj", "{308F8B90-4407-47D5-A4D5-B94D6F6CEB28}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.PubSub.MediatrWrapper", "Architecture\Patterns\ZEA.Architecture.PubSub.MediatrWrapper\ZEA.Architecture.PubSub.MediatrWrapper.csproj", "{308F8B90-4407-47D5-A4D5-B94D6F6CEB28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.PubSub.MediatR.Tests", "Architecture\Patterns\ZEA.Architecture.PubSub.MediatR.Tests\ZEA.Architecture.PubSub.MediatR.Tests.csproj", "{454D260E-EDE2-4E77-89BD-610B1A48AB39}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.PubSub.MediatrWrapper.Tests", "Architecture\Patterns\ZEA.Architecture.PubSub.MediatrWrapper.Tests\ZEA.Architecture.PubSub.MediatrWrapper.Tests.csproj", "{454D260E-EDE2-4E77-89BD-610B1A48AB39}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

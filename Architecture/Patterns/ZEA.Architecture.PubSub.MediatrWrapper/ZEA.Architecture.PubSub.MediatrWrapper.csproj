@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\ZEA.Architecture.PubSub.Abstractions\ZEA.Architecture.PubSub.Abstractions.csproj" />
+        <ProjectReference Include="..\..\ZEA.Architecture.PubSub.Abstractions\ZEA.Architecture.PubSub.Abstractions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="12.4.1" />
+        <PackageReference Include="MediatR" Version="12.*" PrivateAssets="All"/>
     </ItemGroup>
 
 </Project>

@@ -1,24 +1,17 @@
 using IMediator = ZEA.Architecture.PubSub.Abstractions.Interfaces.IMediator;
 using INotification = ZEA.Architecture.PubSub.Abstractions.Interfaces.INotification;
 
-namespace ZEA.Architecture.PubSub.Mediat;
+namespace ZEA.Architecture.PubSub.MediatrWrapper;
 
-public class MediatRMediatorAdapter : IMediator
+public class MediatrMediatorAdapter(MediatR.IMediator mediator) : IMediator
 {
-	private readonly MediatR.IMediator _mediator;
-
-	public MediatRMediatorAdapter(MediatR.IMediator mediator)
-	{
-		_mediator = mediator;
-	}
-
 	public Task<TResponse> SendAsync<TRequest, TResponse>(
 		TRequest request,
 		CancellationToken cancellationToken = default)
 		where TRequest : Abstractions.Interfaces.IRequest<TResponse>
 	{
-		var adapterRequest = new MediatRRequestAdapter<TRequest, TResponse>(request);
-		return _mediator.Send(adapterRequest, cancellationToken);
+		var adapterRequest = new MediatrRequestAdapter<TRequest, TResponse>(request);
+		return mediator.Send(adapterRequest, cancellationToken);
 	}
 
 	public Task PublishAsync<TNotification>(

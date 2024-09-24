@@ -1,24 +1,23 @@
 using Moq;
 using Xunit;
 using ZEA.Architecture.PubSub.Abstractions.Interfaces;
-using ZEA.Architecture.PubSub.Mediat;
-using ZEA.Architecture.PubSub.MediatR.Tests.Samples;
+using ZEA.Architecture.PubSub.MediatrWrapper.Tests.Samples;
 
-namespace ZEA.Architecture.PubSub.MediatR.Tests;
+namespace ZEA.Architecture.PubSub.MediatrWrapper.Tests;
 
-public class MediatRRequestHandlerAdapterTests
+public class MediatrRequestHandlerAdapterTests
 {
 	[Fact]
 	public async Task Handle_CallsCustomHandler()
 	{
 		// Arrange
 		var customHandlerMock = new Mock<IRequestHandler<SampleRequest, string>>();
-		var adapter = new MediatRRequestHandlerAdapter<SampleRequest, string>(customHandlerMock.Object);
+		var adapter = new MediatrRequestHandlerAdapter<SampleRequest, string>(customHandlerMock.Object);
 		var innerRequest = new SampleRequest
 		{
 			Data = "Test data"
 		};
-		var adapterRequest = new MediatRRequestAdapter<SampleRequest, string>(innerRequest);
+		var adapterRequest = new MediatrRequestAdapter<SampleRequest, string>(innerRequest);
 		var expectedResponse = "Processed data: Test data";
 
 		customHandlerMock

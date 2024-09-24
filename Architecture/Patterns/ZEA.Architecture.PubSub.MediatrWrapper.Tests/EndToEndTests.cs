@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
-using ZEA.Architecture.PubSub.MediatR.Tests.Samples;
+using ZEA.Architecture.PubSub.MediatrWrapper.Tests.Samples;
 using IMediator = ZEA.Architecture.PubSub.Abstractions.Interfaces.IMediator;
 
-namespace ZEA.Architecture.PubSub.MediatR.Tests;
+namespace ZEA.Architecture.PubSub.MediatrWrapper.Tests;
 
 public class EndToEndTests
 {
@@ -33,8 +33,8 @@ public class EndToEndTests
 	// 	var notificationHandlerMock = new Mock<IZooperNotificationHandler<SampleNotification>>();
 	//
 	// 	services.AddMediatR(typeof(Program).Assembly);
-	// 	services.AddSingleton<IMediator, MediatRMediatorAdapter>();
-	// 	services.AddTransient(typeof(IRequestHandler<,>), typeof(MediatRRequestHandlerAdapter<,>));
+	// 	services.AddSingleton<IMediator, MediatrMediatorAdapter>();
+	// 	services.AddTransient(typeof(IRequestHandler<,>), typeof(MediatrRequestHandlerAdapter<,>));
 	// 	services.AddTransient(typeof(Abstractions.Interfaces.INotificationHandler<MediatRNotificationAdapter>), typeof(MediatRNotificationHandlerAdapter<>));
 	//
 	// 	// Replace the notification handler with a mock

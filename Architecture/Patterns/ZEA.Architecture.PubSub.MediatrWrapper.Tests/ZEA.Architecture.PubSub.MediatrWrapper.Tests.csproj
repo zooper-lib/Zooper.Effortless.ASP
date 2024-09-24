@@ -16,7 +16,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\ZEA.Architecture.PubSub.Abstractions\ZEA.Architecture.PubSub.Abstractions.csproj" />
-      <ProjectReference Include="..\ZEA.Architecture.PubSub.MediatR\ZEA.Architecture.PubSub.MediatR.csproj" />
+      <ProjectReference Include="..\ZEA.Architecture.PubSub.MediatrWrapper\ZEA.Architecture.PubSub.MediatrWrapper.csproj" />
     </ItemGroup>
 
 </Project>
