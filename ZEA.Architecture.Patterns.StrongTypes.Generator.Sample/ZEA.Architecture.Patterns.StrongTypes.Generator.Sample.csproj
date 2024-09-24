@@ -7,17 +7,16 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\..\Serialization\ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj" />
-<!--        <ProjectReference Include="..\..\..\..\Serialization\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj" />-->
+        <ProjectReference Include="..\ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj" />
         <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes.Generator\ZEA.Architecture.Patterns.StrongTypes.Generator.csproj"
                           OutputItemType="Analyzer"/>
         <ProjectReference Include="..\ZEA.Architecture.Patterns.StrongTypes\ZEA.Architecture.Patterns.StrongTypes.csproj" />
+        <ProjectReference Include="..\ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="ZEA.Serialization.Abstractions" Version="1.0.6"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.*"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.*"/>
     </ItemGroup>
 
 </Project>

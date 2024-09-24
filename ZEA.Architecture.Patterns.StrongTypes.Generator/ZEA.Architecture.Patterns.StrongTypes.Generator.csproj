@@ -1,13 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <Version>2.0.0</Version>
-        <PackageVersion>$(Version)</PackageVersion>
-        <AssemblyVersion>$(Version).0</AssemblyVersion>
-        <FileVersion>$(Version).0</FileVersion>
-    </PropertyGroup>
-
-    <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
         <LangVersion>latest</LangVersion>
@@ -31,7 +24,6 @@
 
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
         <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>
-        <PackageReference Include="ZEA.Serialization.NewtonsoftJson" Version="1.*"/>
     </ItemGroup>
 
     <!-- This is required to include the analyzer in the package -->
@@ -39,5 +31,9 @@
         <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs">
             <Visible>False</Visible>
         </None>
+    </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj" />
     </ItemGroup>
 </Project>

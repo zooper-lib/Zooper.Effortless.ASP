@@ -1,11 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
-    <PropertyGroup>
-        <Version>2.0.0</Version>
-        <PackageVersion>$(Version)</PackageVersion>
-        <AssemblyVersion>$(Version).0</AssemblyVersion>
-        <FileVersion>$(Version).0</FileVersion>
-    </PropertyGroup>
     
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
@@ -14,8 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="11.9.*" />
-        <PackageReference Include="ZEA.Validation.FluentValidation" Version="*" />
+        <PackageReference Include="FluentValidation" Version="11.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ZEA.Validation.FluentValidation\ZEA.Validation.FluentValidation.csproj" />
     </ItemGroup>
 
 </Project>
