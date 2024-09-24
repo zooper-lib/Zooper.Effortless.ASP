@@ -18,4 +18,8 @@
         <PackageReference Include="ZEA.Architecture.Patterns.ADTs" Version="2.*"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\..\..\CHANGELOG.md" Pack="true" />
+    </ItemGroup>
+
 </Project>
