@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\ZEA.Architecture.PubSub.Abstractions\ZEA.Architecture.PubSub.Abstractions.csproj"/>
+        <ProjectReference Include="..\ZEA.Architecture.PubSub.Abstractions\ZEA.Architecture.PubSub.Abstractions.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
