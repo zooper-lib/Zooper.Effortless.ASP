@@ -10,4 +10,8 @@
       <ProjectReference Include="..\ZEA.Architecture.DDD\ZEA.Architecture.DDD.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
+    
 </Project>

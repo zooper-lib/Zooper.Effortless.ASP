@@ -13,5 +13,9 @@
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.*" />
       <PackageReference Include="Newtonsoft.Json" Version="13.*" />
     </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
     
 </Project>

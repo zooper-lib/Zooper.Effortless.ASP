@@ -14,4 +14,8 @@
         <PackageReference Include="MediatR" Version="12.*" PrivateAssets="All"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
+
 </Project>

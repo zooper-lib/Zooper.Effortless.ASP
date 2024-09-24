@@ -7,16 +7,20 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MediatR" Version="12.*" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.*" />
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
-      <PackageReference Include="Moq" Version="4.*" />
-      <PackageReference Include="xunit" Version="2.*" />
+        <PackageReference Include="MediatR" Version="12.*"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.*"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*"/>
+        <PackageReference Include="Moq" Version="4.*"/>
+        <PackageReference Include="xunit" Version="2.*"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ZEA.Architecture.PubSub.Abstractions\ZEA.Architecture.PubSub.Abstractions.csproj" />
-      <ProjectReference Include="..\ZEA.Architecture.PubSub.MediatrWrapper\ZEA.Architecture.PubSub.MediatrWrapper.csproj" />
+        <ProjectReference Include="..\ZEA.Architecture.PubSub.Abstractions\ZEA.Architecture.PubSub.Abstractions.csproj"/>
+        <ProjectReference Include="..\ZEA.Architecture.PubSub.MediatrWrapper\ZEA.Architecture.PubSub.MediatrWrapper.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
     </ItemGroup>
 
 </Project>

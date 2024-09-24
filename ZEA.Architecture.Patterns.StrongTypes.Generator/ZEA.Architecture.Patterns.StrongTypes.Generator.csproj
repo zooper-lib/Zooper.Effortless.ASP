@@ -32,8 +32,12 @@
             <Visible>False</Visible>
         </None>
     </ItemGroup>
-    
+
     <ItemGroup>
-      <ProjectReference Include="..\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj" />
+        <ProjectReference Include="..\ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
     </ItemGroup>
 </Project>

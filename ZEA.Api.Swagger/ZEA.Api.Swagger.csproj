@@ -13,4 +13,8 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="8.0.*"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
+
 </Project>

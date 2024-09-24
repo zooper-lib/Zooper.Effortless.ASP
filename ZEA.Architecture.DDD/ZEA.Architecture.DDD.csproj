@@ -10,4 +10,8 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.*"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
+    
 </Project>

@@ -10,4 +10,8 @@
       <PackageReference Include="Protobuf.Grpc" Version="1.*" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
+    
 </Project>

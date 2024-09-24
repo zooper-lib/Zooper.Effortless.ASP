@@ -16,4 +16,8 @@
       <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="8.*" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
+    
 </Project>

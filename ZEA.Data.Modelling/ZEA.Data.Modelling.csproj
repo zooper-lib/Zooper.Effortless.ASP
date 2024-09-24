@@ -1,5 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    
+
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -7,11 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FluentValidation" Version="11.*" />
+        <PackageReference Include="FluentValidation" Version="11.*"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ZEA.Validation.FluentValidation\ZEA.Validation.FluentValidation.csproj" />
+        <ProjectReference Include="..\ZEA.Validation.FluentValidation\ZEA.Validation.FluentValidation.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
     </ItemGroup>
 
 </Project>

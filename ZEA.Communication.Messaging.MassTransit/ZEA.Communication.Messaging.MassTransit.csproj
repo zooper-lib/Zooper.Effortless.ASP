@@ -17,4 +17,8 @@
       <ProjectReference Include="..\ZEA.Communication.Messaging.Abstractions\ZEA.Communication.Messaging.Abstractions.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
+    
 </Project>
