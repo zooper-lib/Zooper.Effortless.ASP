@@ -24,19 +24,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Api.MVC", "ZEA.Api.MVC\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Api.Swagger", "ZEA.Api.Swagger\ZEA.Api.Swagger.csproj", "{FCC73B74-34CB-4C6E-8256-577630D2EF38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.PubSub.Abstractions", "ZEA.Architecture.PubSub.Abstractions\ZEA.Architecture.PubSub.Abstractions.csproj", "{30A187B2-2E00-463A-9506-54EF7929D07F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.Mediator.Abstractions", "ZEA.Architecture.Pattern.Mediator.Abstractions\ZEA.Architecture.Pattern.Mediator.Abstractions.csproj", "{30A187B2-2E00-463A-9506-54EF7929D07F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.PubSub.MediatrWrapper", "ZEA.Architecture.PubSub.MediatrWrapper\ZEA.Architecture.PubSub.MediatrWrapper.csproj", "{5AB96AC9-ADD9-478C-B617-03D97C0FC329}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.Mediator.MediatrWrapper", "ZEA.Architecture.Pattern.Mediator.MediatrWrapper\ZEA.Architecture.Pattern.Mediator.MediatrWrapper.csproj", "{5AB96AC9-ADD9-478C-B617-03D97C0FC329}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.PubSub.MediatrWrapper.Tests", "ZEA.Architecture.PubSub.MediatrWrapper.Tests\ZEA.Architecture.PubSub.MediatrWrapper.Tests.csproj", "{76B13FF2-DD6D-41A7-AA69-1D797DFCAFE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.Mediator.MediatrWrapper.Tests", "ZEA.Architecture.Pattern.Mediator.MediatrWrapper.Tests\ZEA.Architecture.Pattern.Mediator.MediatrWrapper.Tests.csproj", "{76B13FF2-DD6D-41A7-AA69-1D797DFCAFE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes", "ZEA.Architecture.Patterns.StrongTypes\ZEA.Architecture.Patterns.StrongTypes.csproj", "{E137E3D1-D3FE-45C1-9C4A-1E7F21DE8880}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes", "ZEA.Architecture.Pattern.StrongTypes\ZEA.Architecture.Pattern.StrongTypes.csproj", "{E137E3D1-D3FE-45C1-9C4A-1E7F21DE8880}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes.Generator", "ZEA.Architecture.Patterns.StrongTypes.Generator\ZEA.Architecture.Patterns.StrongTypes.Generator.csproj", "{9AD102CE-D60F-4C87-8D3A-3505BCD473EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes.Generator", "ZEA.Architecture.Pattern.StrongTypes.Generator\ZEA.Architecture.Pattern.StrongTypes.Generator.csproj", "{9AD102CE-D60F-4C87-8D3A-3505BCD473EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes.Generator.Sample", "ZEA.Architecture.Patterns.StrongTypes.Generator.Sample\ZEA.Architecture.Patterns.StrongTypes.Generator.Sample.csproj", "{E08C3847-1883-4E54-9BB5-CE775462A454}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes.Generator.Sample", "ZEA.Architecture.Pattern.StrongTypes.Generator.Sample\ZEA.Architecture.Pattern.StrongTypes.Generator.Sample.csproj", "{E08C3847-1883-4E54-9BB5-CE775462A454}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.StrongTypes.Generator.Tests", "ZEA.Architecture.Patterns.StrongTypes.Generator.Tests\ZEA.Architecture.Patterns.StrongTypes.Generator.Tests.csproj", "{EC894491-0BB0-4ECC-921B-8D47139EAA44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes.Generator.Tests", "ZEA.Architecture.Pattern.StrongTypes.Generator.Tests\ZEA.Architecture.Pattern.StrongTypes.Generator.Tests.csproj", "{EC894491-0BB0-4ECC-921B-8D47139EAA44}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.RailwayOrientedProgramming", "ZEA.Architecture.Patterns.RailwayOrientedProgramming\ZEA.Architecture.Patterns.RailwayOrientedProgramming.csproj", "{F89B413A-2F96-4F75-B883-9BB70D058E41}"
 EndProject

@@ -6,7 +6,29 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [2.1.0] - 2024-04-27
+## [2.2.0] - 2024-09-24
+
+### Added
+
+- **ZEA.Architecture.Pattern.Mediator.***
+    - Introduced new packages which serve as a wrapper for different Mediator libraries.
+
+### Deprecated
+
+- **ZEA.Architecture.Pattern.Mediator.Abstractions.Responses**
+    - Marked all the response classes as `[Obsolete]` to encourage migration to the new `LogicalError` classes.
+
+### Renamed
+
+- **ZEA.Architecture.PubSub.***
+    - Renamed the namespace from `ZEA.Architecture.PubSub` to `ZEA.Architecture.Pattern.Mediator`.
+
+- **ZEA.Architecture.Patterns.***
+    - Renamed the namespace from `ZEA.Architecture.Patterns` to `ZEA.Architecture.Pattern` for consistency.
+
+---
+
+## [2.1.0] - 2024-09-20
 
 ### Added
 
@@ -39,7 +61,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [2.0.0] - 2024-04-20
+## [2.0.0] - 2024-09-19
 
 - Implemented a new release strategy. The format of the changelog has been updated to reflect the new strategy.
 
