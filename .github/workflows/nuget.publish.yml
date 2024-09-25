@@ -5,7 +5,8 @@ on:
     branches:
       - main      # Triggers on pushes to main (release)
       - develop   # Triggers on pushes to develop (pre-release)
-  workflow_dispatch:   # Allows manual triggering
+
+  workflow_dispatch:
 
 permissions:
   contents: write      # Needed for tagging
