@@ -1,6 +1,6 @@
 using OneOf;
 
-namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Interfaces;
+namespace ZEA.Architecture.Pattern.RailwayOrientedProgramming.Interfaces;
 
 /// <summary>
 /// Represents a generic step that returns a result of type <typeparamref name="TOutput"/>.

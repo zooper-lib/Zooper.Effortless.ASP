@@ -1,10 +1,10 @@
 using OneOf;
-using ZEA.Architecture.Patterns.ADTs.Helpers;
-using ZEA.Architecture.Patterns.RailwayOrientedProgramming.Interfaces;
+using ZEA.Architecture.Pattern.ADTs.Helpers;
+using ZEA.Architecture.Pattern.RailwayOrientedProgramming.Interfaces;
 
-namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Implementations;
+namespace ZEA.Architecture.Pattern.RailwayOrientedProgramming.Implementations;
 
-/// <inheritdoc cref="IEitherOneOfStep{TResult,TError}"/>
+/// <inheritdoc cref="IEitherOneOfStep{TOutput,TError}"/>
 public abstract class EitherOneOfStep<TOutput, TError> : IEitherOneOfStep<TOutput, TError>
 	where TError : IOneOf
 {

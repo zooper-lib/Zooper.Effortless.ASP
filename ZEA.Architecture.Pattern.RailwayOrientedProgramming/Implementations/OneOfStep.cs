@@ -1,9 +1,9 @@
 using OneOf;
-using ZEA.Architecture.Patterns.RailwayOrientedProgramming.Interfaces;
+using ZEA.Architecture.Pattern.RailwayOrientedProgramming.Interfaces;
 
-namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Implementations;
+namespace ZEA.Architecture.Pattern.RailwayOrientedProgramming.Implementations;
 
-/// <inheritdoc cref="IOneOfStep{TResponse}"/>
+/// <inheritdoc cref="IOneOfStep{TOutput}"/>
 public abstract class OneOfStep<TOutput> : IOneOfStep<TOutput>
 	where TOutput : IOneOf
 {

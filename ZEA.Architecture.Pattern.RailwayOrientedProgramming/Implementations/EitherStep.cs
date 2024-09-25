@@ -1,10 +1,10 @@
-using ZEA.Architecture.Patterns.ADTs.Errors;
-using ZEA.Architecture.Patterns.ADTs.Helpers;
-using ZEA.Architecture.Patterns.RailwayOrientedProgramming.Interfaces;
+using ZEA.Architecture.Pattern.ADTs.Errors;
+using ZEA.Architecture.Pattern.ADTs.Helpers;
+using ZEA.Architecture.Pattern.RailwayOrientedProgramming.Interfaces;
 
-namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Implementations;
+namespace ZEA.Architecture.Pattern.RailwayOrientedProgramming.Implementations;
 
-/// <inheritdoc cref="IEitherStep{TData}"/>
+/// <inheritdoc cref="IEitherStep{TOutput}"/>
 public abstract class EitherStep<TOutput> : IEitherStep<TOutput>
 {
 	/// <inheritdoc cref="IEitherStep{TData}.ExecuteAsync"/>

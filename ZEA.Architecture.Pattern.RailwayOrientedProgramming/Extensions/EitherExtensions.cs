@@ -1,6 +1,6 @@
-using ZEA.Architecture.Patterns.ADTs.Helpers;
+using ZEA.Architecture.Pattern.ADTs.Helpers;
 
-namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Extensions;
+namespace ZEA.Architecture.Pattern.RailwayOrientedProgramming.Extensions;
 
 /// <summary>
 /// Provides extension methods for <see cref="Either{TLeft,TRight}"/> to support Railway-Oriented Programming.

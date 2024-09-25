@@ -3,7 +3,7 @@ using System.Diagnostics;
 // ReSharper disable NotAccessedPositionalProperty.Global
 // ReSharper disable UnusedType.Global
 
-namespace ZEA.Architecture.Patterns.ADTs.Errors;
+namespace ZEA.Architecture.Pattern.ADTs.Errors;
 
 /// <summary>
 /// Details of the error that are safe to expose to the user or client.

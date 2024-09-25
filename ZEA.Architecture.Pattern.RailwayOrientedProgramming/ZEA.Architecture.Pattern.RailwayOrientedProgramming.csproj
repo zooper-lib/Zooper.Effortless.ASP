@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ZEA.Architecture.Patterns.ADTs\ZEA.Architecture.Patterns.ADTs.csproj"/>
+        <ProjectReference Include="..\ZEA.Architecture.Pattern.ADTs\ZEA.Architecture.Pattern.ADTs.csproj" />
     </ItemGroup>
 
     <ItemGroup>

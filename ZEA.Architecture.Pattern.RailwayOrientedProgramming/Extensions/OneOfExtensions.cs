@@ -1,6 +1,6 @@
 using OneOf;
 
-namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Extensions;
+namespace ZEA.Architecture.Pattern.RailwayOrientedProgramming.Extensions;
 
 /// <summary>
 /// Provides extension methods for OneOf&lt;T, TError&gt; to support Railway-Oriented Programming.

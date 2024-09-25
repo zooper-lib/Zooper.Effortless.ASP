@@ -1,9 +1,9 @@
 using OneOf;
-using ZEA.Architecture.Patterns.ADTs.Helpers;
+using ZEA.Architecture.Pattern.ADTs.Helpers;
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedType.Global
 
-namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Interfaces;
+namespace ZEA.Architecture.Pattern.RailwayOrientedProgramming.Interfaces;
 
 /// <summary>
 /// Represents a generic step that returns either a result of type <typeparamref name="TOutput"/> 

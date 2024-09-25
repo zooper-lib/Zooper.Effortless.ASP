@@ -1,7 +1,7 @@
-using ZEA.Architecture.Patterns.ADTs.Errors;
-using ZEA.Architecture.Patterns.ADTs.Helpers;
+using ZEA.Architecture.Pattern.ADTs.Errors;
+using ZEA.Architecture.Pattern.ADTs.Helpers;
 
-namespace ZEA.Architecture.Patterns.RailwayOrientedProgramming.Interfaces;
+namespace ZEA.Architecture.Pattern.RailwayOrientedProgramming.Interfaces;
 
 /// <summary>
 /// Represents a generic step that processes input data of type <typeparamref name="TOutput"/> 

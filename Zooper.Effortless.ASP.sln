@@ -38,9 +38,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.St
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes.Generator.Tests", "ZEA.Architecture.Pattern.StrongTypes.Generator.Tests\ZEA.Architecture.Pattern.StrongTypes.Generator.Tests.csproj", "{EC894491-0BB0-4ECC-921B-8D47139EAA44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.RailwayOrientedProgramming", "ZEA.Architecture.Patterns.RailwayOrientedProgramming\ZEA.Architecture.Patterns.RailwayOrientedProgramming.csproj", "{F89B413A-2F96-4F75-B883-9BB70D058E41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.RailwayOrientedProgramming", "ZEA.Architecture.Pattern.RailwayOrientedProgramming\ZEA.Architecture.Pattern.RailwayOrientedProgramming.csproj", "{F89B413A-2F96-4F75-B883-9BB70D058E41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Patterns.ADTs", "ZEA.Architecture.Patterns.ADTs\ZEA.Architecture.Patterns.ADTs.csproj", "{2EE59B41-FCB7-4143-848D-34C54B7EA721}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.ADTs", "ZEA.Architecture.Pattern.ADTs\ZEA.Architecture.Pattern.ADTs.csproj", "{2EE59B41-FCB7-4143-848D-34C54B7EA721}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.DDD", "ZEA.Architecture.DDD\ZEA.Architecture.DDD.csproj", "{AC44E6D6-58FE-4792-878A-68E8FBE71B7B}"
 EndProject

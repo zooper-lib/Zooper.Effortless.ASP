@@ -1,6 +1,6 @@
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace ZEA.Architecture.Patterns.ADTs.Helpers;
+namespace ZEA.Architecture.Pattern.ADTs.Helpers;
 
 /// <summary>
 /// Represents a disjoint union of two types, where an instance can hold a value of either the left or the right type.
