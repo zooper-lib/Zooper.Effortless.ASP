@@ -22,7 +22,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-        
+        with:
+          fetch-depth: 0
+      
       # Find the .csproj file by project name
       - name: Find .csproj file
         id: find_csproj
@@ -37,26 +39,68 @@ jobs:
           echo "projectPath=$CS_PROJ_PATH" >> $GITHUB_OUTPUT
           echo "PROJECT_PATH=$CS_PROJ_PATH" >> $GITHUB_ENV
 
-      # Extract version from the .csproj file
-      - name: Get .csproj Version
+      # Extract version from Directory.Build.props
+      - name: Get version from Directory.Build.props
         id: get_version
-        uses: KageKirin/get-csproj-version@v0
-        with:
-          file: ${{ steps.find_csproj.outputs.projectPath }}
+        run: |
+          # Ensure Directory.Build.props exists
+          if [ ! -f "Directory.Build.props" ]; then
+            echo "Error: Directory.Build.props not found in the repository root."
+            exit 1
+          fi
+
+          # Extract the <Version> element using grep and regex
+          VERSION=$(grep -oP '(?<=<Version>)[^<]+' Directory.Build.props)
+
+          if [ -z "$VERSION" ]; then
+            echo "Error: <Version> tag not found in Directory.Build.props."
+            exit 1
+          fi
+
+          echo "Extracted Version: $VERSION"
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       # Set package version
+      # Set package version based on pre-release flag
       - name: Set package version
         id: versioning
         run: |
           echo "Base semantic version: ${{ steps.get_version.outputs.version }}"
           if [ "${{ inputs.isPreRelease }}" == "true" ]; then
-            if [[ "${{ steps.get_version.outputs.version }}" == *"-"* ]]; then
-              echo "PACKAGE_VERSION=${{ steps.get_version.outputs.version }}.${{ github.run_number }}" >> $GITHUB_ENV
+            BASE_VERSION=${{ steps.get_version.outputs.version }}
+
+            # Fetch all tags matching the current base version with -preview.<number>
+            EXISTING_PRE_RELEASE_TAGS=$(git tag --list "${BASE_VERSION}-preview.*")
+
+            if [ -z "$EXISTING_PRE_RELEASE_TAGS" ]; then
+              NEXT_PRE_RELEASE=1
             else
-              echo "PACKAGE_VERSION=${{ steps.get_version.outputs.version }}-preview.${{ github.run_number }}" >> $GITHUB_ENV
+              # Extract the numerical part of pre-release tags
+              PRE_RELEASE_NUMBERS=$(echo "$EXISTING_PRE_RELEASE_TAGS" | grep -oP '(?<=-preview\.)\d+$')
+
+              # Initialize the maximum pre-release number
+              MAX_PRE_RELEASE=0
+
+              # Iterate through the numbers to find the maximum
+              for num in $PRE_RELEASE_NUMBERS; do
+                if [ "$num" -gt "$MAX_PRE_RELEASE" ]; then
+                  MAX_PRE_RELEASE=$num
+                fi
+              done
+
+              # Increment the maximum number to get the next pre-release number
+              NEXT_PRE_RELEASE=$((MAX_PRE_RELEASE + 1))
             fi
+
+            # Construct the new package version with the incremented pre-release number
+            PACKAGE_VERSION="${BASE_VERSION}-preview.${NEXT_PRE_RELEASE}"
+            echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_ENV
+            echo "Set PACKAGE_VERSION to ${PACKAGE_VERSION}"
           else
+            # For non-pre-release builds, use the base version
             echo "PACKAGE_VERSION=${{ steps.get_version.outputs.version }}" >> $GITHUB_ENV
+            echo "Set PACKAGE_VERSION to ${{ steps.get_version.outputs.version }}"
           fi
 
       # Set up .NET Core
@@ -80,3 +124,10 @@ jobs:
       # Publish the NuGet package
       - name: Publish to NuGet
         run: dotnet nuget push **/*.nupkg --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+      
+      # Tag the repository with the new package version
+      - name: Create Git Tag
+        if: success()
+        run: |
+          git tag "${{ env.PACKAGE_VERSION }}"
+          git push origin "${{ env.PACKAGE_VERSION }}"
