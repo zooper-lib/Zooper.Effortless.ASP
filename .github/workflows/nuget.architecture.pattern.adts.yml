@@ -1,4 +1,4 @@
-name: Publish ZEA.Architecture.Patterns.RailwayOrientedProgramming
+name: Publish ZEA.Architecture.Patterns.ADTs
 
 on:
   push:
@@ -6,14 +6,14 @@ on:
       - main
       - develop
     paths:
-      - '**/ZEA.Architecture.Patterns.RailwayOrientedProgramming/**'
+      - '**/ZEA.Architecture.Pattern.ADTs/**'
   workflow_dispatch:
 
 jobs:
   publish-package:
     uses: ./.github/workflows/template.nuget.publish.yml
     with:
-      projectName: 'ZEA.Architecture.Patterns.RailwayOrientedProgramming'
+      projectName: 'ZEA.Architecture.Pattern.ADTs'
       isPreRelease: ${{ github.ref != 'refs/heads/main' }}
     secrets:
       NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
