@@ -70,41 +70,19 @@ jobs:
           # Determine the current branch
           CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
           echo "Current Branch: $CURRENT_BRANCH"
-          
+
           # Define release or pre-release based on branch
           if [ "$CURRENT_BRANCH" == "main" ]; then
-            IS_PRE_RELEASE="false"
-          else
-            IS_PRE_RELEASE="true"
-          fi
-          
-          echo "Is Pre-Release: $IS_PRE_RELEASE"
-          
-          if [ "$IS_PRE_RELEASE" == "true" ]; then
-            BASE_VERSION="${VERSION}"
-            # Fetch all pre-release tags matching the base version
-            EXISTING_PRE_RELEASE_TAGS=$(git tag --list "${BASE_VERSION}-preview.*")
-          
-            if [ -z "$EXISTING_PRE_RELEASE_TAGS" ]; then
-              NEXT_PRE_RELEASE=1
-            else
-              # Extract numerical parts
-              PRE_RELEASE_NUMBERS=$(echo "$EXISTING_PRE_RELEASE_TAGS" | grep -oP '(?<=-preview\.)\d+$')
-              MAX_PRE_RELEASE=0
-              for num in $PRE_RELEASE_NUMBERS; do
-                if [ "$num" -gt "$MAX_PRE_RELEASE" ]; then
-                  MAX_PRE_RELEASE=$num
-                fi
-              done
-              NEXT_PRE_RELEASE=$((MAX_PRE_RELEASE + 1))
-            fi
-            PACKAGE_VERSION="${BASE_VERSION}-preview.${NEXT_PRE_RELEASE}"
-          else
             PACKAGE_VERSION="${VERSION}"
+          else
+            BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
+            PACKAGE_VERSION="${VERSION}.${BUILD_NUMBER}-preview"
           fi
-          
-          # Set only 'package_version' as output
+
           echo "package_version=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
+
+          # Debug statement
+          echo "Determined Package Version: $PACKAGE_VERSION"
 
   build-pack-publish:
     needs: setup
@@ -178,12 +156,14 @@ jobs:
       - name: Create and Push Git Tag
         run: |
           PACKAGE_VERSION="${{ needs.setup.outputs.package_version }}"
-
+          
+          echo "PACKAGE_VERSION is '$PACKAGE_VERSION'"
+          
           if [ -z "$PACKAGE_VERSION" ]; then
             echo "Error: PACKAGE_VERSION is empty."
             exit 1
           fi
-
+          
           # Check if tag already exists
           if git rev-parse "$PACKAGE_VERSION" >/dev/null 2>&1; then
             echo "Tag $PACKAGE_VERSION already exists. Skipping tagging."
