@@ -70,21 +70,21 @@ jobs:
           # Determine the current branch
           CURRENT_BRANCH="${GITHUB_REF#refs/heads/}"
           echo "Current Branch: $CURRENT_BRANCH"
-
+          
           # Define release or pre-release based on branch
           if [ "$CURRENT_BRANCH" == "main" ]; then
             IS_PRE_RELEASE="false"
           else
             IS_PRE_RELEASE="true"
           fi
-
+          
           echo "Is Pre-Release: $IS_PRE_RELEASE"
-
+          
           if [ "$IS_PRE_RELEASE" == "true" ]; then
-            BASE_VERSION="${{ steps.extract_version.outputs.version }}"
+            BASE_VERSION="${VERSION}"
             # Fetch all pre-release tags matching the base version
             EXISTING_PRE_RELEASE_TAGS=$(git tag --list "${BASE_VERSION}-preview.*")
-
+          
             if [ -z "$EXISTING_PRE_RELEASE_TAGS" ]; then
               NEXT_PRE_RELEASE=1
             else
@@ -100,10 +100,10 @@ jobs:
             fi
             PACKAGE_VERSION="${BASE_VERSION}-preview.${NEXT_PRE_RELEASE}"
           else
-            PACKAGE_VERSION="${{ steps.extract_version.outputs.version }}"
+            PACKAGE_VERSION="${VERSION}"
           fi
-
-          echo "PACKAGE_VERSION=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
+          
+          # Set only 'package_version' as output
           echo "package_version=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
 
   build-pack-publish:
@@ -162,7 +162,7 @@ jobs:
         run: dotnet nuget push "./nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
 
   tag:
-    needs: build-pack-publish
+    needs: [ setup, build_pack_publish ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -178,7 +178,12 @@ jobs:
       - name: Create and Push Git Tag
         run: |
           PACKAGE_VERSION="${{ needs.setup.outputs.package_version }}"
-          
+
+          if [ -z "$PACKAGE_VERSION" ]; then
+            echo "Error: PACKAGE_VERSION is empty."
+            exit 1
+          fi
+
           # Check if tag already exists
           if git rev-parse "$PACKAGE_VERSION" >/dev/null 2>&1; then
             echo "Tag $PACKAGE_VERSION already exists. Skipping tagging."
