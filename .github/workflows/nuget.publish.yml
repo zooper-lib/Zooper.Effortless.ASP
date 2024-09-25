@@ -150,10 +150,10 @@ jobs:
         run: dotnet restore "${{ matrix.project }}"
 
       - name: Build
-        run: dotnet build "${{ matrix.project }}" --configuration Release /p:PackageVersion=${{ needs.setup.outputs.package_version
+        run: dotnet build "${{ matrix.project }}" --configuration Release /p:PackageVersion=${{ needs.setup.outputs.package_version }}
 
       - name: Pack
-        run: dotnet pack "${{ matrix.project }}" --configuration Release /p:PackageVersion=${{ needs.setup.outputs.package_version }} --output nup
+        run: dotnet pack "${{ matrix.project }}" --configuration Release /p:PackageVersion=${{ needs.setup.outputs.package_version }} --output nupkg
 
       - name: Publish
         run: dotnet nuget push "${{ matrix.project }}/nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
