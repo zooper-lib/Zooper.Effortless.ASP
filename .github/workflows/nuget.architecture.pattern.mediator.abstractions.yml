@@ -1,0 +1,19 @@
+name: Publish ZEA.Architecture.Patterns.ADTs
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - '**/ZEA.Architecture.Pattern.Mediator.Abstractions/**'
+  workflow_dispatch:
+
+jobs:
+  publish-package:
+    uses: ./.github/workflows/template.nuget.publish.yml
+    with:
+      projectName: 'ZEA.Architecture.Pattern.Mediator.Abstractions'
+      isPreRelease: ${{ github.ref != 'refs/heads/main' }}
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}

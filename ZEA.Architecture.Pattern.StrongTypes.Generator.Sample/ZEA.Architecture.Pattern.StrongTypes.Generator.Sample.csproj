@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj" />
+        <ProjectReference Include="..\ZEA.Architecture.Pattern.StrongTypes.Generator\ZEA.Architecture.Pattern.StrongTypes.Generator.csproj" OutputItemType="Analyzer" />
+        <ProjectReference Include="..\ZEA.Architecture.Pattern.StrongTypes\ZEA.Architecture.Pattern.StrongTypes.csproj" />
+        <ProjectReference Include="..\ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.*"/>
+        <PackageReference Include="Newtonsoft.Json" Version="13.*"/>
+    </ItemGroup>
+
+</Project>
