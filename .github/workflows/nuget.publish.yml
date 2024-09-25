@@ -162,7 +162,7 @@ jobs:
         run: dotnet nuget push "./nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
 
   tag:
-    needs: [ setup, build_pack_publish ]
+    needs: [ setup, build-pack-publish ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
