@@ -1,4 +1,4 @@
-name: Publish ZEA.Architecture.Patterns.ADTs
+name: Publish ZEA.Architecture.Pattern.Mediator.Abstractions
 
 on:
   push:
