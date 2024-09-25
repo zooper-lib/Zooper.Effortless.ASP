@@ -32,6 +32,9 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
+      - name: Create nupkg Directory
+        run: mkdir -p ./nupkg
+
       - name: Extract Central Version
         id: extract_version
         run: |
@@ -134,7 +137,7 @@ jobs:
           - ZEA.Serialization.NewtonsoftJson/ZEA.Serialization.NewtonsoftJson.csproj
           - ZEA.Validation.Abstractions/ZEA.Validation.Abstractions.csproj
           - ZEA.Validation.FluentValidation/ZEA.Validation.FluentValidation.csproj
-              
+    
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -153,10 +156,10 @@ jobs:
         run: dotnet build "${{ matrix.project }}" --configuration Release /p:PackageVersion=${{ needs.setup.outputs.package_version }}
 
       - name: Pack
-        run: dotnet pack "${{ matrix.project }}" --configuration Release /p:PackageVersion=${{ needs.setup.outputs.package_version }} --output nupkg
+        run: dotnet pack "${{ matrix.project }}" --configuration Release /p:PackageVersion=${{ needs.setup.outputs.package_version }} --output ./nupkg
 
       - name: Publish
-        run: dotnet nuget push "${{ matrix.project }}/nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push "./nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
 
   tag:
     needs: build-pack-publish
