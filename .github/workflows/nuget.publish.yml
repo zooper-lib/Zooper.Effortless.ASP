@@ -15,36 +15,6 @@ permissions:
 env:
   DOTNET_VERSION: '8.x'  # Define the .NET SDK version here
 
-  # 1. Define all projects at the top for easy management
-  PROJECTS: |
-    [ 
-      "ZEA.Api.MVC/ZEA.Api.MVC.csproj",
-      "ZEA.Api.Swagger/ZEA.Api.Swagger.csproj",
-      "ZEA.Architecture.Pattern.Mediator.Abstractions/ZEA.Architecture.Pattern.Mediator.Abstractions.csproj",
-      "ZEA.Architecture.Pattern.Mediator.MediatrWrapper/ZEA.Architecture.Pattern.Mediator.MediatrWrapper.csproj",
-      "ZEA.Architecture.Pattern.StrongTypes/ZEA.Architecture.Pattern.StrongTypes.csproj",
-      "ZEA.Architecture.Pattern.StrongTypes.Generator/ZEA.Architecture.Pattern.StrongTypes.Generator.csproj",
-      "ZEA.Architecture.Patterns.ADTs/ZEA.Architecture.Patterns.ADTs.csproj"
-      "ZEA.Architecture.Patterns.RailwayOrientedProgramming/ZEA.Architecture.Patterns.RailwayOrientedProgramming.csproj",
-      "ZEA.Architecture.DDD/ZEA.Architecture.DDD.csproj",
-      "ZEA.Architecture.EventSourcing/ZEA.Architecture.EventSourcing.csproj",
-      "ZEA.Architecture.Hexagonal/ZEA.Architecture.Hexagonal.csproj",
-      "ZEA.Architecture.Modularization/ZEA.Architecture.Modularization.csproj",
-      "ZEA.Communication.Abstractions/ZEA.Communication.Abstractions.csproj",
-      "ZEA.Communication.gRPC/ZEA.Communication.gRPC.csproj",
-      "ZEA.Communication.Messaging.Abstractions/ZEA.Communication.Messaging.Abstractions.csproj",
-      "ZEA.Communication.Messaging.MassTransit/ZEA.Communication.Messaging.MassTransit.csproj",
-      "ZEA.Communication.Refit/ZEA.Communication.Refit.csproj",
-      "ZEA.Configuration.Abstractions/ZEA.Configuration.Abstractions.csproj",
-      "ZEA.Configuration.AzureKeyVault/ZEA.Configuration.AzureKeyVault.csproj",
-      "ZEA.Configuration.HashicorpVault/ZEA.Configuration.HashicorpVault.csproj",
-      "ZEA.Data.Modelling/ZEA.Data.Modelling.csproj",
-      "ZEA.Serialization.Abstractions/ZEA.Serialization.Abstractions.csproj",
-      "ZEA.Serialization.NewtonsoftJson/ZEA.Serialization.NewtonsoftJson.csproj",
-      "ZEA.Validation.Abstractions/ZEA.Validation.Abstractions.csproj",
-      "ZEA.Validation.FluentValidation/ZEA.Validation.FluentValidation.csproj"
-    ]
-
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -138,7 +108,33 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: ${{ fromJson(env.PROJECTS) }}
+        project:
+          - ZEA.Api.MVC/ZEA.Api.MVC.csproj
+          - ZEA.Api.Swagger/ZEA.Api.Swagger.csproj
+          - ZEA.Architecture.Pattern.Mediator.Abstractions/ZEA.Architecture.Pattern.Mediator.Abstractions.csproj
+          - ZEA.Architecture.Pattern.Mediator.MediatrWrapper/ZEA.Architecture.Pattern.Mediator.MediatrWrapper.csproj
+          - ZEA.Architecture.Pattern.StrongTypes/ZEA.Architecture.Pattern.StrongTypes.csproj
+          - ZEA.Architecture.Pattern.StrongTypes.Generator/ZEA.Architecture.Pattern.StrongTypes.Generator.csproj
+          - ZEA.Architecture.Patterns.ADTs/ZEA.Architecture.Patterns.ADTs.csproj
+          - ZEA.Architecture.Patterns.RailwayOrientedProgramming/ZEA.Architecture.Patterns.RailwayOrientedProgramming.csproj
+          - ZEA.Architecture.DDD/ZEA.Architecture.DDD.csproj
+          - ZEA.Architecture.EventSourcing/ZEA.Architecture.EventSourcing.csproj
+          - ZEA.Architecture.Hexagonal/ZEA.Architecture.Hexagonal.csproj
+          - ZEA.Architecture.Modularization/ZEA.Architecture.Modularization.csproj
+          - ZEA.Communication.Abstractions/ZEA.Communication.Abstractions.csproj
+          - ZEA.Communication.gRPC/ZEA.Communication.gRPC.csproj
+          - ZEA.Communication.Messaging.Abstractions/ZEA.Communication.Messaging.Abstractions.csproj
+          - ZEA.Communication.Messaging.MassTransit/ZEA.Communication.Messaging.MassTransit.csproj
+          - ZEA.Communication.Refit/ZEA.Communication.Refit.csproj
+          - ZEA.Configuration.Abstractions/ZEA.Configuration.Abstractions.csproj
+          - ZEA.Configuration.AzureKeyVault/ZEA.Configuration.AzureKeyVault.csproj
+          - ZEA.Configuration.HashicorpVault/ZEA.Configuration.HashicorpVault.csproj
+          - ZEA.Data.Modelling/ZEA.Data.Modelling.csproj
+          - ZEA.Serialization.Abstractions/ZEA.Serialization.Abstractions.csproj
+          - ZEA.Serialization.NewtonsoftJson/ZEA.Serialization.NewtonsoftJson.csproj
+          - ZEA.Validation.Abstractions/ZEA.Validation.Abstractions.csproj
+          - ZEA.Validation.FluentValidation/ZEA.Validation.FluentValidation.csproj
+              
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
