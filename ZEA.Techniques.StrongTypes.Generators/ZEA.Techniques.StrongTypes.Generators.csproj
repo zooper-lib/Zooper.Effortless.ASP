@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
+
+        <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <PackageId>ZEA.Techniques.StrongTypes.Generators</PackageId>
+
+        <IncludeProjectReferences>false</IncludeProjectReferences>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.9.2"/>
+
+        <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="4.9.2"/>
+    </ItemGroup>
+
+    <!-- This is required to include the analyzer in the package -->
+    <ItemGroup>
+        <None Include="$(OutputPath)$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs">
+            <Visible>False</Visible>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZEA.Serializations.NewtonsoftJson\ZEA.Serializations.NewtonsoftJson.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true"/>
+    </ItemGroup>
+</Project>

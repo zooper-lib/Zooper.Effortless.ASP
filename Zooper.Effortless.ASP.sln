@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apis", "Apis", "{125FA61A-3BBB-4EE8-8103-3BACACC0201D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Applications", "Applications", "{125FA61A-3BBB-4EE8-8103-3BACACC0201D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Architecture", "Architecture", "{2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Architectures", "Architectures", "{2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Configurations", "Configurations", "{330BD57F-24D2-4006-B30B-C92E409D92A2}"
 EndProject
@@ -12,69 +12,73 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Serialization", "Serializat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Validation", "Validation", "{59B49CBD-4E45-435B-94E6-F82FA4D6F556}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{AB375879-6818-4CF5-8246-6CC49FD3ADA0}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Patterns", "Patterns", "{C4890210-4F82-46C1-8610-EC56CAB61CB4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "StrongTypes", "StrongTypes", "{1E863AB8-8964-49F8-861B-515C7F1CC10B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PubSub", "PubSub", "{EA13C9E1-C56C-4057-8CEA-5340C97CF04C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mediators", "Mediators", "{EA13C9E1-C56C-4057-8CEA-5340C97CF04C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Api.MVC", "ZEA.Api.MVC\ZEA.Api.MVC.csproj", "{DC44E601-0B44-48B9-A3E7-16A6A8D46606}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Applications.WebApis.MVC", "ZEA.Applications.WebApis.MVC\ZEA.Applications.WebApis.MVC.csproj", "{DC44E601-0B44-48B9-A3E7-16A6A8D46606}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Api.Swagger", "ZEA.Api.Swagger\ZEA.Api.Swagger.csproj", "{FCC73B74-34CB-4C6E-8256-577630D2EF38}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Applications.WebApis.Swagger", "ZEA.Applications.WebApis.Swagger\ZEA.Applications.WebApis.Swagger.csproj", "{FCC73B74-34CB-4C6E-8256-577630D2EF38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.Mediator.Abstractions", "ZEA.Architecture.Pattern.Mediator.Abstractions\ZEA.Architecture.Pattern.Mediator.Abstractions.csproj", "{30A187B2-2E00-463A-9506-54EF7929D07F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architectures.Mediators.Abstractions", "ZEA.Architectures.Mediators.Abstractions\ZEA.Architectures.Mediators.Abstractions.csproj", "{30A187B2-2E00-463A-9506-54EF7929D07F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.Mediator.MediatrWrapper", "ZEA.Architecture.Pattern.Mediator.MediatrWrapper\ZEA.Architecture.Pattern.Mediator.MediatrWrapper.csproj", "{5AB96AC9-ADD9-478C-B617-03D97C0FC329}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architectures.Mediators.MediatrWrapper", "ZEA.Architectures.Mediators.MediatrWrapper\ZEA.Architectures.Mediators.MediatrWrapper.csproj", "{5AB96AC9-ADD9-478C-B617-03D97C0FC329}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.Mediator.MediatrWrapper.Tests", "ZEA.Architecture.Pattern.Mediator.MediatrWrapper.Tests\ZEA.Architecture.Pattern.Mediator.MediatrWrapper.Tests.csproj", "{76B13FF2-DD6D-41A7-AA69-1D797DFCAFE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architectures.Mediators.MediatrWrapper.Tests", "ZEA.Architectures.Mediators.MediatrWrapper.Tests\ZEA.Architectures.Mediators.MediatrWrapper.Tests.csproj", "{76B13FF2-DD6D-41A7-AA69-1D797DFCAFE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes", "ZEA.Architecture.Pattern.StrongTypes\ZEA.Architecture.Pattern.StrongTypes.csproj", "{E137E3D1-D3FE-45C1-9C4A-1E7F21DE8880}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Techniques.StrongTypes", "ZEA.Techniques.StrongTypes\ZEA.Techniques.StrongTypes.csproj", "{E137E3D1-D3FE-45C1-9C4A-1E7F21DE8880}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes.Generator", "ZEA.Architecture.Pattern.StrongTypes.Generator\ZEA.Architecture.Pattern.StrongTypes.Generator.csproj", "{9AD102CE-D60F-4C87-8D3A-3505BCD473EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Techniques.StrongTypes.Generators", "ZEA.Techniques.StrongTypes.Generators\ZEA.Techniques.StrongTypes.Generators.csproj", "{9AD102CE-D60F-4C87-8D3A-3505BCD473EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes.Generator.Sample", "ZEA.Architecture.Pattern.StrongTypes.Generator.Sample\ZEA.Architecture.Pattern.StrongTypes.Generator.Sample.csproj", "{E08C3847-1883-4E54-9BB5-CE775462A454}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Techniques.StrongTypes.Generators.Samples", "ZEA.Techniques.StrongTypes.Generators.Samples\ZEA.Techniques.StrongTypes.Generators.Samples.csproj", "{E08C3847-1883-4E54-9BB5-CE775462A454}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.StrongTypes.Generator.Tests", "ZEA.Architecture.Pattern.StrongTypes.Generator.Tests\ZEA.Architecture.Pattern.StrongTypes.Generator.Tests.csproj", "{EC894491-0BB0-4ECC-921B-8D47139EAA44}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Techniques.StrongTypes.Generators.Tests", "ZEA.Techniques.StrongTypes.Generators.Tests\ZEA.Techniques.StrongTypes.Generators.Tests.csproj", "{EC894491-0BB0-4ECC-921B-8D47139EAA44}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.RailwayOrientedProgramming", "ZEA.Architecture.Pattern.RailwayOrientedProgramming\ZEA.Architecture.Pattern.RailwayOrientedProgramming.csproj", "{F89B413A-2F96-4F75-B883-9BB70D058E41}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Techniques.RailwayOrientedProgramming", "ZEA.Techniques.RailwayOrientedProgramming\ZEA.Techniques.RailwayOrientedProgramming.csproj", "{F89B413A-2F96-4F75-B883-9BB70D058E41}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Pattern.ADTs", "ZEA.Architecture.Pattern.ADTs\ZEA.Architecture.Pattern.ADTs.csproj", "{2EE59B41-FCB7-4143-848D-34C54B7EA721}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Techniques.ADTs", "ZEA.Techniques.ADTs\ZEA.Techniques.ADTs.csproj", "{2EE59B41-FCB7-4143-848D-34C54B7EA721}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.DDD", "ZEA.Architecture.DDD\ZEA.Architecture.DDD.csproj", "{AC44E6D6-58FE-4792-878A-68E8FBE71B7B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architectures.DDD.Abstractions", "ZEA.Architectures.DDD.Abstractions\ZEA.Architectures.DDD.Abstractions.csproj", "{AC44E6D6-58FE-4792-878A-68E8FBE71B7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.EventSourcing", "ZEA.Architecture.EventSourcing\ZEA.Architecture.EventSourcing.csproj", "{E89426B8-1AF8-425C-BF14-0B9F64269E0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architectures.EventSourcing", "ZEA.Architectures.EventSourcing\ZEA.Architectures.EventSourcing.csproj", "{E89426B8-1AF8-425C-BF14-0B9F64269E0C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Hexagonal", "ZEA.Architecture.Hexagonal\ZEA.Architecture.Hexagonal.csproj", "{10EED62F-A58C-4C9E-BE1F-DAACE81BF215}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architectures.Hexagonal", "ZEA.Architectures.Hexagonal\ZEA.Architectures.Hexagonal.csproj", "{10EED62F-A58C-4C9E-BE1F-DAACE81BF215}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architecture.Modularization", "ZEA.Architecture.Modularization\ZEA.Architecture.Modularization.csproj", "{10EE709B-BF7E-4315-AA90-41D98A9E4921}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architectures.Modularization", "ZEA.Architectures.Modularization\ZEA.Architectures.Modularization.csproj", "{10EE709B-BF7E-4315-AA90-41D98A9E4921}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Abstractions", "ZEA.Communication.Abstractions\ZEA.Communication.Abstractions.csproj", "{29270759-C8AC-4C48-902F-88287CA3C087}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Abstractions", "ZEA.Communications.Abstractions\ZEA.Communications.Abstractions.csproj", "{29270759-C8AC-4C48-902F-88287CA3C087}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.gRPC", "ZEA.Communication.gRPC\ZEA.Communication.gRPC.csproj", "{68F6FF39-EBF7-4B64-BED1-89716BCA48EB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.gRPC", "ZEA.Communications.gRPC\ZEA.Communications.gRPC.csproj", "{68F6FF39-EBF7-4B64-BED1-89716BCA48EB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Messaging.Abstractions", "ZEA.Communication.Messaging.Abstractions\ZEA.Communication.Messaging.Abstractions.csproj", "{21B83B1C-A0E8-46F2-88A9-8C04DE68BD57}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.Abstractions", "ZEA.Communications.Messaging.Abstractions\ZEA.Communications.Messaging.Abstractions.csproj", "{21B83B1C-A0E8-46F2-88A9-8C04DE68BD57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Refit", "ZEA.Communication.Refit\ZEA.Communication.Refit.csproj", "{81F0D783-622A-4F67-ADE3-94ACD46A7C8D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Refit", "ZEA.Communications.Refit\ZEA.Communications.Refit.csproj", "{81F0D783-622A-4F67-ADE3-94ACD46A7C8D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communication.Messaging.MassTransit", "ZEA.Communication.Messaging.MassTransit\ZEA.Communication.Messaging.MassTransit.csproj", "{8FE30EBD-FD13-4A91-A5FD-2C4820E071AC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit", "ZEA.Communications.Messaging.MassTransit\ZEA.Communications.Messaging.MassTransit.csproj", "{8FE30EBD-FD13-4A91-A5FD-2C4820E071AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configuration.Abstractions", "ZEA.Configuration.Abstractions\ZEA.Configuration.Abstractions.csproj", "{80F8007F-0D7D-4614-AF0E-27CCF6C73571}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations.Abstractions", "ZEA.Configurations.Abstractions\ZEA.Configurations.Abstractions.csproj", "{80F8007F-0D7D-4614-AF0E-27CCF6C73571}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configuration.AzureKeyVault", "ZEA.Configuration.AzureKeyVault\ZEA.Configuration.AzureKeyVault.csproj", "{A2A92C1C-E0FB-426C-86DB-61C95A139E33}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations.AzureKeyVault", "ZEA.Configurations.AzureKeyVault\ZEA.Configurations.AzureKeyVault.csproj", "{A2A92C1C-E0FB-426C-86DB-61C95A139E33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configuration.HashicorpVault", "ZEA.Configuration.HashicorpVault\ZEA.Configuration.HashicorpVault.csproj", "{1B0EB2BB-8AAB-4E8F-9CDB-0B0FD0FF798C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Configurations.HashicorpVault", "ZEA.Configurations.HashicorpVault\ZEA.Configurations.HashicorpVault.csproj", "{1B0EB2BB-8AAB-4E8F-9CDB-0B0FD0FF798C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Data.Modelling", "ZEA.Data.Modelling\ZEA.Data.Modelling.csproj", "{6A3EE0AA-8DBE-4DBC-89C2-57CDB8066B3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Architectures.DDD.Modelling", "ZEA.Architectures.DDD.Modelling\ZEA.Architectures.DDD.Modelling.csproj", "{6A3EE0AA-8DBE-4DBC-89C2-57CDB8066B3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Serialization.Abstractions", "ZEA.Serialization.Abstractions\ZEA.Serialization.Abstractions.csproj", "{661F33A1-98FC-421F-9C53-C424BA517C9A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Serializations.Abstractions", "ZEA.Serializations.Abstractions\ZEA.Serializations.Abstractions.csproj", "{661F33A1-98FC-421F-9C53-C424BA517C9A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Serialization.NewtonsoftJson", "ZEA.Serialization.NewtonsoftJson\ZEA.Serialization.NewtonsoftJson.csproj", "{54D18ACE-80C9-49AE-A99B-BE85E8144462}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Serializations.NewtonsoftJson", "ZEA.Serializations.NewtonsoftJson\ZEA.Serializations.NewtonsoftJson.csproj", "{54D18ACE-80C9-49AE-A99B-BE85E8144462}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Validation.Abstractions", "ZEA.Validation.Abstractions\ZEA.Validation.Abstractions.csproj", "{66BF593C-5667-475D-A153-7B36AC98B461}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Validations.Abstractions", "ZEA.Validations.Abstractions\ZEA.Validations.Abstractions.csproj", "{66BF593C-5667-475D-A153-7B36AC98B461}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Validation.FluentValidation", "ZEA.Validation.FluentValidation\ZEA.Validation.FluentValidation.csproj", "{B91C10CF-FE89-46A3-9C74-25819D062DA2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Validations.FluentValidation", "ZEA.Validations.FluentValidation\ZEA.Validations.FluentValidation.csproj", "{B91C10CF-FE89-46A3-9C74-25819D062DA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Techniques", "Techniques", "{9BA1EE1A-8910-4BC6-A618-22B091B49C0F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DDD", "DDD", "{9FCCCFE8-2C0F-44D2-850A-E4521D238242}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ADTs", "ADTs", "{83B09205-37E5-43D7-8446-E03FD466564F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ROPs", "ROPs", "{A280FE28-6068-4173-ACF2-70B9EBEDFAF6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -82,9 +86,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{C4890210-4F82-46C1-8610-EC56CAB61CB4} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
-		{1E863AB8-8964-49F8-861B-515C7F1CC10B} = {C4890210-4F82-46C1-8610-EC56CAB61CB4}
-		{EA13C9E1-C56C-4057-8CEA-5340C97CF04C} = {C4890210-4F82-46C1-8610-EC56CAB61CB4}
 		{DC44E601-0B44-48B9-A3E7-16A6A8D46606} = {125FA61A-3BBB-4EE8-8103-3BACACC0201D}
 		{FCC73B74-34CB-4C6E-8256-577630D2EF38} = {125FA61A-3BBB-4EE8-8103-3BACACC0201D}
 		{30A187B2-2E00-463A-9506-54EF7929D07F} = {EA13C9E1-C56C-4057-8CEA-5340C97CF04C}
@@ -94,11 +95,7 @@ Global
 		{9AD102CE-D60F-4C87-8D3A-3505BCD473EF} = {1E863AB8-8964-49F8-861B-515C7F1CC10B}
 		{E08C3847-1883-4E54-9BB5-CE775462A454} = {1E863AB8-8964-49F8-861B-515C7F1CC10B}
 		{EC894491-0BB0-4ECC-921B-8D47139EAA44} = {1E863AB8-8964-49F8-861B-515C7F1CC10B}
-		{F89B413A-2F96-4F75-B883-9BB70D058E41} = {C4890210-4F82-46C1-8610-EC56CAB61CB4}
-		{2EE59B41-FCB7-4143-848D-34C54B7EA721} = {C4890210-4F82-46C1-8610-EC56CAB61CB4}
-		{AC44E6D6-58FE-4792-878A-68E8FBE71B7B} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 		{E89426B8-1AF8-425C-BF14-0B9F64269E0C} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
-		{10EED62F-A58C-4C9E-BE1F-DAACE81BF215} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 		{10EE709B-BF7E-4315-AA90-41D98A9E4921} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 		{29270759-C8AC-4C48-902F-88287CA3C087} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
 		{68F6FF39-EBF7-4B64-BED1-89716BCA48EB} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
@@ -108,11 +105,20 @@ Global
 		{80F8007F-0D7D-4614-AF0E-27CCF6C73571} = {330BD57F-24D2-4006-B30B-C92E409D92A2}
 		{A2A92C1C-E0FB-426C-86DB-61C95A139E33} = {330BD57F-24D2-4006-B30B-C92E409D92A2}
 		{1B0EB2BB-8AAB-4E8F-9CDB-0B0FD0FF798C} = {330BD57F-24D2-4006-B30B-C92E409D92A2}
-		{6A3EE0AA-8DBE-4DBC-89C2-57CDB8066B3E} = {AB375879-6818-4CF5-8246-6CC49FD3ADA0}
 		{661F33A1-98FC-421F-9C53-C424BA517C9A} = {C83B1152-7609-4166-A2C7-D25F22E1BDD9}
 		{54D18ACE-80C9-49AE-A99B-BE85E8144462} = {C83B1152-7609-4166-A2C7-D25F22E1BDD9}
 		{66BF593C-5667-475D-A153-7B36AC98B461} = {59B49CBD-4E45-435B-94E6-F82FA4D6F556}
 		{B91C10CF-FE89-46A3-9C74-25819D062DA2} = {59B49CBD-4E45-435B-94E6-F82FA4D6F556}
+		{1E863AB8-8964-49F8-861B-515C7F1CC10B} = {9BA1EE1A-8910-4BC6-A618-22B091B49C0F}
+		{9FCCCFE8-2C0F-44D2-850A-E4521D238242} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
+		{AC44E6D6-58FE-4792-878A-68E8FBE71B7B} = {9FCCCFE8-2C0F-44D2-850A-E4521D238242}
+		{6A3EE0AA-8DBE-4DBC-89C2-57CDB8066B3E} = {9FCCCFE8-2C0F-44D2-850A-E4521D238242}
+		{EA13C9E1-C56C-4057-8CEA-5340C97CF04C} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
+		{83B09205-37E5-43D7-8446-E03FD466564F} = {9BA1EE1A-8910-4BC6-A618-22B091B49C0F}
+		{2EE59B41-FCB7-4143-848D-34C54B7EA721} = {83B09205-37E5-43D7-8446-E03FD466564F}
+		{A280FE28-6068-4173-ACF2-70B9EBEDFAF6} = {9BA1EE1A-8910-4BC6-A618-22B091B49C0F}
+		{F89B413A-2F96-4F75-B883-9BB70D058E41} = {A280FE28-6068-4173-ACF2-70B9EBEDFAF6}
+		{10EED62F-A58C-4C9E-BE1F-DAACE81BF215} = {2ACF15A9-C70D-4663-A2DA-17CE2855CCA5}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{DC44E601-0B44-48B9-A3E7-16A6A8D46606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
