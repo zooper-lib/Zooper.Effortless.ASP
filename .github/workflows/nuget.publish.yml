@@ -89,31 +89,31 @@ jobs:
     strategy:
       matrix:
         project:
-          - ZEA.Api.MVC/ZEA.Api.MVC.csproj
-          - ZEA.Api.Swagger/ZEA.Api.Swagger.csproj
-          - ZEA.Architecture.Pattern.Mediator.Abstractions/ZEA.Architecture.Pattern.Mediator.Abstractions.csproj
-          - ZEA.Architecture.Pattern.Mediator.MediatrWrapper/ZEA.Architecture.Pattern.Mediator.MediatrWrapper.csproj
-          - ZEA.Architecture.Pattern.StrongTypes/ZEA.Architecture.Pattern.StrongTypes.csproj
-          - ZEA.Architecture.Pattern.StrongTypes.Generator/ZEA.Architecture.Pattern.StrongTypes.Generator.csproj
-          - ZEA.Architecture.Patterns.ADTs/ZEA.Architecture.Patterns.ADTs.csproj
-          - ZEA.Architecture.Patterns.RailwayOrientedProgramming/ZEA.Architecture.Patterns.RailwayOrientedProgramming.csproj
-          - ZEA.Architecture.DDD/ZEA.Architecture.DDD.csproj
-          - ZEA.Architecture.EventSourcing/ZEA.Architecture.EventSourcing.csproj
-          - ZEA.Architecture.Hexagonal/ZEA.Architecture.Hexagonal.csproj
-          - ZEA.Architecture.Modularization/ZEA.Architecture.Modularization.csproj
-          - ZEA.Communication.Abstractions/ZEA.Communication.Abstractions.csproj
-          - ZEA.Communication.gRPC/ZEA.Communication.gRPC.csproj
-          - ZEA.Communication.Messaging.Abstractions/ZEA.Communication.Messaging.Abstractions.csproj
-          - ZEA.Communication.Messaging.MassTransit/ZEA.Communication.Messaging.MassTransit.csproj
-          - ZEA.Communication.Refit/ZEA.Communication.Refit.csproj
-          - ZEA.Configuration.Abstractions/ZEA.Configuration.Abstractions.csproj
-          - ZEA.Configuration.AzureKeyVault/ZEA.Configuration.AzureKeyVault.csproj
-          - ZEA.Configuration.HashicorpVault/ZEA.Configuration.HashicorpVault.csproj
-          - ZEA.Data.Modelling/ZEA.Data.Modelling.csproj
-          - ZEA.Serialization.Abstractions/ZEA.Serialization.Abstractions.csproj
-          - ZEA.Serialization.NewtonsoftJson/ZEA.Serialization.NewtonsoftJson.csproj
-          - ZEA.Validation.Abstractions/ZEA.Validation.Abstractions.csproj
-          - ZEA.Validation.FluentValidation/ZEA.Validation.FluentValidation.csproj
+          - ZEA.Applications.WebApis.MVC/ZEA.Applications.WebApis.MVC.csproj
+          - ZEA.Applications.WebApis.Swagger/ZEA.Applications.WebApis.Swagger.csproj
+          - ZEA.Architectures.DDD.Abstractions/ZEA.Architectures.DDD.Abstractions.csproj
+          - ZEA.Architectures.DDD.Modelling/ZEA.Architectures.DDD.Modelling.csproj
+          - ZEA.Architectures.Mediators.Abstractions/ZEA.Architectures.Mediators.Abstractions.csproj
+          - ZEA.Architectures.Mediators.MediatrWrapper/ZEA.Architectures.Mediators.MediatrWrapper.csproj
+          - ZEA.Architectures.EventSourcing/ZEA.Architectures.EventSourcing.csproj
+          - ZEA.Architectures.Hexagonal/ZEA.Architectures.Hexagonal.csproj
+          - ZEA.Architectures.Modularization/ZEA.Architectures.Modularization.csproj
+          - ZEA.Communications.Abstractions/ZEA.Communications.Abstractions.csproj
+          - ZEA.Communications.gRPC/ZEA.Communications.gRPC.csproj
+          - ZEA.Communications.Messaging.Abstractions/ZEA.Communications.Messaging.Abstractions.csproj
+          - ZEA.Communications.Messaging.MassTransit/ZEA.Communications.Messaging.MassTransit.csproj
+          - ZEA.Communications.Refit/ZEA.Communications.Refit.csproj
+          - ZEA.Configurations.Abstractions/ZEA.Configurations.Abstractions.csproj
+          - ZEA.Configurations.AzureKeyVault/ZEA.Configurations.AzureKeyVault.csproj
+          - ZEA.Configurations.HashicorpVault/ZEA.Configurations.HashicorpVault.csproj
+          - ZEA.Serializations.Abstractions/ZEA.Serializations.Abstractions.csproj
+          - ZEA.Serializations.NewtonsoftJson/ZEA.Serializations.NewtonsoftJson.csproj
+          - ZEA.Techniques.ADTs/ZEA.Techniques.ADTs.csproj
+          - ZEA.Techniques.RailwayOrientedProgramming/ZEA.Techniques.RailwayOrientedProgramming.csproj
+          - ZEA.Techniques.StrongTypes/ZEA.Techniques.StrongTypes.csproj
+          - ZEA.Techniques.StrongTypes.Generators/ZEA.Techniques.StrongTypes.Generators.csproj
+          - ZEA.Validations.Abstractions/ZEA.Validations.Abstractions.csproj
+          - ZEA.Validations.FluentValidation/ZEA.Validations.FluentValidation.csproj
     
     steps:
       - name: Checkout Repository
