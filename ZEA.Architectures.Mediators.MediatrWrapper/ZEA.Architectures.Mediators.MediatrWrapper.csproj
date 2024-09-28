@@ -8,6 +8,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\ZEA.Architectures.Mediators.Abstractions\ZEA.Architectures.Mediators.Abstractions.csproj" />
+        <ProjectReference Include="..\ZEA.Validations.FluentValidation\ZEA.Validations.FluentValidation.csproj" />
     </ItemGroup>
 
     <ItemGroup>

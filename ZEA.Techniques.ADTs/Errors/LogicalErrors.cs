@@ -26,10 +26,12 @@ public record PublicDetails(string Message, string? Details = null);
 )]
 public record InternalDetails(StackTrace StackTrace);
 
+public interface IAdtType;
+
 /// <summary>
 /// Base class representing a logical error within the program flow.
 /// </summary>
-public abstract record LogicalError(string Message, string? Details = null)
+public abstract record LogicalError(string Message, string? Details = null) : IAdtType
 {
 	public InternalDetails? InternalDetails { get; protected init; }
 
