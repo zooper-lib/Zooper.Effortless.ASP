@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="..\CHANGELOG.md" Pack="true"/>
+        <None Include="..\CHANGELOG.md" Pack="true" PackagePath="docs\CHANGELOG.md" />
     </ItemGroup>
 
     <ItemGroup>
