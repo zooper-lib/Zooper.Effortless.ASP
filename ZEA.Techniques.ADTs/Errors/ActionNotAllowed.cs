@@ -1,3 +1,5 @@
+// TODO: Change Namespaces to "Responses"
+
 namespace ZEA.Techniques.ADTs.Errors;
 
 /// <summary>

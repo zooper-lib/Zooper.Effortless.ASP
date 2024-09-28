@@ -1,7 +1,11 @@
+using System.Reflection;
+using FluentValidation;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using ZEA.Architectures.Mediators.Abstractions.Builders;
-using ZEA.Architectures.Mediators.Abstractions.Interfaces;
 using ZEA.Architectures.Mediators.MediatrWrapper.Adapters;
+using ZEA.Validations.FluentValidation;
+using IMediator = ZEA.Architectures.Mediators.Abstractions.Interfaces.IMediator;
 
 namespace ZEA.Architectures.Mediators.MediatrWrapper.Extensions;
 
@@ -30,8 +34,35 @@ public static class MediatorBuilderExtensions
 				services.AddSingleton<IMediator, MediatrMediatorAdapter>();
 
 				// Register handler adapters
-				services.AddTransient(typeof(IRequestHandler<,>), typeof(MediatrRequestHandlerAdapter<,>));
-				services.AddTransient(typeof(INotificationHandler<>), typeof(MediatrNotificationHandlerAdapter<>));
+				services.AddTransient(typeof(Abstractions.Interfaces.IRequestHandler<,>), typeof(MediatrRequestHandlerAdapter<,>));
+				services.AddTransient(typeof(Abstractions.Interfaces.INotificationHandler<>), typeof(MediatrNotificationHandlerAdapter<>));
+			}
+		);
+
+		return builder;
+	}
+
+	// TODO: Check this method if it is working. Also for the Behavior.
+	public static MediatorBuilder UseFluentValidationBehavior(this MediatorBuilder builder)
+	{
+		builder.ConfigureImplementation(
+			(
+				services,
+				assemblies) =>
+			{
+				// Register all classes that inherit from AbstractValidator
+				services.Scan(
+					scan => scan.FromAssemblies(assemblies)
+						.AddClasses(classes => classes.AssignableTo(typeof(AbstractValidator<>)))
+						.AsImplementedInterfaces()
+						.WithTransientLifetime()
+				);
+
+				// Register the ValidationBehavior for MediatR
+				services.AddTransient(
+					typeof(IPipelineBehavior<,>),
+					typeof(ValidationBehavior<,>)
+				);
 			}
 		);
 
