@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 - **ZEA.Architecture.Pattern.Mediator.***
     - Introduced new packages which serve as a wrapper for different Mediator libraries.
+- **ZEA.Communications.Messaging.Abstractions**
+    - Added the possibility to add metadata to a publish command.
 
 ### Deprecated
 

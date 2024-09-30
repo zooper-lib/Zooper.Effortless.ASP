@@ -28,6 +28,7 @@ public record InternalDetails(StackTrace StackTrace);
 
 public interface IAdtType;
 
+// TODO: Rename to something better
 /// <summary>
 /// Base class representing a logical error within the program flow.
 /// </summary>
