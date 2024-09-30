@@ -35,10 +35,10 @@ public interface IEventPublisher : IPublisher
 	/// <summary>
 	/// Publishes the event with metadata.
 	/// </summary>
-	/// <param name="event"></param>
-	/// <param name="metadata"></param>
-	/// <param name="cancellationToken"></param>
-	/// <typeparam name="TEvent"></typeparam>
+	/// <param name="event">The event to publish</param>
+	/// <param name="metadata">The metadata alongside the event</param>
+	/// <param name="cancellationToken">The cancellation token</param>
+	/// <typeparam name="TEvent">The type of the event.</typeparam>
 	/// <returns></returns>
 	Task PublishAsync<TEvent>(
 		TEvent @event,
@@ -48,10 +48,10 @@ public interface IEventPublisher : IPublisher
 	/// <summary>
 	/// Publishes the event with metadata.
 	/// </summary>
-	/// <param name="event"></param>
-	/// <param name="metadata"></param>
-	/// <param name="cancellationToken"></param>
-	/// <typeparam name="TEvent"></typeparam>
+	/// <param name="event">The event to publish</param>
+	/// <param name="metadata">The metadata alongside the event</param>
+	/// <param name="cancellationToken">The cancellation token</param>
+	/// <typeparam name="TEvent">The type of the event.</typeparam>
 	/// <returns></returns>
 	Task PublishAsync<TEvent>(
 		TEvent @event,
