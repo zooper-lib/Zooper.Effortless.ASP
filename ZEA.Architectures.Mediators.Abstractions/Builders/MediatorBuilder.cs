@@ -9,70 +9,159 @@ namespace ZEA.Architectures.Mediators.Abstractions.Builders;
 /// </summary>
 public class MediatorBuilder(IServiceCollection services)
 {
-	private readonly List<Assembly> _assemblies = [];
+	// Lists to store the handler types
+	private readonly List<Type> _requestHandlerTypes = [];
+	private readonly List<Type> _notificationHandlerTypes = [];
+
+	// HashSet to store the assemblies containing the handlers
+	private readonly HashSet<Assembly> _handlerAssemblies = [];
+
+	// Implementation configuration action
+	private Action<IServiceCollection, IEnumerable<Assembly>>? _implementationConfiguration;
+
+	// Flag to check if an implementation has been configured
+	private bool _implementationConfigured;
 
 	/// <summary>
-	/// Adds assemblies to scan for handlers.
-	/// If no assemblies are provided, all currently loaded assemblies will be used.
+	/// Adds request handlers from the specified assemblies.
+	/// If no assemblies are provided, all loaded assemblies are scanned.
 	/// </summary>
-	/// <param name="assemblies">The assemblies to scan for handlers.</param>
-	/// <returns>The current <see cref="MediatorBuilder"/> instance for chaining further configuration.</returns>
-	public MediatorBuilder AddAssemblies(params Assembly[] assemblies)
+	public MediatorBuilder AddRequestHandlersFromAssemblies(params Assembly[] assemblies)
 	{
-		if (assemblies is { Length: > 0 })
+		var assembliesToScan = assemblies.Length > 0
+			? assemblies
+			: AppDomain.CurrentDomain.GetAssemblies();
+
+		foreach (var assembly in assembliesToScan)
 		{
-			_assemblies.AddRange(assemblies);
+			var handlerTypes = assembly.GetTypes()
+				.Where(type => type is { IsAbstract: false, IsInterface: false })
+				.Where(
+					type => type.GetInterfaces().Any(
+						i =>
+							i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>)
+					)
+				)
+				.ToList();
+
+			_requestHandlerTypes.AddRange(handlerTypes);
+			_handlerAssemblies.Add(assembly);
 		}
 
 		return this;
 	}
 
 	/// <summary>
-	/// Allows implementation-specific service registration without exposing IServiceCollection or assemblies.
+	/// Adds specific request handler types.
 	/// </summary>
-	/// <param name="configure">An action that receives <see cref="IServiceCollection"/> and assemblies for registration.</param>
-	/// <returns>The current <see cref="MediatorBuilder"/> instance for chaining further configuration.</returns>
-	public MediatorBuilder ConfigureImplementation(Action<IServiceCollection, IEnumerable<Assembly>> configure)
+	public MediatorBuilder AddRequestHandlers(params Type[] handlerTypes)
 	{
-		if (_assemblies.Count == 0)
+		_requestHandlerTypes.AddRange(handlerTypes);
+
+		foreach (var handlerType in handlerTypes)
 		{
-			// Use all loaded assemblies if none are provided
-			_assemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies());
+			_handlerAssemblies.Add(handlerType.Assembly);
 		}
 
-		configure(services, _assemblies);
+		return this;
+	}
 
+	/// <summary>
+	/// Adds notification handlers from the specified assemblies.
+	/// If no assemblies are provided, all loaded assemblies are scanned.
+	/// </summary>
+	public MediatorBuilder AddNotificationHandlersFromAssemblies(params Assembly[] assemblies)
+	{
+		var assembliesToScan = assemblies.Length > 0
+			? assemblies
+			: AppDomain.CurrentDomain.GetAssemblies();
+
+		foreach (var assembly in assembliesToScan)
+		{
+			var handlerTypes = assembly.GetTypes()
+				.Where(type => type is { IsAbstract: false, IsInterface: false })
+				.Where(
+					type => type.GetInterfaces().Any(
+						i =>
+							i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INotificationHandler<>)
+					)
+				)
+				.ToList();
+
+			_notificationHandlerTypes.AddRange(handlerTypes);
+			_handlerAssemblies.Add(assembly);
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	/// Adds specific notification handler types.
+	/// </summary>
+	public MediatorBuilder AddNotificationHandlers(params Type[] handlerTypes)
+	{
+		_notificationHandlerTypes.AddRange(handlerTypes);
+
+		foreach (var handlerType in handlerTypes)
+		{
+			_handlerAssemblies.Add(handlerType.Assembly);
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	/// Configures the mediator to use the specified implementation.
+	/// </summary>
+	public MediatorBuilder UseImplementation(Action<IServiceCollection, IEnumerable<Assembly>> configureImplementation)
+	{
+		_implementationConfiguration = configureImplementation;
+		_implementationConfigured = true;
 		return this;
 	}
 
 	/// <summary>
 	/// Finalizes the configuration and registers the mediator and handlers.
 	/// </summary>
-	/// <returns>The configured <see cref="IServiceCollection"/> instance.</returns>
 	public IServiceCollection Build()
 	{
-		if (_assemblies.Count == 0)
+		if (!_implementationConfigured)
 		{
-			// Use all loaded assemblies if none are provided
-			_assemblies.AddRange(AppDomain.CurrentDomain.GetAssemblies());
+			throw new InvalidOperationException(
+				"No mediator implementation has been configured. Please configure an implementation using an implementation-specific method like 'UseMediatR'."
+			);
 		}
 
-		// Register your handlers based on abstractions
-		services.Scan(
-			scan => scan
-				.FromAssemblies(_assemblies)
-				.AddClasses(classes => classes.AssignableTo(typeof(IRequestHandler<,>)))
-				.AsImplementedInterfaces()
-				.WithTransientLifetime()
-		);
+		// Execute the implementation configuration, passing the collected assemblies
+		_implementationConfiguration?.Invoke(services, _handlerAssemblies);
 
-		services.Scan(
-			scan => scan
-				.FromAssemblies(_assemblies)
-				.AddClasses(classes => classes.AssignableTo(typeof(INotificationHandler<>)))
-				.AsImplementedInterfaces()
-				.WithTransientLifetime()
-		);
+		// Register request handlers
+		foreach (var handlerType in _requestHandlerTypes)
+		{
+			var interfaces = handlerType.GetInterfaces().Where(
+				i =>
+					i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>)
+			);
+
+			foreach (var @interface in interfaces)
+			{
+				services.AddTransient(@interface, handlerType);
+			}
+		}
+
+		// Register notification handlers
+		foreach (var handlerType in _notificationHandlerTypes)
+		{
+			var interfaces = handlerType.GetInterfaces().Where(
+				i =>
+					i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INotificationHandler<>)
+			);
+
+			foreach (var @interface in interfaces)
+			{
+				services.AddTransient(@interface, handlerType);
+			}
+		}
 
 		return services;
 	}
