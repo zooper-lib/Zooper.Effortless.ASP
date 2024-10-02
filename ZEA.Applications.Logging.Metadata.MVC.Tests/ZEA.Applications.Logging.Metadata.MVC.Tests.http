@@ -1,0 +1,12 @@
+@ZEA.Applications.Logging.Metadata.MVC.Tests_HostAddress = http://localhost:5071
+
+### Unauthenticated Request
+
+GET http://localhost:5071/Test/unauthorized
+Accept: application/json
+
+### Authenticated Request
+
+GET http://localhost:5071/Test/authorized
+Accept: application/json
+X-Authenticated: true
