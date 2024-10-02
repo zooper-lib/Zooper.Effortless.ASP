@@ -89,6 +89,8 @@ jobs:
     strategy:
       matrix:
         project:
+          - ZEA.Applications.Logging.Metadata.Abstractions/ZEA.Applications.Logging.Metadata.Abstractions.csproj
+          - ZEA.Applications.Logging.Metadata.MVC/ZEA.Applications.Logging.Metadata.MVC.csproj
           - ZEA.Applications.WebApis.MVC/ZEA.Applications.WebApis.MVC.csproj
           - ZEA.Applications.WebApis.Swagger/ZEA.Applications.WebApis.Swagger.csproj
           - ZEA.Architectures.DDD.Abstractions/ZEA.Architectures.DDD.Abstractions.csproj
