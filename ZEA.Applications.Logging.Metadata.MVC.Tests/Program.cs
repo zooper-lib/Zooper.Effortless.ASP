@@ -1,21 +1,12 @@
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Newtonsoft.Json;
 using ZEA.Applications.Logging.Metadata.Abstractions.Interfaces;
 using ZEA.Applications.Logging.Metadata.MVC.Extensions;
+using ZEA.Applications.Logging.Metadata.MVC.Services;
 using ZEA.Applications.Logging.Metadata.MVC.Tests;
-using ZEA.Applications.Logging.Metadata.MVC.Tests.Adaptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers()
-	.AddNewtonsoftJson(
-		options =>
-		{
-			options.SerializerSettings.TypeNameHandling = TypeNameHandling.Auto;
-			options.SerializerSettings.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
-		}
-	);
+builder.Services.AddControllers();
 
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession(
@@ -37,7 +28,7 @@ builder.Services.AddAuthentication(
 	.AddScheme<AuthenticationSchemeOptions, FakeAuthenticationHandler>("FakeAuthentication", options => { });
 
 // Register request metadata services
-builder.Services.AddRequestMetadata<RequestMetadata, CustomRequestMetadataService>();
+builder.Services.AddRequestMetadata<RequestMetadata, RequestMetadataService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -1,10 +1,8 @@
-using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using ZEA.Architectures.Mediators.Abstractions.Builders;
 using ZEA.Architectures.Mediators.MediatrWrapper.Adapters;
 using ZEA.Validations.FluentValidation;
-using IMediator = ZEA.Architectures.Mediators.Abstractions.Interfaces.IMediator;
 
 namespace ZEA.Architectures.Mediators.MediatrWrapper.Extensions;
 

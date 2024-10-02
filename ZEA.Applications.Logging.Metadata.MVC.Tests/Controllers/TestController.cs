@@ -17,7 +17,13 @@ public class TestController : ControllerBase
 		if (metadata != null)
 		{
 			// Use the metadata as needed
-			return Ok(metadata);
+			return Ok(
+				new
+				{
+					metadata.SessionId,
+					metadata.Timestamp
+				}
+			);
 		}
 		else
 		{
@@ -34,7 +40,13 @@ public class TestController : ControllerBase
 		if (metadata != null)
 		{
 			// Use the metadata as needed
-			return Ok(metadata);
+			return Ok(
+				new
+				{
+					metadata.SessionId,
+					metadata.Timestamp
+				}
+			);
 		}
 		else
 		{

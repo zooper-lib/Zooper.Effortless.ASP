@@ -14,11 +14,6 @@ public class RequestMetadataModelBinderProvider<TMetadata>(IRequestMetadataAcces
 {
 	public IModelBinder? GetBinder(ModelBinderProviderContext context)
 	{
-		if (context.Metadata.ModelType == typeof(TMetadata))
-		{
-			return new RequestMetadataModelBinder<TMetadata>(accessor);
-		}
-
-		return null;
+		return context.Metadata.ModelType == typeof(TMetadata) ? new RequestMetadataModelBinder<TMetadata>(accessor) : null;
 	}
 }
