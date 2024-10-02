@@ -18,4 +18,8 @@
         <ProjectReference Include="..\ZEA.Applications.Logging.Metadata.Abstractions\ZEA.Applications.Logging.Metadata.Abstractions.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true" PackagePath="docs\CHANGELOG.md" />
+    </ItemGroup>
+
 </Project>
