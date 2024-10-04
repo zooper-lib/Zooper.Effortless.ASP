@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using ZEA.Communications.Messaging.Abstractions;
+using ZEA.Communications.Messaging.MassTransit.Implementations;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
 

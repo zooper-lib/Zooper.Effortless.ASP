@@ -1,7 +1,7 @@
 ﻿using MassTransit;
 using ZEA.Communications.Messaging.Abstractions;
 
-namespace ZEA.Communications.Messaging.MassTransit;
+namespace ZEA.Communications.Messaging.MassTransit.Implementations;
 
 // ReSharper disable once ClassNeverInstantiated.Global
 public class MassTransitMessagePublisher(IBus bus) : IMessagePublisher

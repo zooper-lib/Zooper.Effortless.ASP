@@ -1,9 +1,11 @@
+using ZEA.Applications.Logging.Metadata.Abstractions.Interfaces;
+
 namespace ZEA.Communications.Messaging.Abstractions;
 
 /// <summary>
 /// The metadata for an event.
 /// </summary>
-public class EventMetadata(Guid id, DateTime createdAt)
+public class EventMetadata(Guid id, DateTime createdAt) : IMetadata
 {
 	public static EventMetadata Create() => new(Guid.NewGuid(), DateTime.UtcNow);
 
