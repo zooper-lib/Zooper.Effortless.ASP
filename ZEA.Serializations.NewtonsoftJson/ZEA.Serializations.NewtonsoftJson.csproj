@@ -17,5 +17,9 @@
     <ItemGroup>
         <None Include="..\CHANGELOG.md" Pack="true" PackagePath="docs\CHANGELOG.md" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ZEA.Serializations.Abstractions\ZEA.Serializations.Abstractions.csproj" />
+    </ItemGroup>
     
 </Project>
