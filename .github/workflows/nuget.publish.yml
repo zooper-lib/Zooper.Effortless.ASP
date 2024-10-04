@@ -110,6 +110,7 @@ jobs:
           - ZEA.Configurations.HashicorpVault/ZEA.Configurations.HashicorpVault.csproj
           - ZEA.Serializations.Abstractions/ZEA.Serializations.Abstractions.csproj
           - ZEA.Serializations.NewtonsoftJson/ZEA.Serializations.NewtonsoftJson.csproj
+          - ZEA.Serializations.SystemTextJson/ZEA.Serializations.SystemTextJson.csproj
           - ZEA.Techniques.ADTs/ZEA.Techniques.ADTs.csproj
           - ZEA.Techniques.RailwayOrientedProgramming/ZEA.Techniques.RailwayOrientedProgramming.csproj
           - ZEA.Techniques.StrongTypes/ZEA.Techniques.StrongTypes.csproj

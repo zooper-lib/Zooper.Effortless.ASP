@@ -1,13 +1,13 @@
-using System.Text.Json;
 using MassTransit;
 using ZEA.Applications.Logging.Metadata.Abstractions.Interfaces;
 using ZEA.Architectures.DDD.Abstractions.Interfaces;
 using ZEA.Communications.Messaging.Abstractions;
+using ZEA.Serializations.Abstractions.Interfaces;
 
 namespace ZEA.Communications.Messaging.MassTransit.Implementations;
 
 // ReSharper disable once UnusedType.Global
-public class MassTransitEventPublisher(IBus bus, JsonSerializerOptions serializerOptions) : IEventPublisher
+public class MassTransitEventPublisher(IBus bus, IJsonSerializer jsonSerializer) : IEventPublisher
 {
 	/// <inheritdoc/>
 	[Obsolete("This method is obsolete. Use the PublishAsync method instead.")]
@@ -65,7 +65,7 @@ public class MassTransitEventPublisher(IBus bus, JsonSerializerOptions serialize
 		IMetadata metadata,
 		CancellationToken cancellationToken) where TEvent : class, IEvent
 	{
-		var metadataJson = JsonSerializer.Serialize(metadata, serializerOptions);
+		var metadataJson = jsonSerializer.Serialize(metadata);
 
 		await bus.Publish(@event, context => { context.Headers.Set("Metadata", metadataJson); }, cancellationToken);
 	}

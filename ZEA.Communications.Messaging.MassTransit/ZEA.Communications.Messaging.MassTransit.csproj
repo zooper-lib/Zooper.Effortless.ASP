@@ -16,6 +16,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ZEA.Applications.Logging.Metadata.Abstractions\ZEA.Applications.Logging.Metadata.Abstractions.csproj" />
       <ProjectReference Include="..\ZEA.Communications.Messaging.Abstractions\ZEA.Communications.Messaging.Abstractions.csproj" />
+      <ProjectReference Include="..\ZEA.Serializations.Abstractions\ZEA.Serializations.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>
