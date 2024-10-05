@@ -26,6 +26,6 @@ public static class DomainEventExtensions
 			throw new InvalidOperationException($"Domain event of type {type.FullName} does not have a DomainEventNameAttribute.");
 		}
 
-		return attribute.EventName;
+		return attribute.Version is null ? $"{attribute.EventName}" : $"{attribute.EventName}-V{attribute.Version}";
 	}
 }

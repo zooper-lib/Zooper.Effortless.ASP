@@ -36,6 +36,30 @@ public class DomainEventSerializer(JsonSerializerSettings? jsonSettings = null)
 	}
 
 	/// <summary>
+	/// Deserializes a domain event from a JSON-encoded byte array based on the event name and version.
+	/// </summary>
+	/// <param name="eventName">The name of the event, used to determine the correct event type.</param>
+	/// <param name="version">The version of the event.</param>
+	/// <param name="eventData">The byte array containing the JSON-encoded event data.</param>
+	/// <returns>The deserialized domain event, or <c>null</c> if the event data is empty.</returns>
+	/// <exception cref="JsonSerializationException">Thrown if the event type cannot be resolved or if deserialization fails.</exception>
+	public IDomainEvent? DeserializeEvent(
+		string eventName,
+		int version,
+		byte[] eventData)
+	{
+		var eventType = DomainEventTypeResolver.ResolveEventType(eventName, version);
+
+		if (eventType == null)
+		{
+			throw new JsonSerializationException($"No event type found for EventName '{eventName}'.");
+		}
+
+		var jsonData = Encoding.UTF8.GetString(eventData);
+		return (IDomainEvent?)JsonConvert.DeserializeObject(jsonData, eventType, _jsonSettings);
+	}
+
+	/// <summary>
 	/// Serializes a domain event into a JSON-encoded byte array.
 	/// </summary>
 	/// <param name="domainEvent">The domain event to serialize.</param>
