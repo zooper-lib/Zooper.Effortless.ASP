@@ -52,7 +52,7 @@ public class MassTransitEventPublisher(IBus bus, IJsonSerializer jsonSerializer)
 			{
 				foreach (var kvp in metadata)
 				{
-					context.Headers.Set(kvp.Key, kvp.Value?.ToString());
+					context.Headers.Set(kvp.Key, kvp.Value.ToString());
 				}
 			},
 			cancellationToken
