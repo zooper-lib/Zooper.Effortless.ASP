@@ -95,7 +95,7 @@ namespace MassTransitSourceGenerator.Generated
 {{
     public static class MassTransitConsumerRegistration
     {{
-        public static void RegisterConsumers(this IServiceBusBusFactoryConfigurator cfg, IBusRegistrationContext context, IServiceProvider provider)
+        public static void RegisterConsumers(this IServiceBusBusFactoryConfigurator cfg, IBusRegistrationContext context)
         {{
 "
 		);
