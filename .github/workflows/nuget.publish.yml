@@ -140,7 +140,7 @@ jobs:
         run: dotnet pack "${{ matrix.project }}" --configuration Release /p:PackageVersion=${{ needs.setup.outputs.package_version }} --output ./nupkg
 
       - name: Publish
-        run: dotnet nuget push "./nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json --verbosity detailed
+        run: dotnet nuget push "./nupkg/*.nupkg" --api-key "${{ secrets.NUGET_API_KEY }}" --source https://api.nuget.org/v3/index.json
 
   tag:
     needs: [ setup, build-pack-publish ]
