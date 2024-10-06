@@ -84,36 +84,35 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 
 		// Generate the registration code
 		var sourceBuilder = new StringBuilder(
-			$@"
-using MassTransit;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using System;
-using MassTransit;
+			"""
+			using Microsoft.Extensions.DependencyInjection;
+			using Microsoft.Extensions.Configuration;
+			using System;
+			using MassTransit;
 
-namespace MassTransitSourceGenerator.Generated
-{{
-    public static class MassTransitConsumerRegistration
-    {{
-        public static void RegisterConsumers(this IServiceBusBusFactoryConfigurator cfg, IBusRegistrationContext context)
-        {{
-"
+			namespace MassTransitSourceGenerator.Generated
+			{
+			    public static class MassTransitConsumerRegistration
+			    {
+			        public static void RegisterConsumers(this IServiceBusBusFactoryConfigurator cfg, IBusRegistrationContext context)
+			        {
+			"""
 		);
 
 		foreach (var consumer in consumers)
 		{
 			sourceBuilder.AppendLine(
-				$$$"""
-				               cfg.AddConsumer<{{consumer.ClassName}}>();
-				   
-				               cfg.Message<{{{consumer.InterfaceName}}}>(mtc => mtc.SetEntityName("{{{consumer.EntityName}}}"));
-				               
-				               cfg.SubscriptionEndpoint("{{{consumer.SubscriptionName}}}", "{{{consumer.EntityName}}}", e =>
-				               {
-				                   e.ConfigureConsumer<{{{consumer.ClassName}}}>(context);
-				               });
+				$$"""
+				              cfg.AddConsumer<{{consumer.ClassName}}>();
+				  
+				              cfg.Message<{{consumer.InterfaceName}}>(mtc => mtc.SetEntityName("{{consumer.EntityName}}"));
+				              
+				              cfg.SubscriptionEndpoint("{{consumer.SubscriptionName}}", "{{consumer.EntityName}}", e =>
+				              {
+				                  e.ConfigureConsumer<{{consumer.ClassName}}>(context);
+				              });
 
-				   """
+				  """
 			);
 		}
 
