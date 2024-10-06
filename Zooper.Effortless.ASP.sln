@@ -94,6 +94,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messagin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit.AzureServiceBus", "ZEA.Communications.Messaging.MassTransit.AzureServiceBus\ZEA.Communications.Messaging.MassTransit.AzureServiceBus.csproj", "{FAA7FD4C-369D-4273-BF03-DCAB70552AD2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit.Generators", "ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators.csproj", "{9B5475A9-71A1-4A28-AA39-3C986A576540}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit.Generators.Sample", "ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators.Sample\ZEA.Communications.Messaging.MassTransit.Generators.Sample.csproj", "{1E588B6C-6515-48E8-A1B4-ACF7A19EC0D6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -140,6 +144,8 @@ Global
 		{26499954-0A2C-485D-85D0-BE636719742A} = {C83B1152-7609-4166-A2C7-D25F22E1BDD9}
 		{88FD8E56-01CC-4687-BE15-597B5EE864DA} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
 		{FAA7FD4C-369D-4273-BF03-DCAB70552AD2} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
+		{9B5475A9-71A1-4A28-AA39-3C986A576540} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
+		{1E588B6C-6515-48E8-A1B4-ACF7A19EC0D6} = {76494949-86B3-4F74-A135-A9F66F4CBFAF}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{DC44E601-0B44-48B9-A3E7-16A6A8D46606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -282,5 +288,13 @@ Global
 		{FAA7FD4C-369D-4273-BF03-DCAB70552AD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAA7FD4C-369D-4273-BF03-DCAB70552AD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAA7FD4C-369D-4273-BF03-DCAB70552AD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B5475A9-71A1-4A28-AA39-3C986A576540}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B5475A9-71A1-4A28-AA39-3C986A576540}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B5475A9-71A1-4A28-AA39-3C986A576540}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B5475A9-71A1-4A28-AA39-3C986A576540}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E588B6C-6515-48E8-A1B4-ACF7A19EC0D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E588B6C-6515-48E8-A1B4-ACF7A19EC0D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E588B6C-6515-48E8-A1B4-ACF7A19EC0D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E588B6C-6515-48E8-A1B4-ACF7A19EC0D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
