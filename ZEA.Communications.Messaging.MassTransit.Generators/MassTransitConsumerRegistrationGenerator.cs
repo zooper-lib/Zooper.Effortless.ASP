@@ -8,11 +8,11 @@ using ZEA.Communications.Messaging.MassTransit.Generators.Attributes;
 namespace ZEA.Communications.Messaging.MassTransit.Generators;
 
 [Generator]
-public class MassTransitRegistrationGenerator : ISourceGenerator
+public class MassTransitConsumerRegistrationGenerator : ISourceGenerator
 {
 	public void Initialize(GeneratorInitializationContext context)
 	{
-		// Register a syntax receiver that will be created for each generation pass
+		// Register a syntax receiver that will collect candidate classes
 		context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
 	}
 
@@ -22,12 +22,12 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 		if (context.SyntaxReceiver is not SyntaxReceiver receiver)
 			return;
 
-		// Get the attribute symbol
+		// Get the MassTransitConsumerAttribute symbol
 		var attributeSymbol = FindTypeByName(context.Compilation, nameof(MassTransitConsumerAttribute));
 
 		if (attributeSymbol == null)
 		{
-			// Attribute not found
+			// Attribute not found; nothing to generate
 			return;
 		}
 
@@ -57,7 +57,7 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 			if (attributeData is null)
 				continue;
 
-			// Extract attribute arguments
+			// Extract attribute arguments (optional, depending on whether needed for Consumer registration)
 			var entityName = attributeData.ConstructorArguments.Length > 0 ? attributeData.ConstructorArguments[0].Value as string : null;
 			var subscriptionName = attributeData.ConstructorArguments.Length > 1
 				? attributeData.ConstructorArguments[1].Value as string
@@ -67,11 +67,17 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 			if (entityName is null || subscriptionName is null || queueName is null)
 				continue;
 
+			// Get the message type from IConsumer<T>
+			var interfaceName = GetConsumerInterface(classSymbol, consumerInterfaceSymbol);
+
+			if (interfaceName == "object")
+				continue; // Skip if message type not found
+
 			consumers.Add(
 				new ConsumerInfo
 				{
 					ClassName = classSymbol.ToDisplayString(),
-					InterfaceName = GetConsumerInterface(classSymbol, consumerInterfaceSymbol),
+					InterfaceName = interfaceName,
 					EntityName = entityName,
 					SubscriptionName = subscriptionName,
 					QueueName = queueName
@@ -82,35 +88,27 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 		if (!consumers.Any())
 			return;
 
-		// Generate the registration code
+		// Generate the Consumer registration code
 		var sourceBuilder = new StringBuilder(
 			"""
-			using Microsoft.Extensions.DependencyInjection;
-			using Microsoft.Extensions.Configuration;
-			using System;
-			using MassTransit;
-
-			namespace MassTransitSourceGenerator.Generated
-			{
-			    public static class MassTransitConsumerRegistration
+			
+			    using MassTransit;
+			    using Microsoft.Extensions.DependencyInjection;
+			    
+			    namespace MassTransitSourceGenerator.Generated
 			    {
-			        public static void RegisterConsumers(this IServiceBusBusFactoryConfigurator cfg, IBusRegistrationContext context)
+			        public static class MassTransitConsumersRegistration
 			        {
+			            public static void AddMassTransitConsumers(this IBusRegistrationConfigurator cfg)
+			            {
+			    
 			"""
 		);
 
 		foreach (var consumer in consumers)
 		{
 			sourceBuilder.AppendLine(
-				$$"""
-				  
-				              cfg.Message<{{consumer.InterfaceName}}>(mtc => mtc.SetEntityName("{{consumer.EntityName}}"));
-				              
-				              cfg.SubscriptionEndpoint("{{consumer.SubscriptionName}}", "{{consumer.EntityName}}", e =>
-				              {
-				                  e.ConfigureConsumer<{{consumer.ClassName}}>(context);
-				              });
-				  """
+				$"    cfg.AddConsumer<{consumer.ClassName}>();"
 			);
 		}
 
@@ -122,7 +120,7 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 			"""
 		);
 		// Add the generated source to the compilation
-		context.AddSource("MassTransitConsumerRegistration.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
+		context.AddSource("MassTransitConsumersRegistration.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
 	}
 
 	private static string GetConsumerInterface(
@@ -196,6 +194,6 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 		public string InterfaceName { get; init; } = string.Empty;
 		public string EntityName { get; init; } = string.Empty;
 		public string SubscriptionName { get; init; } = string.Empty;
-		public string QueueName { get; set; } = string.Empty;
+		public string QueueName { get; init; } = string.Empty;
 	}
 }
