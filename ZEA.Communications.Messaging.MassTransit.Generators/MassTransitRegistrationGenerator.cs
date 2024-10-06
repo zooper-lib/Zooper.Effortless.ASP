@@ -103,16 +103,17 @@ namespace MassTransitSourceGenerator.Generated
 		foreach (var consumer in consumers)
 		{
 			sourceBuilder.AppendLine(
-				$$"""
-				  
-				              cfg.Message<{{consumer.InterfaceName}}>(mtc => mtc.SetEntityName("{{consumer.EntityName}}"));
-				              
-				              cfg.SubscriptionEndpoint("{{consumer.SubscriptionName}}", "{{consumer.EntityName}}", e =>
-				              {
-				                  e.ConfigureConsumer<{{consumer.ClassName}}>(context);
-				              });
+				$$$"""
+				               cfg.AddConsumer<{{consumer.ClassName}}>();
+				   
+				               cfg.Message<{{{consumer.InterfaceName}}}>(mtc => mtc.SetEntityName("{{{consumer.EntityName}}}"));
+				               
+				               cfg.SubscriptionEndpoint("{{{consumer.SubscriptionName}}}", "{{{consumer.EntityName}}}", e =>
+				               {
+				                   e.ConfigureConsumer<{{{consumer.ClassName}}}>(context);
+				               });
 
-				  """
+				   """
 			);
 		}
 
@@ -195,10 +196,10 @@ namespace MassTransitSourceGenerator.Generated
 
 	private class ConsumerInfo
 	{
-		public string ClassName { get; set; } = string.Empty;
-		public string InterfaceName { get; set; } = string.Empty;
-		public string EntityName { get; set; } = string.Empty;
-		public string SubscriptionName { get; set; } = string.Empty;
+		public string ClassName { get; init; } = string.Empty;
+		public string InterfaceName { get; init; } = string.Empty;
+		public string EntityName { get; init; } = string.Empty;
+		public string SubscriptionName { get; init; } = string.Empty;
 		public string QueueName { get; set; } = string.Empty;
 	}
 }
