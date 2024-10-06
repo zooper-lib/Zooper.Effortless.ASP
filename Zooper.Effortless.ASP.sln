@@ -94,9 +94,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messagin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit.AzureServiceBus", "ZEA.Communications.Messaging.MassTransit.AzureServiceBus\ZEA.Communications.Messaging.MassTransit.AzureServiceBus.csproj", "{FAA7FD4C-369D-4273-BF03-DCAB70552AD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit.Generators", "ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators.csproj", "{9B5475A9-71A1-4A28-AA39-3C986A576540}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit.Generators", "ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators.csproj", "{9B5475A9-71A1-4A28-AA39-3C986A576540}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit.Generators.Sample", "ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators.Sample\ZEA.Communications.Messaging.MassTransit.Generators.Sample.csproj", "{1E588B6C-6515-48E8-A1B4-ACF7A19EC0D6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZEA.Communications.Messaging.MassTransit.Generators.Sample", "ZEA.Communications.Messaging.MassTransit.Generators.Sample\ZEA.Communications.Messaging.MassTransit.Generators.Sample.csproj", "{1E588B6C-6515-48E8-A1B4-ACF7A19EC0D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
