@@ -90,12 +90,12 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 			using System;
 			using MassTransit;
 
-			namespace MassTransitSourceGenerator.Generated
+			namespace MassTransitSourceGenerator.Generated;
+			
+			public static class MassTransitConsumerConnection
 			{
-			    public static class MassTransitConsumerRegistration
+			    public static void ConnectConsumers(this IServiceBusBusFactoryConfigurator cfg, IBusRegistrationContext context)
 			    {
-			        public static void RegisterConsumers(this IServiceBusBusFactoryConfigurator cfg, IBusRegistrationContext context)
-			        {
 			"""
 		);
 
@@ -104,25 +104,24 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 			sourceBuilder.AppendLine(
 				$$"""
 				  
-				              cfg.Message<{{consumer.InterfaceName}}>(mtc => mtc.SetEntityName("{{consumer.EntityName}}"));
-				              
-				              cfg.SubscriptionEndpoint("{{consumer.SubscriptionName}}", "{{consumer.EntityName}}", e =>
-				              {
-				                  e.ConfigureConsumer<{{consumer.ClassName}}>(context);
-				              });
+				          cfg.Message<{{consumer.InterfaceName}}>(mtc => mtc.SetEntityName("{{consumer.EntityName}}"));
+				          
+				          cfg.SubscriptionEndpoint("{{consumer.SubscriptionName}}", "{{consumer.EntityName}}", e =>
+				          {
+				              e.ConfigureConsumer<{{consumer.ClassName}}>(context);
+				          });
 				  """
 			);
 		}
 
 		sourceBuilder.AppendLine(
 			"""
-			        }
 			    }
 			}
 			"""
 		);
 		// Add the generated source to the compilation
-		context.AddSource("MassTransitConsumerRegistration.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
+		context.AddSource("MassTransitConsumerConnection.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
 	}
 
 	private static string GetConsumerInterface(

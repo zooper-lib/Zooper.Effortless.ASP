@@ -85,22 +85,23 @@ public class MassTransitConsumerRegistrationGenerator : ISourceGenerator
 			);
 		}
 
-		if (!consumers.Any())
+		if (consumers.Count == 0)
+		{
 			return;
+		}
 
 		// Generate the Consumer registration code
 		var sourceBuilder = new StringBuilder(
 			"""
+			using MassTransit;
+			using Microsoft.Extensions.DependencyInjection;
+
+			namespace MassTransitSourceGenerator.Generated;
 			
-			    using MassTransit;
-			    using Microsoft.Extensions.DependencyInjection;
-			    
-			    namespace MassTransitSourceGenerator.Generated
+			public static class MassTransitConsumersRegistration
+			{
+			    public static void AddMassTransitConsumers(this IBusRegistrationConfigurator cfg)
 			    {
-			        public static class MassTransitConsumersRegistration
-			        {
-			            public static void AddMassTransitConsumers(this IBusRegistrationConfigurator cfg)
-			            {
 			    
 			"""
 		);
@@ -114,7 +115,6 @@ public class MassTransitConsumerRegistrationGenerator : ISourceGenerator
 
 		sourceBuilder.AppendLine(
 			"""
-			        }
 			    }
 			}
 			"""
