@@ -46,40 +46,43 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 		foreach (var classDeclaration in receiver.CandidateClasses)
 		{
 			var model = context.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-			var classSymbol = model.GetDeclaredSymbol(classDeclaration) as INamedTypeSymbol;
 
-			if (classSymbol is null)
+			if (model.GetDeclaredSymbol(classDeclaration) is not INamedTypeSymbol classSymbol)
+			{
 				continue;
+			}
 
 			var attributeData = classSymbol.GetAttributes()
 				.FirstOrDefault(ad => ad.AttributeClass?.Equals(attributeSymbol, SymbolEqualityComparer.Default) == true);
 
 			if (attributeData is null)
+			{
 				continue;
+			}
 
 			// Extract attribute arguments
 			var entityName = attributeData.ConstructorArguments.Length > 0 ? attributeData.ConstructorArguments[0].Value as string : null;
 			var subscriptionName = attributeData.ConstructorArguments.Length > 1
 				? attributeData.ConstructorArguments[1].Value as string
 				: null;
-			var queueName = attributeData.ConstructorArguments.Length > 2 ? attributeData.ConstructorArguments[2].Value as string : null;
 
-			if (entityName is null || subscriptionName is null || queueName is null)
+			if (entityName is null || subscriptionName is null)
+			{
 				continue;
+			}
 
 			consumers.Add(
-				new ConsumerInfo
+				new()
 				{
 					ClassName = classSymbol.ToDisplayString(),
 					InterfaceName = GetConsumerInterface(classSymbol, consumerInterfaceSymbol),
 					EntityName = entityName,
-					SubscriptionName = subscriptionName,
-					QueueName = queueName
+					SubscriptionName = subscriptionName
 				}
 			);
 		}
 
-		if (!consumers.Any())
+		if (consumers.Count == 0)
 			return;
 
 		// Generate the registration code
@@ -91,7 +94,7 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 			using MassTransit;
 
 			namespace MassTransitSourceGenerator.Generated;
-			
+
 			public static class MassTransitConsumerConnection
 			{
 			    public static void ConnectConsumers(this IServiceBusBusFactoryConfigurator cfg, IBusRegistrationContext context)
@@ -195,6 +198,5 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 		public string InterfaceName { get; init; } = string.Empty;
 		public string EntityName { get; init; } = string.Empty;
 		public string SubscriptionName { get; init; } = string.Empty;
-		public string QueueName { get; set; } = string.Empty;
 	}
 }

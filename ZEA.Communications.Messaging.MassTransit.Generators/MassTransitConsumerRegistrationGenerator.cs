@@ -62,9 +62,8 @@ public class MassTransitConsumerRegistrationGenerator : ISourceGenerator
 			var subscriptionName = attributeData.ConstructorArguments.Length > 1
 				? attributeData.ConstructorArguments[1].Value as string
 				: null;
-			var queueName = attributeData.ConstructorArguments.Length > 2 ? attributeData.ConstructorArguments[2].Value as string : null;
 
-			if (entityName is null || subscriptionName is null || queueName is null)
+			if (entityName is null || subscriptionName is null)
 				continue;
 
 			// Get the message type from IConsumer<T>
@@ -74,13 +73,12 @@ public class MassTransitConsumerRegistrationGenerator : ISourceGenerator
 				continue; // Skip if message type not found
 
 			consumers.Add(
-				new ConsumerInfo
+				new()
 				{
 					ClassName = classSymbol.ToDisplayString(),
 					InterfaceName = interfaceName,
 					EntityName = entityName,
-					SubscriptionName = subscriptionName,
-					QueueName = queueName
+					SubscriptionName = subscriptionName
 				}
 			);
 		}
@@ -97,7 +95,7 @@ public class MassTransitConsumerRegistrationGenerator : ISourceGenerator
 			using Microsoft.Extensions.DependencyInjection;
 
 			namespace MassTransitSourceGenerator.Generated;
-			
+
 			public static class MassTransitConsumersRegistration
 			{
 			    public static void AddMassTransitConsumers(this IBusRegistrationConfigurator cfg)
@@ -194,6 +192,5 @@ public class MassTransitConsumerRegistrationGenerator : ISourceGenerator
 		public string InterfaceName { get; init; } = string.Empty;
 		public string EntityName { get; init; } = string.Empty;
 		public string SubscriptionName { get; init; } = string.Empty;
-		public string QueueName { get; init; } = string.Empty;
 	}
 }
