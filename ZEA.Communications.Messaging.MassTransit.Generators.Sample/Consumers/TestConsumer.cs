@@ -5,7 +5,7 @@ using ZEA.Communications.Messaging.MassTransit.Generators.Sample.Events;
 
 namespace ZEA.Communications.Messaging.MassTransit.Generators.Sample.Consumers;
 
-[MassTransitConsumer("TestTopic", "TestSubscription")]
+[Consumer("TestTopic", "TestSubscription")]
 public class TestConsumer : IConsumer<TestEvent>
 {
 	public async Task Consume(ConsumeContext<TestEvent> context)
