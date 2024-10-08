@@ -83,7 +83,9 @@ public class MassTransitRegistrationGenerator : ISourceGenerator
 		}
 
 		if (consumers.Count == 0)
+		{
 			return;
+		}
 
 		// Generate the registration code
 		var sourceBuilder = new StringBuilder(
