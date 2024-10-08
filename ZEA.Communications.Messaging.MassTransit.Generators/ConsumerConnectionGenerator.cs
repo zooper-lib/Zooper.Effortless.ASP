@@ -14,7 +14,7 @@ public class ConsumerConnectionGenerator : ISourceGenerator
 	private const string FileName = "MassTransitConsumerConnection";
 	private const string Namespace = "ZEA.MassTransit.Generated";
 	private const string ClassName = "MassTransitConsumerConnection";
-	private const string MethodName = "ConfigureTopics";
+	private const string MethodName = "ConfigureSubscriptions";
 
 	public void Initialize(GeneratorInitializationContext context)
 	{
