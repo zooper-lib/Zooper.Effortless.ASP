@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using ZEA.Communications.Messaging.MassTransit.Generators.Attributes;
 using ZEA.Communications.Messaging.MassTransit.Generators.Helpers;
@@ -42,19 +43,20 @@ public sealed class TopicGenerator : ISourceGenerator
 		// Collect all topic information
 		var topics = new List<TopicInfo>();
 
-		foreach (var classDeclaration in receiver.CandidateClasses)
+		foreach (var classDeclaration in receiver.CandidateTypes)
 		{
 			var model = context.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-			var classSymbol = model.GetDeclaredSymbol(classDeclaration) as INamedTypeSymbol;
 
-			if (classSymbol is null)
+			if (model.GetDeclaredSymbol(classDeclaration) is not INamedTypeSymbol classSymbol)
 				continue;
 
 			var attributeData = classSymbol.GetAttributes()
 				.FirstOrDefault(ad => ad.AttributeClass?.Equals(attributeSymbol, SymbolEqualityComparer.Default) == true);
 
 			if (attributeData is null)
+			{
 				continue;
+			}
 
 			// Extract topic name from the TopicAttribute
 			var topicName = attributeData.ConstructorArguments.Length > 0 ? attributeData.ConstructorArguments[0].Value as string : null;
@@ -148,14 +150,18 @@ public sealed class TopicGenerator : ISourceGenerator
 	/// </summary>
 	private class SyntaxReceiver : ISyntaxReceiver
 	{
-		public List<Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax> CandidateClasses { get; } = [];
+		public List<TypeDeclarationSyntax> CandidateTypes { get; } = [];
 
 		public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
 		{
-			// Look for classes with attributes
-			if (syntaxNode is Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax { AttributeLists.Count: > 0 } classDeclaration)
+			switch (syntaxNode)
 			{
-				CandidateClasses.Add(classDeclaration);
+				case ClassDeclarationSyntax classDeclaration:
+					CandidateTypes.Add(classDeclaration);
+					break;
+				case RecordDeclarationSyntax recordDeclaration:
+					CandidateTypes.Add(recordDeclaration);
+					break;
 			}
 		}
 	}
