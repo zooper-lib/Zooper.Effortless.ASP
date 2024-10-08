@@ -37,7 +37,11 @@ public class MassTransitEventPublisher(IBus bus, IJsonSerializer jsonSerializer)
 			throw new ArgumentException("Metadata JSON cannot be null or empty.", nameof(metadataJson));
 		}
 
-		await bus.Publish(@event, context => { context.Headers.Set("Metadata", metadataJson); }, cancellationToken);
+		await bus.Publish(
+			@event,
+			context => { context.Headers.Set(MassTransitConstants.MetadataHeaderKey, metadataJson); },
+			cancellationToken
+		);
 	}
 
 	/// <inheritdoc/>
@@ -67,6 +71,10 @@ public class MassTransitEventPublisher(IBus bus, IJsonSerializer jsonSerializer)
 	{
 		var metadataJson = jsonSerializer.Serialize(metadata);
 
-		await bus.Publish(@event, context => { context.Headers.Set("Metadata", metadataJson); }, cancellationToken);
+		await bus.Publish(
+			@event,
+			context => { context.Headers.Set(MassTransitConstants.MetadataHeaderKey, metadataJson); },
+			cancellationToken
+		);
 	}
 }
