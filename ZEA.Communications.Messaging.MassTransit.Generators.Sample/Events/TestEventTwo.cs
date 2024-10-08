@@ -1,4 +1,4 @@
-using ZEA.Communications.Messaging.MassTransit.Generators.Attributes;
+using ZEA.Communications.Messaging.MassTransit.Attributes;
 
 namespace ZEA.Communications.Messaging.MassTransit.Generators.Sample.Events;
 

@@ -37,4 +37,8 @@
         <None Include="..\CHANGELOG.md" Pack="true" PackagePath="docs\CHANGELOG.md"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ZEA.Communications.Messaging.MassTransit\ZEA.Communications.Messaging.MassTransit.csproj" />
+    </ItemGroup>
+
 </Project>

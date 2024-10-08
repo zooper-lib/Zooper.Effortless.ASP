@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using ZEA.Communications.Messaging.MassTransit.Generators.Attributes;
+using ZEA.Communications.Messaging.MassTransit.Attributes;
 using ZEA.Communications.Messaging.MassTransit.Generators.Helpers;
 
 namespace ZEA.Communications.Messaging.MassTransit.Generators;

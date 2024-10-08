@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using MassTransit;
-using ZEA.Communications.Messaging.MassTransit.Generators.Attributes;
+using ZEA.Communications.Messaging.MassTransit.Attributes;
 using ZEA.Communications.Messaging.MassTransit.Generators.Sample.Events;
 
 namespace ZEA.Communications.Messaging.MassTransit.Generators.Sample.Consumers;
