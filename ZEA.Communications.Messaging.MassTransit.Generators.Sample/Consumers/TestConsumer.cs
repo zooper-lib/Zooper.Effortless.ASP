@@ -6,9 +6,9 @@ using ZEA.Communications.Messaging.MassTransit.Generators.Sample.Events;
 namespace ZEA.Communications.Messaging.MassTransit.Generators.Sample.Consumers;
 
 [Consumer("TestTopic", "TestSubscription")]
-public class TestConsumer : IConsumer<TestEvent>
+public class TestConsumer : IConsumer<TestEventOne>
 {
-	public async Task Consume(ConsumeContext<TestEvent> context)
+	public async Task Consume(ConsumeContext<TestEventOne> context)
 	{
 		throw new System.NotImplementedException();
 	}
