@@ -2,6 +2,7 @@ using System.Reflection;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using ZEA.Communications.Messaging.MassTransit.Builders;
+using ZEA.Communications.Messaging.MassTransit.Extensions;
 
 namespace ZEA.Communications.Messaging.MassTransit.AzureServiceBus.Builders;
 
@@ -12,6 +13,7 @@ public class AzureServiceBusBuilder : ITransportBuilder
 {
 	private readonly string _connectionString;
 	private readonly List<Assembly> _consumerAssemblies = [];
+	private bool excludeBaseInterfaces = false;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AzureServiceBusBuilder"/> class.
@@ -30,6 +32,13 @@ public class AzureServiceBusBuilder : ITransportBuilder
 	}
 
 	/// <inheritdoc/>
+	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
+	{
+		excludeBaseInterfaces = exclude;
+		return this;
+	}
+
+	/// <inheritdoc/>
 	public void Build(IServiceCollection services)
 	{
 		services.AddMassTransit(
@@ -42,7 +51,12 @@ public class AzureServiceBusBuilder : ITransportBuilder
 						cfg) =>
 					{
 						cfg.Host(_connectionString);
-						// Add additional Azure Service Bus configurations here
+
+						// Conditionally exclude base interfaces
+						if (excludeBaseInterfaces)
+						{
+							cfg.ExcludeBaseInterfaces();
+						}
 					}
 				);
 			}

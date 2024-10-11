@@ -3,6 +3,7 @@ using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using ZEA.Communications.Messaging.MassTransit.Attributes;
 using ZEA.Communications.Messaging.MassTransit.Builders;
+using ZEA.Communications.Messaging.MassTransit.Extensions;
 
 namespace ZEA.Communications.Messaging.MassTransit.RabbitMq.Builders;
 
@@ -15,6 +16,7 @@ public class RabbitMqBuilder : ITransportBuilder
 	private readonly string _username;
 	private readonly string _password;
 	private readonly List<Assembly> _consumerAssemblies = [];
+	private bool excludeBaseInterfaces = false;
 	private readonly List<Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>> _endpointConfigurations = [];
 	private Action<IRetryConfigurator>? _retryConfigurator;
 	private Action<IRedeliveryConfigurator>? _redeliveryConfigurator;
@@ -46,6 +48,13 @@ public class RabbitMqBuilder : ITransportBuilder
 	}
 
 	/// <inheritdoc/>
+	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
+	{
+		excludeBaseInterfaces = exclude;
+		return this;
+	}
+
+	/// <inheritdoc/>
 	public void Build(IServiceCollection services)
 	{
 		services.AddMassTransit(
@@ -66,6 +75,12 @@ public class RabbitMqBuilder : ITransportBuilder
 								h.Password(_password);
 							}
 						);
+
+						// Conditionally exclude base interfaces
+						if (excludeBaseInterfaces)
+						{
+							cfg.ExcludeBaseInterfaces();
+						}
 
 						foreach (var endpointConfig in _endpointConfigurations)
 							endpointConfig(cfg, context);

@@ -5,7 +5,6 @@ using ZEA.Communications.Messaging.MassTransit.Attributes;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
 
-
 /// <summary>
 ///     A builder class for configuring MassTransit with RabbitMQ.
 /// </summary>
@@ -37,6 +36,12 @@ public class RabbitMqBuilder(
 
 		_consumerAssemblies.AddRange(consumerAssemblies);
 		return this;
+	}
+
+	/// <inheritdoc/>
+	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
+	{
+		throw new NotImplementedException();
 	}
 
 	/// <summary>

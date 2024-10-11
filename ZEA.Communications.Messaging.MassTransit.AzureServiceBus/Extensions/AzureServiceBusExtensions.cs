@@ -1,4 +1,5 @@
 using ZEA.Communications.Messaging.MassTransit.Builders;
+using AzureServiceBusBuilder = ZEA.Communications.Messaging.MassTransit.AzureServiceBus.Builders.AzureServiceBusBuilder;
 
 namespace ZEA.Communications.Messaging.MassTransit.AzureServiceBus.Extensions;
 

@@ -15,6 +15,11 @@ public class AzureServiceBusBuilder(string connectionString) : ITransportBuilder
 		return this;
 	}
 
+	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
+	{
+		throw new NotImplementedException();
+	}
+
 	public void Build(IServiceCollection services)
 	{
 		services.AddMassTransit(
