@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
 
+[Obsolete("Use 'AzureServiceBusBuilder' in 'ZEA.Communications.Messaging.MassTransit.AzureServiceBus' instead.")]
 public class AzureServiceBusBuilder(string connectionString) : ITransportBuilder
 {
 	private readonly List<Assembly> _consumerAssemblies = [];

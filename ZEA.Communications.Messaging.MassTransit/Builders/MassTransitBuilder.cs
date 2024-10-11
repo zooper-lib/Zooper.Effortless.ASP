@@ -8,6 +8,12 @@ public class MassTransitBuilder(IServiceCollection services)
 {
 	private ITransportBuilder? _transportBuilder;
 
+	/// <summary>
+	/// Gets or sets the transport builder to use for configuring MassTransit.
+	/// </summary>
+	public ITransportBuilder? TransportBuilder { get; set; }
+
+	[Obsolete("This method is obsolete. Use the ITTransportBuilder interface instead.")]
 	public MassTransitBuilder UseAzureServiceBus(
 		string connectionString,
 		Action<AzureServiceBusBuilder> configure)
@@ -18,6 +24,7 @@ public class MassTransitBuilder(IServiceCollection services)
 		return this;
 	}
 
+	[Obsolete("This method is obsolete. Use the ITTransportBuilder interface instead.")]
 	public MassTransitBuilder UseRabbitMq(
 		string host,
 		string username,
@@ -35,20 +42,21 @@ public class MassTransitBuilder(IServiceCollection services)
 	}
 
 	/// <summary>
-	///     Adds a message publisher to the service collection.
+	/// Adds a message publisher to the service collection.
 	/// </summary>
 	/// <returns>The current builder instance.</returns>
 	public MassTransitBuilder AddPublisher()
 	{
+		services.AddSingleton<IEventPublisher, MassTransitEventPublisher>();
 		services.AddSingleton<IMessagePublisher, MassTransitMessagePublisher>();
 		return this;
 	}
 
 	/// <summary>
-	///     Builds the MassTransit configuration and registers it with the service collection.
+	/// Builds the MassTransit configuration and registers it with the service collection.
 	/// </summary>
 	public void Build()
 	{
-		_transportBuilder?.Build(services);
+		TransportBuilder?.Build(services);
 	}
 }

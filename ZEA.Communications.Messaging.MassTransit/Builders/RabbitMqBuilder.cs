@@ -5,12 +5,14 @@ using ZEA.Communications.Messaging.MassTransit.Attributes;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
 
+
 /// <summary>
 ///     A builder class for configuring MassTransit with RabbitMQ.
 /// </summary>
 /// <param name="host">The RabbitMQ host address.</param>
 /// <param name="username">The RabbitMQ username.</param>
 /// <param name="password">The RabbitMQ password.</param>
+[Obsolete("Use 'RabbitMqBuilder' in 'ZEA.Communications.Messaging.MassTransit.RabbitMq' instead.")]
 public class RabbitMqBuilder(
 	string host,
 	string username,
