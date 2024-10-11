@@ -8,12 +8,12 @@ using ZEA.Communications.Messaging.MassTransit.Generators.Helpers;
 namespace ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus;
 
 [Generator]
-public sealed class TopicGenerator : ISourceGenerator
+public sealed class ChannelGenerator : ISourceGenerator
 {
-	private const string FileName = "MassTransitTopicRegistration";
+	private const string FileName = "MassTransitChannelRegistration";
 	private const string Namespace = "ZEA.MassTransit.AzureServiceBus.Generated";
-	private const string ClassName = "MassTransitTopicRegistration";
-	private const string MethodName = "ConfigureTopics";
+	private const string ClassName = "MassTransitChannelRegistration";
+	private const string MethodName = "ConfigureChannels";
 
 	public void Initialize(GeneratorInitializationContext context)
 	{
@@ -38,8 +38,8 @@ public sealed class TopicGenerator : ISourceGenerator
 			return;
 		}
 
-		// Collect all topic information
-		var topics = new List<TopicInfo>();
+		// Collect all channel information
+		var channels = new List<ChannelInfo>();
 
 		foreach (var classDeclaration in receiver.CandidateTypes)
 		{
@@ -56,32 +56,32 @@ public sealed class TopicGenerator : ISourceGenerator
 				continue;
 			}
 
-			// Extract topic name from the ChannelAttribute
-			var topicName = attributeData.ConstructorArguments.Length > 0 ? attributeData.ConstructorArguments[0].Value as string : null;
+			// Extract channel name from the ChannelAttribute
+			var channelName = attributeData.ConstructorArguments.Length > 0 ? attributeData.ConstructorArguments[0].Value as string : null;
 
-			if (topicName is null)
+			if (channelName is null)
 				continue;
 
-			topics.Add(
+			channels.Add(
 				new()
 				{
 					EventName = classSymbol.ToDisplayString(),
-					TopicName = topicName
+					ChannelName = channelName
 				}
 			);
 		}
 
-		if (topics.Count == 0)
+		if (channels.Count == 0)
 		{
 			return;
 		}
 
-		// Generate the topic registration code
+		// Generate the channel registration code
 		var sourceBuilder = new StringBuilder();
 
 		AppendUsings(sourceBuilder);
 		AppendNamespace(sourceBuilder);
-		AppendClass(sourceBuilder, topics);
+		AppendClass(sourceBuilder, channels);
 
 		// Add the generated source to the compilation
 		context.AddSource($"{FileName}.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
@@ -102,44 +102,44 @@ public sealed class TopicGenerator : ISourceGenerator
 
 	private static void AppendClass(
 		StringBuilder sourceBuilder,
-		List<TopicInfo> topics)
+		List<ChannelInfo> channels)
 	{
 		sourceBuilder.AppendLine($"public static class {ClassName}");
 		sourceBuilder.AppendLine("{");
 
-		AppendMethod(sourceBuilder, topics);
+		AppendMethod(sourceBuilder, channels);
 
 		sourceBuilder.AppendLine("}");
 	}
 
 	private static void AppendMethod(
 		StringBuilder sourceBuilder,
-		List<TopicInfo> topics)
+		List<ChannelInfo> channels)
 	{
 		sourceBuilder.AppendLine($"public static void {MethodName}(this IServiceBusBusFactoryConfigurator cfg)");
 		sourceBuilder.AppendLine("{");
 
-		AppendTopicList(sourceBuilder, topics);
+		AppendChannelList(sourceBuilder, channels);
 
 		sourceBuilder.AppendLine("}");
 	}
 
-	private static void AppendTopicList(
+	private static void AppendChannelList(
 		StringBuilder sourceBuilder,
-		List<TopicInfo> topics)
+		List<ChannelInfo> channels)
 	{
-		foreach (var topic in topics)
+		foreach (var channel in channels)
 		{
-			AppendTopicRegistration(sourceBuilder, topic);
+			AppendChannelRegistration(sourceBuilder, channel);
 		}
 	}
 
-	private static void AppendTopicRegistration(
+	private static void AppendChannelRegistration(
 		StringBuilder sourceBuilder,
-		TopicInfo topic)
+		ChannelInfo channel)
 	{
 		sourceBuilder.AppendLine(
-			$"cfg.Message<{topic.EventName}>(x => x.SetEntityName(\"{topic.TopicName}\"));"
+			$"cfg.Message<{channel.EventName}>(x => x.SetEntityName(\"{channel.ChannelName}\"));"
 		);
 	}
 
@@ -164,9 +164,9 @@ public sealed class TopicGenerator : ISourceGenerator
 		}
 	}
 
-	private class TopicInfo
+	private class ChannelInfo
 	{
 		public string EventName { get; init; } = string.Empty;
-		public string TopicName { get; init; } = string.Empty;
+		public string ChannelName { get; init; } = string.Empty;
 	}
 }
