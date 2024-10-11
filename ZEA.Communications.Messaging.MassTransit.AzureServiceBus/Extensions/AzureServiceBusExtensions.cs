@@ -15,7 +15,7 @@ public static class AzureServiceBusExtensions
 	/// <param name="connectionString">The Azure Service Bus connection string.</param>
 	/// <param name="configure">An optional action to configure the AzureServiceBusBuilder.</param>
 	/// <returns>The MassTransit builder.</returns>
-	public static MassTransitBuilder UseAzureServiceBus(
+	public static MassTransitBuilder ConfigureAzureServiceBus(
 		this MassTransitBuilder builder,
 		string connectionString,
 		Action<AzureServiceBusBuilder>? configure = null)

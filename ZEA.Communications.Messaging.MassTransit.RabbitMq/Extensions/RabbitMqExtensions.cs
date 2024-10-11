@@ -1,4 +1,5 @@
 using ZEA.Communications.Messaging.MassTransit.Builders;
+using RabbitMqBuilder = ZEA.Communications.Messaging.MassTransit.RabbitMq.Builders.RabbitMqBuilder;
 
 namespace ZEA.Communications.Messaging.MassTransit.RabbitMq.Extensions;
 
@@ -16,7 +17,7 @@ public static class RabbitMqExtensions
 	/// <param name="password">The RabbitMQ password.</param>
 	/// <param name="configure">An optional action to configure the RabbitMqBuilder.</param>
 	/// <returns>The MassTransit builder.</returns>
-	public static MassTransitBuilder UseRabbitMq(
+	public static MassTransitBuilder ConfigureRabbitMq(
 		this MassTransitBuilder builder,
 		string host,
 		string username,

@@ -11,7 +11,7 @@ public class MassTransitBuilder(IServiceCollection services)
 	/// </summary>
 	public ITransportBuilder? TransportBuilder { get; set; }
 
-	[Obsolete("This method is obsolete. Use the ITTransportBuilder interface instead.")]
+	[Obsolete("This method is obsolete. Use the AzureServiceBusExtensions.ConfigureAzureServiceBus extension method instead.")]
 	public MassTransitBuilder UseAzureServiceBus(
 		string connectionString,
 		Action<AzureServiceBusBuilder> configure)
@@ -22,7 +22,7 @@ public class MassTransitBuilder(IServiceCollection services)
 		return this;
 	}
 
-	[Obsolete("This method is obsolete. Use the ITTransportBuilder interface instead.")]
+	[Obsolete("This method is obsolete. Use the RabbitMqExtensions.ConfigureRabbitMq extension method instead.")]
 	public MassTransitBuilder UseRabbitMq(
 		string host,
 		string username,
