@@ -40,6 +40,11 @@ public class RabbitMqBuilder(
 		return this;
 	}
 
+	public void ConfigureTransport(IBusRegistrationConfigurator configurator)
+	{
+		throw new NotImplementedException();
+	}
+
 	/// <inheritdoc/>
 	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
 	{
@@ -52,6 +57,11 @@ public class RabbitMqBuilder(
 	}
 
 	public ITransportBuilder UseSystemTextJson(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ITransportBuilder UseMessageRetry(Action<IRetryConfigurator> configureRetry)
 	{
 		throw new NotImplementedException();
 	}

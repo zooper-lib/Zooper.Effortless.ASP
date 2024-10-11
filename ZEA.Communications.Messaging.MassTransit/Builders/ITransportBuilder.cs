@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using MassTransit;
 using Newtonsoft.Json;
+using ZEA.Communications.Messaging.MassTransit.Interfaces;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
 
@@ -36,4 +37,11 @@ public interface ITransportBuilder
 	/// <param name="configure">Action to configure JsonSerializerOptions.</param>
 	/// <returns>The current transport builder instance.</returns>
 	ITransportBuilder UseSystemTextJson(Func<JsonSerializerOptions, JsonSerializerOptions> configure);
+
+	/// <summary>
+	/// Configures the message retry policy.
+	/// </summary>
+	/// <param name="configureRetry">An action to configure the retry policy.</param>
+	/// <returns>The current transport builder instance.</returns>
+	ITransportBuilder UseMessageRetry(Action<IRetryConfigurator> configureRetry);
 }

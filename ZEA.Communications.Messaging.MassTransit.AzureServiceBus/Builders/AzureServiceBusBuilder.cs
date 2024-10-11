@@ -1,7 +1,5 @@
-using System.Reflection;
 using System.Text.Json;
 using MassTransit;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using ZEA.Communications.Messaging.MassTransit.Builders;
 using ZEA.Communications.Messaging.MassTransit.Extensions;
@@ -21,6 +19,10 @@ public class AzureServiceBusBuilder : ITransportBuilder
 	private Func<JsonSerializerOptions, JsonSerializerOptions>? _systemTextJsonConfig;
 
 	private Action<IServiceBusBusFactoryConfigurator, IBusRegistrationContext>? _configureBus;
+
+	private Action<IRetryConfigurator>? _retryConfigurator;
+	private int? _maxDeliveryCount;
+	private bool? _enableDeadLetteringOnMessageExpiration;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AzureServiceBusBuilder"/> class.
@@ -64,6 +66,25 @@ public class AzureServiceBusBuilder : ITransportBuilder
 	}
 
 	/// <inheritdoc/>
+	public ITransportBuilder UseMessageRetry(Action<IRetryConfigurator> configureRetry)
+	{
+		_retryConfigurator = configureRetry;
+		return this;
+	}
+
+	public AzureServiceBusBuilder SetMaxDeliveryCount(int maxDeliveryCount)
+	{
+		_maxDeliveryCount = maxDeliveryCount;
+		return this;
+	}
+
+	public AzureServiceBusBuilder EnableDeadLetteringOnMessageExpiration(bool enable)
+	{
+		_enableDeadLetteringOnMessageExpiration = enable;
+		return this;
+	}
+
+	/// <inheritdoc/>
 	public void ConfigureTransport(IBusRegistrationConfigurator configurator)
 	{
 		configurator.UsingAzureServiceBus(
@@ -94,6 +115,23 @@ public class AzureServiceBusBuilder : ITransportBuilder
 				if (_excludeBaseInterfaces)
 				{
 					cfg.ExcludeBaseInterfaces();
+				}
+
+				// Apply message retry policy
+				if (_retryConfigurator != null)
+				{
+					cfg.UseMessageRetry(_retryConfigurator);
+				}
+
+				// Apply dead-lettering settings
+				if (_maxDeliveryCount.HasValue)
+				{
+					cfg.MaxDeliveryCount = _maxDeliveryCount.Value;
+				}
+
+				if (_enableDeadLetteringOnMessageExpiration.HasValue)
+				{
+					cfg.EnableDeadLetteringOnMessageExpiration = _enableDeadLetteringOnMessageExpiration.Value;
 				}
 
 				// Apply additional configurations

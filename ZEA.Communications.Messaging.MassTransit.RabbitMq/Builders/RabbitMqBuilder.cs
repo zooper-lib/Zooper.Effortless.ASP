@@ -1,9 +1,9 @@
-using System.Reflection;
 using System.Text.Json;
 using MassTransit;
 using Newtonsoft.Json;
 using ZEA.Communications.Messaging.MassTransit.Builders;
 using ZEA.Communications.Messaging.MassTransit.Extensions;
+using ZEA.Communications.Messaging.MassTransit.RabbitMq.Observers;
 
 namespace ZEA.Communications.Messaging.MassTransit.RabbitMq.Builders;
 
@@ -24,7 +24,10 @@ public class RabbitMqBuilder : ITransportBuilder
 	private Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>? _configureBus;
 
 	private Action<IRetryConfigurator>? _retryConfigurator;
-	private Action<IRedeliveryConfigurator>? _redeliveryConfigurator;
+
+	// RabbitMQ-specific dead-lettering settings
+	private string? _deadLetterExchange;
+	private string? _deadLetterRoutingKey;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="RabbitMqBuilder"/> class.
@@ -74,25 +77,25 @@ public class RabbitMqBuilder : ITransportBuilder
 		return this;
 	}
 
-	/// <summary>
-	/// Sets a retry configuration.
-	/// </summary>
-	/// <param name="configureRetry">The retry configuration action.</param>
-	/// <returns>The current builder instance.</returns>
-	public ITransportBuilder UseRetry(Action<IRetryConfigurator> configureRetry)
+	/// <inheritdoc/>
+	public ITransportBuilder UseMessageRetry(Action<IRetryConfigurator> configureRetry)
 	{
 		_retryConfigurator = configureRetry;
 		return this;
 	}
 
 	/// <summary>
-	/// Sets a redelivery configuration.
+	/// Configures dead-lettering by setting the dead-letter exchange and routing key.
 	/// </summary>
-	/// <param name="configureRedelivery">The redelivery configuration action.</param>
+	/// <param name="deadLetterExchange">The dead-letter exchange name.</param>
+	/// <param name="deadLetterRoutingKey">The dead-letter routing key.</param>
 	/// <returns>The current builder instance.</returns>
-	public ITransportBuilder UseRedelivery(Action<IRedeliveryConfigurator> configureRedelivery)
+	public RabbitMqBuilder ConfigureDeadLettering(
+		string deadLetterExchange,
+		string deadLetterRoutingKey)
 	{
-		_redeliveryConfigurator = configureRedelivery;
+		_deadLetterExchange = deadLetterExchange;
+		_deadLetterRoutingKey = deadLetterRoutingKey;
 		return this;
 	}
 
@@ -136,8 +139,25 @@ public class RabbitMqBuilder : ITransportBuilder
 					cfg.ExcludeBaseInterfaces();
 				}
 
+				// Apply message retry policy
+				if (_retryConfigurator != null)
+				{
+					cfg.UseMessageRetry(_retryConfigurator);
+				}
+
+				// Apply dead-lettering configuration via endpoint observer
+				if (!string.IsNullOrEmpty(_deadLetterExchange))
+				{
+					cfg.ConnectEndpointConfigurationObserver(
+						new DeadLetterEndpointConfigurationObserver(_deadLetterExchange, _deadLetterRoutingKey)
+					);
+				}
+
 				// Apply additional configurations
 				_configureBus?.Invoke(cfg, context);
+
+				// Configure endpoints
+				cfg.ConfigureEndpoints(context);
 			}
 		);
 	}

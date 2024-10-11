@@ -17,6 +17,11 @@ public class AzureServiceBusBuilder(string connectionString) : ITransportBuilder
 		return this;
 	}
 
+	public void ConfigureTransport(IBusRegistrationConfigurator configurator)
+	{
+		throw new NotImplementedException();
+	}
+
 	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
 	{
 		throw new NotImplementedException();
@@ -28,6 +33,11 @@ public class AzureServiceBusBuilder(string connectionString) : ITransportBuilder
 	}
 
 	public ITransportBuilder UseSystemTextJson(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ITransportBuilder UseMessageRetry(Action<IRetryConfigurator> configureRetry)
 	{
 		throw new NotImplementedException();
 	}
