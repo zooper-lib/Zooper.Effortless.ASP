@@ -3,12 +3,12 @@ using Microsoft.CodeAnalysis;
 
 namespace ZEA.Communications.Messaging.MassTransit.Generators.Helpers;
 
-internal static class NamedTypeSymbolHelper
+public static class NamedTypeSymbolHelper
 {
 	/// <summary>
 	/// Recursively searches the global namespace for a type with the specified name.
 	/// </summary>
-	internal static INamedTypeSymbol? FindTypeByName(
+	public static INamedTypeSymbol? FindTypeByName(
 		Compilation compilation,
 		string typeName)
 	{

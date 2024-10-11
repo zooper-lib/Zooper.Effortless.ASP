@@ -2,9 +2,16 @@ namespace ZEA.Communications.Messaging.MassTransit.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
 public sealed class ConsumerAttribute(
-	string entityName,
-	string subscriptionName) : Attribute
+	string channelName,
+	string endpointName) : Attribute
 {
-	public string EntityName { get; } = entityName;
-	public string SubscriptionName { get; } = subscriptionName;
+	/// <summary>
+	/// The name of the messaging channel (e.g., topic, exchange).
+	/// </summary>
+	public string ChannelName { get; } = channelName;
+
+	/// <summary>
+	/// The name of the endpoint (e.g., subscription, queue) where the consumer listens.
+	/// </summary>
+	public string EndpointName { get; } = endpointName;
 }
