@@ -1,6 +1,8 @@
 using System.Reflection;
+using System.Text.Json;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using ZEA.Communications.Messaging.MassTransit.Attributes;
 using ZEA.Communications.Messaging.MassTransit.Builders;
 using ZEA.Communications.Messaging.MassTransit.Extensions;
@@ -16,7 +18,11 @@ public class RabbitMqBuilder : ITransportBuilder
 	private readonly string _username;
 	private readonly string _password;
 	private readonly List<Assembly> _consumerAssemblies = [];
-	private bool excludeBaseInterfaces = false;
+	private bool _excludeBaseInterfaces;
+
+	private Func<JsonSerializerSettings, JsonSerializerSettings>? _newtonsoftJsonConfig;
+	private Func<JsonSerializerOptions, JsonSerializerOptions>? _systemTextJsonConfig;
+
 	private readonly List<Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>> _endpointConfigurations = [];
 	private Action<IRetryConfigurator>? _retryConfigurator;
 	private Action<IRedeliveryConfigurator>? _redeliveryConfigurator;
@@ -50,7 +56,21 @@ public class RabbitMqBuilder : ITransportBuilder
 	/// <inheritdoc/>
 	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
 	{
-		excludeBaseInterfaces = exclude;
+		_excludeBaseInterfaces = exclude;
+		return this;
+	}
+
+	/// <inheritdoc/>
+	public ITransportBuilder UseNewtonsoftJson(Func<JsonSerializerSettings, JsonSerializerSettings> configure)
+	{
+		_newtonsoftJsonConfig = configure;
+		return this;
+	}
+
+	/// <inheritdoc/>
+	public ITransportBuilder UseSystemTextJson(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
+	{
+		_systemTextJsonConfig = configure;
 		return this;
 	}
 
@@ -76,8 +96,25 @@ public class RabbitMqBuilder : ITransportBuilder
 							}
 						);
 
+						// Apply Newtonsoft.Json configuration
+						if (_newtonsoftJsonConfig != null)
+						{
+							cfg.UseNewtonsoftJsonSerializer();
+							cfg.ConfigureNewtonsoftJsonSerializer(_newtonsoftJsonConfig);
+							cfg.UseNewtonsoftJsonDeserializer();
+							cfg.ConfigureNewtonsoftJsonDeserializer(_newtonsoftJsonConfig);
+						}
+
+						// Apply System.Text.Json configuration
+						if (_systemTextJsonConfig != null)
+						{
+							cfg.UseJsonSerializer();
+							cfg.ConfigureJsonSerializerOptions(_systemTextJsonConfig);
+							cfg.UseJsonDeserializer();
+						}
+
 						// Conditionally exclude base interfaces
-						if (excludeBaseInterfaces)
+						if (_excludeBaseInterfaces)
 						{
 							cfg.ExcludeBaseInterfaces();
 						}

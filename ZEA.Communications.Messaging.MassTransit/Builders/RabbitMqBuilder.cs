@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using System.Text.Json;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using ZEA.Communications.Messaging.MassTransit.Attributes;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
@@ -40,6 +42,21 @@ public class RabbitMqBuilder(
 
 	/// <inheritdoc/>
 	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ITransportBuilder UseNewtonsoftJson(Func<JsonSerializerSettings, JsonSerializerSettings> configure)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ITransportBuilder UseSystemTextJson(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
+	{
+		throw new NotImplementedException();
+	}
+
+	public ITransportBuilder UseNewtonsoftJsonSerialization(TypeNameHandling typeNameHandling = TypeNameHandling.Objects)
 	{
 		throw new NotImplementedException();
 	}

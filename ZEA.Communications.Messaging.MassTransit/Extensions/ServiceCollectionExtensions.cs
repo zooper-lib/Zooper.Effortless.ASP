@@ -14,7 +14,7 @@ public static class ServiceCollectionExtensions
 	/// <param name="services">The service collection to add MassTransit to.</param>
 	/// <param name="configure">An action to configure the MassTransit builder.</param>
 	/// <returns>The service collection.</returns>
-	public static IServiceCollection AddMassTransit(
+	public static IServiceCollection AddMessagingWithMassTransit(
 		this IServiceCollection services,
 		Action<MassTransitBuilder> configure)
 	{

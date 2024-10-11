@@ -6,8 +6,6 @@ namespace ZEA.Communications.Messaging.MassTransit.Builders;
 
 public class MassTransitBuilder(IServiceCollection services)
 {
-	private ITransportBuilder? _transportBuilder;
-
 	/// <summary>
 	/// Gets or sets the transport builder to use for configuring MassTransit.
 	/// </summary>
@@ -20,7 +18,7 @@ public class MassTransitBuilder(IServiceCollection services)
 	{
 		var azureServiceBusBuilder = new AzureServiceBusBuilder(connectionString);
 		configure(azureServiceBusBuilder);
-		_transportBuilder = azureServiceBusBuilder;
+		TransportBuilder = azureServiceBusBuilder;
 		return this;
 	}
 
@@ -37,7 +35,7 @@ public class MassTransitBuilder(IServiceCollection services)
 			password
 		);
 		configure(rabbitMqBuilder);
-		_transportBuilder = rabbitMqBuilder;
+		TransportBuilder = rabbitMqBuilder;
 		return this;
 	}
 
