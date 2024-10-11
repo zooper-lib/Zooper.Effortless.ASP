@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using System.Reflection;
+using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 using ZEA.Communications.Messaging.Abstractions;
 using ZEA.Communications.Messaging.MassTransit.Implementations;
 
@@ -6,6 +8,8 @@ namespace ZEA.Communications.Messaging.MassTransit.Builders;
 
 public class MassTransitBuilder(IServiceCollection services)
 {
+	private readonly List<Action<IBusRegistrationConfigurator>> _consumerConfigurations = [];
+
 	/// <summary>
 	/// Gets or sets the transport builder to use for configuring MassTransit.
 	/// </summary>
@@ -51,10 +55,42 @@ public class MassTransitBuilder(IServiceCollection services)
 	}
 
 	/// <summary>
+	/// Adds consumers using a custom configuration action.
+	/// </summary>
+	/// <param name="configureConsumers">An action to configure consumers.</param>
+	/// <returns>The current builder instance.</returns>
+	public MassTransitBuilder AddConsumers(Action<IBusRegistrationConfigurator> configureConsumers)
+	{
+		_consumerConfigurations.Add(configureConsumers);
+		return this;
+	}
+
+	/// <summary>
+	/// Adds consumer assemblies to scan for consumers.
+	/// </summary>
+	/// <param name="consumerAssemblies">Assemblies containing consumers.</param>
+	/// <returns>The current builder instance.</returns>
+	public MassTransitBuilder AddConsumerAssemblies(params Assembly[] consumerAssemblies)
+	{
+		_consumerConfigurations.Add(cfg => cfg.AddConsumers(consumerAssemblies));
+		return this;
+	}
+
+	/// <summary>
 	/// Builds the MassTransit configuration and registers it with the service collection.
 	/// </summary>
 	public void Build()
 	{
-		TransportBuilder?.Build(services);
+		services.AddMassTransit(configurator =>
+		{
+			// Register consumers
+			foreach (var configureConsumers in _consumerConfigurations)
+			{
+				configureConsumers(configurator);
+			}
+
+			// Configure transport-specific settings
+			TransportBuilder?.ConfigureTransport(configurator);
+		});
 	}
 }

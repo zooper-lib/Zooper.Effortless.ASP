@@ -14,12 +14,13 @@ namespace ZEA.Communications.Messaging.MassTransit.AzureServiceBus.Builders;
 public class AzureServiceBusBuilder : ITransportBuilder
 {
 	private readonly string _connectionString;
-	private readonly List<Assembly> _consumerAssemblies = [];
 
 	private bool _excludeBaseInterfaces;
 
 	private Func<JsonSerializerSettings, JsonSerializerSettings>? _newtonsoftJsonConfig;
 	private Func<JsonSerializerOptions, JsonSerializerOptions>? _systemTextJsonConfig;
+
+	private Action<IServiceBusBusFactoryConfigurator, IBusRegistrationContext>? _configureBus;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="AzureServiceBusBuilder"/> class.
@@ -28,13 +29,6 @@ public class AzureServiceBusBuilder : ITransportBuilder
 	public AzureServiceBusBuilder(string connectionString)
 	{
 		_connectionString = connectionString;
-	}
-
-	/// <inheritdoc/>
-	public ITransportBuilder AddConsumerAssemblies(params Assembly[] consumerAssemblies)
-	{
-		_consumerAssemblies.AddRange(consumerAssemblies);
-		return this;
 	}
 
 	/// <inheritdoc/>
@@ -58,44 +52,52 @@ public class AzureServiceBusBuilder : ITransportBuilder
 		return this;
 	}
 
-	/// <inheritdoc/>
-	public void Build(IServiceCollection services)
+	/// <summary>
+	/// Allows additional configuration of the Azure Service Bus.
+	/// </summary>
+	/// <param name="configure">An action to configure the bus factory configurator.</param>
+	/// <returns>The current builder instance.</returns>
+	public AzureServiceBusBuilder ConfigureBus(Action<IServiceBusBusFactoryConfigurator, IBusRegistrationContext> configure)
 	{
-		services.AddMassTransit(
-			configurator =>
+		_configureBus = configure;
+		return this;
+	}
+
+	/// <inheritdoc/>
+	public void ConfigureTransport(IBusRegistrationConfigurator configurator)
+	{
+		configurator.UsingAzureServiceBus(
+			(
+				context,
+				cfg) =>
 			{
-				configurator.AddConsumers(_consumerAssemblies.ToArray());
-				configurator.UsingAzureServiceBus(
-					(
-						context,
-						cfg) =>
-					{
-						cfg.Host(_connectionString);
+				cfg.Host(_connectionString);
 
-						// Apply Newtonsoft.Json configuration
-						if (_newtonsoftJsonConfig != null)
-						{
-							cfg.UseNewtonsoftJsonSerializer();
-							cfg.ConfigureNewtonsoftJsonSerializer(_newtonsoftJsonConfig);
-							cfg.UseNewtonsoftJsonDeserializer();
-							cfg.ConfigureNewtonsoftJsonDeserializer(_newtonsoftJsonConfig);
-						}
+				// Apply Newtonsoft.Json configuration
+				if (_newtonsoftJsonConfig != null)
+				{
+					cfg.UseNewtonsoftJsonSerializer();
+					cfg.ConfigureNewtonsoftJsonSerializer(_newtonsoftJsonConfig);
+					cfg.UseNewtonsoftJsonDeserializer();
+					cfg.ConfigureNewtonsoftJsonDeserializer(_newtonsoftJsonConfig);
+				}
 
-						// Apply System.Text.Json configuration
-						if (_systemTextJsonConfig != null)
-						{
-							cfg.UseJsonSerializer();
-							cfg.ConfigureJsonSerializerOptions(_systemTextJsonConfig);
-							cfg.UseJsonDeserializer();
-						}
+				// Apply System.Text.Json configuration
+				if (_systemTextJsonConfig != null)
+				{
+					cfg.UseJsonSerializer();
+					cfg.ConfigureJsonSerializerOptions(_systemTextJsonConfig);
+					cfg.UseJsonDeserializer();
+				}
 
-						// Conditionally exclude base interfaces
-						if (_excludeBaseInterfaces)
-						{
-							cfg.ExcludeBaseInterfaces();
-						}
-					}
-				);
+				// Conditionally exclude base interfaces
+				if (_excludeBaseInterfaces)
+				{
+					cfg.ExcludeBaseInterfaces();
+				}
+
+				// Apply additional configurations
+				_configureBus?.Invoke(cfg, context);
 			}
 		);
 	}

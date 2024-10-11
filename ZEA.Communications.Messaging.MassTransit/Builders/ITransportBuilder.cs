@@ -1,6 +1,5 @@
-﻿using System.Reflection;
-using System.Text.Json;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System.Text.Json;
+using MassTransit;
 using Newtonsoft.Json;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
@@ -11,11 +10,10 @@ namespace ZEA.Communications.Messaging.MassTransit.Builders;
 public interface ITransportBuilder
 {
 	/// <summary>
-	/// Adds consumer assemblies to the transport builder.
+	/// Configures the transport-specific settings.
 	/// </summary>
-	/// <param name="consumerAssemblies">Assemblies containing MassTransit consumers.</param>
-	/// <returns>The current transport builder instance.</returns>
-	ITransportBuilder AddConsumerAssemblies(params Assembly[] consumerAssemblies);
+	/// <param name="configurator">The bus registration configurator.</param>
+	void ConfigureTransport(IBusRegistrationConfigurator configurator);
 
 	/// <summary>
 	/// Sets whether to exclude base interfaces from publishing.
@@ -38,10 +36,4 @@ public interface ITransportBuilder
 	/// <param name="configure">Action to configure JsonSerializerOptions.</param>
 	/// <returns>The current transport builder instance.</returns>
 	ITransportBuilder UseSystemTextJson(Func<JsonSerializerOptions, JsonSerializerOptions> configure);
-
-	/// <summary>
-	/// Builds the MassTransit configuration and registers it with the service collection.
-	/// </summary>
-	/// <param name="services">The service collection to register services with.</param>
-	void Build(IServiceCollection services);
 }

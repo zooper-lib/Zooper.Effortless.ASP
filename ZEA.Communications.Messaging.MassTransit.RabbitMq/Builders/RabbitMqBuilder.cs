@@ -1,9 +1,7 @@
 using System.Reflection;
 using System.Text.Json;
 using MassTransit;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using ZEA.Communications.Messaging.MassTransit.Attributes;
 using ZEA.Communications.Messaging.MassTransit.Builders;
 using ZEA.Communications.Messaging.MassTransit.Extensions;
 
@@ -17,13 +15,14 @@ public class RabbitMqBuilder : ITransportBuilder
 	private readonly string _host;
 	private readonly string _username;
 	private readonly string _password;
-	private readonly List<Assembly> _consumerAssemblies = [];
+
 	private bool _excludeBaseInterfaces;
 
 	private Func<JsonSerializerSettings, JsonSerializerSettings>? _newtonsoftJsonConfig;
 	private Func<JsonSerializerOptions, JsonSerializerOptions>? _systemTextJsonConfig;
 
-	private readonly List<Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>> _endpointConfigurations = [];
+	private Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>? _configureBus;
+
 	private Action<IRetryConfigurator>? _retryConfigurator;
 	private Action<IRedeliveryConfigurator>? _redeliveryConfigurator;
 
@@ -41,16 +40,6 @@ public class RabbitMqBuilder : ITransportBuilder
 		_host = host;
 		_username = username;
 		_password = password;
-	}
-
-	/// <inheritdoc/>
-	public ITransportBuilder AddConsumerAssemblies(params Assembly[] consumerAssemblies)
-	{
-		if (consumerAssemblies == null || consumerAssemblies.Length == 0)
-			throw new ArgumentNullException(nameof(consumerAssemblies));
-
-		_consumerAssemblies.AddRange(consumerAssemblies);
-		return this;
 	}
 
 	/// <inheritdoc/>
@@ -74,123 +63,14 @@ public class RabbitMqBuilder : ITransportBuilder
 		return this;
 	}
 
-	/// <inheritdoc/>
-	public void Build(IServiceCollection services)
-	{
-		services.AddMassTransit(
-			configurator =>
-			{
-				configurator.AddConsumers(_consumerAssemblies.ToArray());
-				configurator.UsingRabbitMq(
-					(
-						context,
-						cfg) =>
-					{
-						cfg.UseNewtonsoftJsonSerializer();
-						cfg.Host(
-							_host,
-							h =>
-							{
-								h.Username(_username);
-								h.Password(_password);
-							}
-						);
-
-						// Apply Newtonsoft.Json configuration
-						if (_newtonsoftJsonConfig != null)
-						{
-							cfg.UseNewtonsoftJsonSerializer();
-							cfg.ConfigureNewtonsoftJsonSerializer(_newtonsoftJsonConfig);
-							cfg.UseNewtonsoftJsonDeserializer();
-							cfg.ConfigureNewtonsoftJsonDeserializer(_newtonsoftJsonConfig);
-						}
-
-						// Apply System.Text.Json configuration
-						if (_systemTextJsonConfig != null)
-						{
-							cfg.UseJsonSerializer();
-							cfg.ConfigureJsonSerializerOptions(_systemTextJsonConfig);
-							cfg.UseJsonDeserializer();
-						}
-
-						// Conditionally exclude base interfaces
-						if (_excludeBaseInterfaces)
-						{
-							cfg.ExcludeBaseInterfaces();
-						}
-
-						foreach (var endpointConfig in _endpointConfigurations)
-							endpointConfig(cfg, context);
-
-						if (_retryConfigurator != null)
-						{
-							cfg.UseMessageRetry(_retryConfigurator);
-						}
-
-						if (_redeliveryConfigurator != null)
-						{
-							cfg.UseDelayedRedelivery(_redeliveryConfigurator);
-						}
-					}
-				);
-			}
-		);
-	}
-
 	/// <summary>
-	/// Adds a configuration action for endpoints.
+	/// Allows additional configuration of the RabbitMQ bus.
 	/// </summary>
-	/// <param name="configure">The configuration action for the endpoints.</param>
+	/// <param name="configure">An action to configure the bus factory configurator.</param>
 	/// <returns>The current builder instance.</returns>
-	public ITransportBuilder ConfigureEndpoints(Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext> configure)
+	public RabbitMqBuilder ConfigureBus(Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext> configure)
 	{
-		_endpointConfigurations.Add(configure);
-		return this;
-	}
-
-	/// <summary>
-	/// Adds endpoints for consumers that are decorated with a <see cref="QueueNameAttribute"/>.
-	/// </summary>
-	/// <returns>The current builder instance.</returns>
-	public ITransportBuilder ConfigureEndpointsByAttribute()
-	{
-		var consumersByQueueName = new Dictionary<string, List<Type>>();
-
-		// Group consumers by queue name
-		foreach (var assembly in _consumerAssemblies)
-		{
-			foreach (var type in assembly.GetTypes())
-			{
-				var queueNameAttribute = type.GetCustomAttribute<QueueNameAttribute>();
-				if (queueNameAttribute == null) continue;
-
-				if (!consumersByQueueName.ContainsKey(queueNameAttribute.QueueName))
-					consumersByQueueName[queueNameAttribute.QueueName] = [];
-
-				consumersByQueueName[queueNameAttribute.QueueName].Add(type);
-			}
-		}
-
-		// Configure each queue with its consumers
-		foreach (var kvp in consumersByQueueName)
-		{
-			_endpointConfigurations.Add(
-				(
-					cfg,
-					ctx) =>
-				{
-					cfg.ReceiveEndpoint(
-						kvp.Key,
-						e =>
-						{
-							foreach (var consumerType in kvp.Value)
-								e.ConfigureConsumer(ctx, consumerType);
-						}
-					);
-				}
-			);
-		}
-
+		_configureBus = configure;
 		return this;
 	}
 
@@ -214,5 +94,51 @@ public class RabbitMqBuilder : ITransportBuilder
 	{
 		_redeliveryConfigurator = configureRedelivery;
 		return this;
+	}
+
+	/// <inheritdoc/>
+	public void ConfigureTransport(IBusRegistrationConfigurator configurator)
+	{
+		configurator.UsingRabbitMq(
+			(
+				context,
+				cfg) =>
+			{
+				cfg.Host(
+					_host,
+					h =>
+					{
+						h.Username(_username);
+						h.Password(_password);
+					}
+				);
+
+				// Apply Newtonsoft.Json configuration
+				if (_newtonsoftJsonConfig != null)
+				{
+					cfg.UseNewtonsoftJsonSerializer();
+					cfg.ConfigureNewtonsoftJsonSerializer(_newtonsoftJsonConfig);
+					cfg.UseNewtonsoftJsonDeserializer();
+					cfg.ConfigureNewtonsoftJsonDeserializer(_newtonsoftJsonConfig);
+				}
+
+				// Apply System.Text.Json configuration
+				if (_systemTextJsonConfig != null)
+				{
+					cfg.UseJsonSerializer();
+					cfg.ConfigureJsonSerializerOptions(_systemTextJsonConfig);
+					cfg.UseJsonDeserializer();
+				}
+
+				// Conditionally exclude base interfaces
+				if (_excludeBaseInterfaces)
+				{
+					cfg.ExcludeBaseInterfaces();
+				}
+
+				// Apply additional configurations
+				_configureBus?.Invoke(cfg, context);
+			}
+		);
 	}
 }
