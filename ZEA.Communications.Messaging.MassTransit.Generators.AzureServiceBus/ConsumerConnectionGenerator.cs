@@ -1,18 +1,16 @@
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Text;
 using ZEA.Communications.Messaging.MassTransit.Attributes;
 using ZEA.Communications.Messaging.MassTransit.Generators.Helpers;
 
-namespace ZEA.Communications.Messaging.MassTransit.Generators;
+namespace ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus;
 
 [Generator]
 public class ConsumerConnectionGenerator : ISourceGenerator
 {
 	private const string FileName = "MassTransitConsumerConnection";
-	private const string Namespace = "ZEA.MassTransit.Generated";
+	private const string Namespace = "ZEA.MassTransit.AzureServiceBus.Generated";
 	private const string ClassName = "MassTransitConsumerConnection";
 	private const string MethodName = "ConfigureSubscriptions";
 
@@ -81,7 +79,7 @@ public class ConsumerConnectionGenerator : ISourceGenerator
 				new()
 				{
 					EventName = classSymbol.ToDisplayString(),
-					TopicName = entityName,
+					ChannelName = entityName,
 					SubscriptionName = subscriptionName
 				}
 			);
@@ -160,7 +158,7 @@ public class ConsumerConnectionGenerator : ISourceGenerator
 	{
 		sourceBuilder.AppendLine(
 			$$"""
-			  cfg.SubscriptionEndpoint("{{consumer.SubscriptionName}}", "{{consumer.TopicName}}", e =>
+			  cfg.SubscriptionEndpoint("{{consumer.SubscriptionName}}", "{{consumer.ChannelName}}", e =>
 			  {
 			      e.ConfigureConsumer<{{consumer.EventName}}>(context);
 			  });
@@ -188,7 +186,7 @@ public class ConsumerConnectionGenerator : ISourceGenerator
 	private class ConsumerInfo
 	{
 		public string EventName { get; init; } = string.Empty;
-		public string TopicName { get; init; } = string.Empty;
+		public string ChannelName { get; init; } = string.Empty;
 		public string SubscriptionName { get; init; } = string.Empty;
 	}
 }

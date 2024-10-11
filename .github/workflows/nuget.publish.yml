@@ -89,10 +89,13 @@ jobs:
     strategy:
       matrix:
         project:
+          # Applications
           - ZEA.Applications.Logging.Metadata.Abstractions/ZEA.Applications.Logging.Metadata.Abstractions.csproj
           - ZEA.Applications.Logging.Metadata.MVC/ZEA.Applications.Logging.Metadata.MVC.csproj
           - ZEA.Applications.WebApis.MVC/ZEA.Applications.WebApis.MVC.csproj
           - ZEA.Applications.WebApis.Swagger/ZEA.Applications.WebApis.Swagger.csproj
+          
+          # Architectures
           - ZEA.Architectures.DDD.Abstractions/ZEA.Architectures.DDD.Abstractions.csproj
           - ZEA.Architectures.DDD.Modelling/ZEA.Architectures.DDD.Modelling.csproj
           - ZEA.Architectures.Mediators.Abstractions/ZEA.Architectures.Mediators.Abstractions.csproj
@@ -100,22 +103,36 @@ jobs:
           - ZEA.Architectures.EventSourcing/ZEA.Architectures.EventSourcing.csproj
           - ZEA.Architectures.Hexagonal/ZEA.Architectures.Hexagonal.csproj
           - ZEA.Architectures.Modularization/ZEA.Architectures.Modularization.csproj
+          
+          # Communications
           - ZEA.Communications.Abstractions/ZEA.Communications.Abstractions.csproj
           - ZEA.Communications.gRPC/ZEA.Communications.gRPC.csproj
+          - ZEA.Communications.Refit/ZEA.Communications.Refit.csproj
+          # Communications - Messaging
           - ZEA.Communications.Messaging.Abstractions/ZEA.Communications.Messaging.Abstractions.csproj
           - ZEA.Communications.Messaging.MassTransit/ZEA.Communications.Messaging.MassTransit.csproj
+          # Communications - Messaging - MassTransit - Generators
           - ZEA.Communications.Messaging.MassTransit.Generators/ZEA.Communications.Messaging.MassTransit.Generators.csproj
-          - ZEA.Communications.Refit/ZEA.Communications.Refit.csproj
+          - ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus/ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus.csproj
+          - ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq/ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq.csproj
+          
+          # Configurations
           - ZEA.Configurations.Abstractions/ZEA.Configurations.Abstractions.csproj
           - ZEA.Configurations.AzureKeyVault/ZEA.Configurations.AzureKeyVault.csproj
           - ZEA.Configurations.HashicorpVault/ZEA.Configurations.HashicorpVault.csproj
+          
+          # Serializations
           - ZEA.Serializations.Abstractions/ZEA.Serializations.Abstractions.csproj
           - ZEA.Serializations.NewtonsoftJson/ZEA.Serializations.NewtonsoftJson.csproj
           - ZEA.Serializations.SystemTextJson/ZEA.Serializations.SystemTextJson.csproj
+          
+          # Techniques
           - ZEA.Techniques.ADTs/ZEA.Techniques.ADTs.csproj
           - ZEA.Techniques.RailwayOrientedProgramming/ZEA.Techniques.RailwayOrientedProgramming.csproj
           - ZEA.Techniques.StrongTypes/ZEA.Techniques.StrongTypes.csproj
           - ZEA.Techniques.StrongTypes.Generators/ZEA.Techniques.StrongTypes.Generators.csproj
+          
+          # Validations
           - ZEA.Validations.Abstractions/ZEA.Validations.Abstractions.csproj
           - ZEA.Validations.FluentValidation/ZEA.Validations.FluentValidation.csproj
     

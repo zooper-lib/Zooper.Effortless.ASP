@@ -7,6 +7,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus\ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus.csproj" OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq\ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq.csproj" OutputItemType="Analyzer"/>
         <ProjectReference Include="..\ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators.csproj" OutputItemType="Analyzer"/>
     </ItemGroup>
 
