@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MediatR" Version="12.4.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.*"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*"/>
+        <PackageReference Include="Moq" Version="4.*"/>
+        <PackageReference Include="xunit" Version="2.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZEA.Architectures.Mediators.Abstractions\ZEA.Architectures.Mediators.Abstractions.csproj" />
+        <ProjectReference Include="..\ZEA.Architectures.Mediators.MediatrWrapper\ZEA.Architectures.Mediators.MediatrWrapper.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true" PackagePath="docs\CHANGELOG.md" />
+    </ItemGroup>
+
+</Project>

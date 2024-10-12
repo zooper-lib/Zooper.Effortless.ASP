@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MediatR" Version="12.*"/>
+        <PackageReference Include="Scrutor" Version="4.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true" PackagePath="docs\CHANGELOG.md" />
+    </ItemGroup>
+
+</Project>

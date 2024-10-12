@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.*"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZEA.Validations.FluentValidation\ZEA.Validations.FluentValidation.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="..\CHANGELOG.md" Pack="true" PackagePath="docs\CHANGELOG.md" />
+    </ItemGroup>
+
+</Project>

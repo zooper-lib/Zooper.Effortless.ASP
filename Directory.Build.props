@@ -1,0 +1,12 @@
+<Project>
+    <PropertyGroup>
+        <Version>2.2.0</Version>
+        <PackageVersion>$(Version)</PackageVersion>
+        <AssemblyVersion>$(Version).0</AssemblyVersion>
+        <FileVersion>$(Version).0</FileVersion>
+        <Authors>Zooper</Authors>
+        <Company>Zooper</Company>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <PackageProjectUrl>https://github.com/zooper-lib/Zooper.Effortless.ASP</PackageProjectUrl>
+    </PropertyGroup>
+</Project>

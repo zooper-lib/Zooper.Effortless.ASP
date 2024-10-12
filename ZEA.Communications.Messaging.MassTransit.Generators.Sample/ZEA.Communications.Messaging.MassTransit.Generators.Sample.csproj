@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <RootNamespace>ZEA.Communications.Messaging.MassTransit.Generators.Sample</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus\ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus.csproj" OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq\ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq.csproj" OutputItemType="Analyzer"/>
+        <ProjectReference Include="..\ZEA.Communications.Messaging.MassTransit.Generators\ZEA.Communications.Messaging.MassTransit.Generators.csproj" OutputItemType="Analyzer"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MassTransit" Version="8.2.5" />
+        <PackageReference Include="MassTransit.Abstractions" Version="8.2.5"/>
+        <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.2.5" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    </ItemGroup>
+
+</Project>
