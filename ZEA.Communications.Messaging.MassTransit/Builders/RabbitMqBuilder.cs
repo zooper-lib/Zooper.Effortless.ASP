@@ -1,6 +1,8 @@
 ﻿using System.Reflection;
+using System.Text.Json;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using ZEA.Communications.Messaging.MassTransit.Attributes;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
@@ -11,15 +13,16 @@ namespace ZEA.Communications.Messaging.MassTransit.Builders;
 /// <param name="host">The RabbitMQ host address.</param>
 /// <param name="username">The RabbitMQ username.</param>
 /// <param name="password">The RabbitMQ password.</param>
+[Obsolete("Use 'RabbitMqBuilder' in 'ZEA.Communications.Messaging.MassTransit.RabbitMq' instead.")]
 public class RabbitMqBuilder(
 	string host,
 	string username,
 	string password) : ITransportBuilder
 {
-	private readonly List<Assembly> _consumerAssemblies = [];
-	private readonly List<Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>> _endpointConfigurations = [];
-	private Action<IRetryConfigurator>? _retryConfigurator;
-	private Action<IRedeliveryConfigurator>? _redeliveryConfigurator;
+	[Obsolete] private readonly List<Assembly> _consumerAssemblies = [];
+	[Obsolete] private readonly List<Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>> _endpointConfigurations = [];
+	[Obsolete] private Action<IRetryConfigurator>? _retryConfigurator;
+	[Obsolete] private Action<IRedeliveryConfigurator>? _redeliveryConfigurator;
 
 	/// <summary>
 	///     Adds the specified consumer assemblies to the builder.
@@ -27,6 +30,7 @@ public class RabbitMqBuilder(
 	/// <param name="consumerAssemblies">The consumer assemblies to add.</param>
 	/// <returns>The current builder instance.</returns>
 	/// /// <exception cref="ArgumentNullException">Thrown when no consumer assemblies are provided.</exception>
+	[Obsolete]
 	public ITransportBuilder AddConsumerAssemblies(params Assembly[] consumerAssemblies)
 	{
 		// There must at least be one consumer assembly.
@@ -37,10 +41,48 @@ public class RabbitMqBuilder(
 		return this;
 	}
 
+	[Obsolete]
+	public void ConfigureTransport(IBusRegistrationConfigurator configurator)
+	{
+		throw new NotImplementedException();
+	}
+
+	/// <inheritdoc/>
+	[Obsolete]
+	public ITransportBuilder ExcludeBaseInterfacesFromPublishing(bool exclude)
+	{
+		throw new NotImplementedException();
+	}
+
+	[Obsolete]
+	public ITransportBuilder UseNewtonsoftJson(Func<JsonSerializerSettings, JsonSerializerSettings> configure)
+	{
+		throw new NotImplementedException();
+	}
+
+	[Obsolete]
+	public ITransportBuilder UseSystemTextJson(Func<JsonSerializerOptions, JsonSerializerOptions> configure)
+	{
+		throw new NotImplementedException();
+	}
+
+	[Obsolete]
+	public ITransportBuilder UseMessageRetry(Action<IRetryConfigurator> configureRetry)
+	{
+		throw new NotImplementedException();
+	}
+
+	[Obsolete]
+	public ITransportBuilder UseNewtonsoftJsonSerialization(TypeNameHandling typeNameHandling = TypeNameHandling.Objects)
+	{
+		throw new NotImplementedException();
+	}
+
 	/// <summary>
 	///     Builds the MassTransit configuration and registers it with the service collection.
 	/// </summary>
 	/// /// <param name="services">The service collection to register the configuration with.</param>
+	[Obsolete]
 	public void Build(IServiceCollection services)
 	{
 		services.AddMassTransit(
@@ -106,6 +148,7 @@ public class RabbitMqBuilder(
 	///  );
 	///  </code>
 	/// </example>
+	[Obsolete]
 	public ITransportBuilder ConfigureEndpoints(Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext> configure)
 	{
 		_endpointConfigurations.Add(configure);
@@ -116,6 +159,7 @@ public class RabbitMqBuilder(
 	///     Adds the endpoints for consumers that are decorated with a <see cref="QueueNameAttribute" />.
 	/// </summary>
 	/// <returns>The current builder instance.</returns>
+	[Obsolete]
 	public ITransportBuilder ConfigureEndpointsByAttribute()
 	{
 		var consumersByQueueName = new Dictionary<string, List<Type>>();
@@ -161,6 +205,7 @@ public class RabbitMqBuilder(
 	///     Adds the endpoints for consumers that are decorated with a <see cref="ExchangeNameAttribute" />.
 	/// </summary>
 	/// <returns>The current builder instance.</returns>
+	[Obsolete]
 	public ITransportBuilder ConfigureEndpointsByAttribute(
 		string queueName,
 		string exchangeType)
@@ -215,6 +260,7 @@ public class RabbitMqBuilder(
 	/// </summary>
 	/// <param name="configureRetry">The retry configuration action.</param>
 	/// <returns>The current builder instance.</returns>
+	[Obsolete]
 	public ITransportBuilder UseRetry(Action<IRetryConfigurator> configureRetry)
 	{
 		_retryConfigurator = configureRetry;
@@ -226,6 +272,7 @@ public class RabbitMqBuilder(
 	/// </summary>
 	/// <param name="configureRedelivery"></param>
 	/// <returns></returns>
+	[Obsolete]
 	public ITransportBuilder UseRedelivery(Action<IRedeliveryConfigurator> configureRedelivery)
 	{
 		_redeliveryConfigurator = configureRedelivery;

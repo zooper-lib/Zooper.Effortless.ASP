@@ -7,8 +7,10 @@ using ZEA.Communications.Messaging.MassTransit.Builders;
 
 namespace ZEA.Communications.Messaging.MassTransit.Extensions;
 
+[Obsolete("This class and all containing methods are obsolete. Use the Generators instead for all the functionality.")]
 public static class MassTransitExtensions
 {
+	[Obsolete("Use 'ServiceCollection.AddMessagingWithMassTransit' instead.")]
 	public static IServiceCollection AddMassTransitServices(
 		this IServiceCollection services,
 		Action<MassTransitBuilder> configure)

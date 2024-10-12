@@ -110,7 +110,10 @@ jobs:
           - ZEA.Communications.Refit/ZEA.Communications.Refit.csproj
           # Communications - Messaging
           - ZEA.Communications.Messaging.Abstractions/ZEA.Communications.Messaging.Abstractions.csproj
+          # Communications - Messaging - MassTransit
           - ZEA.Communications.Messaging.MassTransit/ZEA.Communications.Messaging.MassTransit.csproj
+          - ZEA.Communications.Messaging.MassTransit.AzureServiceBus/ZEA.Communications.Messaging.MassTransit.AzureServiceBus.csproj
+          - ZEA.Communications.Messaging.MassTransit.RabbitMq/ZEA.Communications.Messaging.MassTransit.RabbitMq.csproj
           # Communications - Messaging - MassTransit - Generators
           - ZEA.Communications.Messaging.MassTransit.Generators/ZEA.Communications.Messaging.MassTransit.Generators.csproj
           - ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus/ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus.csproj

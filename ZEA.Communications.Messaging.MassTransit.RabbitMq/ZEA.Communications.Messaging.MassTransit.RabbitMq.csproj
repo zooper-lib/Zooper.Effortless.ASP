@@ -6,4 +6,8 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ZEA.Communications.Messaging.MassTransit\ZEA.Communications.Messaging.MassTransit.csproj" />
+    </ItemGroup>
+
 </Project>
