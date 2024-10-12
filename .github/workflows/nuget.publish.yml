@@ -75,7 +75,7 @@ jobs:
             PACKAGE_VERSION="${VERSION}"
           else
             BUILD_NUMBER="${GITHUB_RUN_NUMBER}"
-            PACKAGE_VERSION="${VERSION}.${BUILD_NUMBER}-preview"
+            PACKAGE_VERSION="${VERSION}-preview.${BUILD_NUMBER}"
           fi
 
           echo "package_version=${PACKAGE_VERSION}" >> $GITHUB_OUTPUT
