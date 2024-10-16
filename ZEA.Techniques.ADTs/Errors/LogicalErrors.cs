@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using ZEA.Techniques.ADTs.Interfaces;
 
 // ReSharper disable NotAccessedPositionalProperty.Global
 // ReSharper disable UnusedType.Global
@@ -25,8 +26,6 @@ public record PublicDetails(string Message, string? Details = null);
 	"Better to log it and expose a generic error message to the client."
 )]
 public record InternalDetails(StackTrace StackTrace);
-
-public interface IAdtType;
 
 // TODO: Rename to something better
 /// <summary>
