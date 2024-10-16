@@ -1,6 +1,8 @@
 // ReSharper disable UnusedType.Global
 
-namespace ZEA.Techniques.ADTs.Errors;
+using ZEA.Techniques.ADTs.Interfaces;
+
+namespace ZEA.Techniques.ADTs;
 
 /// <summary>
 /// Represents a successful operation.

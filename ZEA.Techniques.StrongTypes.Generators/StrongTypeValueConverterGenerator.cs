@@ -326,7 +326,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		{
 			// Check if the node is a class or a record
 			if (syntaxNode is TypeDeclarationSyntax typeDeclaration &&
-			    (typeDeclaration is ClassDeclarationSyntax || typeDeclaration is RecordDeclarationSyntax) &&
+			    typeDeclaration is ClassDeclarationSyntax or RecordDeclarationSyntax &&
 			    typeDeclaration.AttributeLists
 				    .Any(
 					    attrList => attrList.Attributes
