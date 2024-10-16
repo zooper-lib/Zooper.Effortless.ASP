@@ -11,7 +11,7 @@ namespace ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq;
 public sealed class ChannelGenerator : ISourceGenerator
 {
 	private const string FileName = "MassTransitChannelRegistration";
-	private const string Namespace = "ZEA.MassTransit.RabbitMQ.Generated";
+	private const string Namespace = "ZEA.MassTransit.RabbitMq.Generated";
 	private const string ClassName = "MassTransitChannelRegistration";
 	private const string MethodName = "ConfigureChannels";
 
