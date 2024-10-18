@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using MassTransit;
 using Newtonsoft.Json;
-using ZEA.Communications.Messaging.MassTransit.Interfaces;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
 

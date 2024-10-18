@@ -2,83 +2,134 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 
 namespace ZEA.Techniques.StrongTypes.Generators;
 
 [Generator]
-public class StrongTypeConverterGenerator : ISourceGenerator
+public class StrongTypeConverterGenerator : IIncrementalGenerator
 {
-	public void Initialize(GeneratorInitializationContext context)
+	public void Initialize(IncrementalGeneratorInitializationContext context)
 	{
-		// Register a syntax receiver that will be created for each generation pass
-		context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
+		// Register a syntax provider that filters for classes or records with the GenerateConverters attribute
+		var candidateTypes = context.SyntaxProvider
+			.CreateSyntaxProvider(
+				predicate: IsCandidateType,
+				transform: GetSemanticTarget
+			)
+			.Where(symbol => symbol != null)!; // Filter out nulls
+
+		// Combine all candidate symbols with the compilation
+		var compilationAndTypes = context.CompilationProvider.Combine(candidateTypes.Collect());
+
+		// Register the source output
+		context.RegisterSourceOutput(
+			compilationAndTypes,
+			(
+				spc,
+				source) =>
+			{
+				var compilation = source.Left;
+				var types = source.Right;
+
+				// Retrieve the GenerateConvertersAttribute symbol
+				var generateConvertersAttributeSymbol = FindTypeByName(compilation, "GenerateConvertersAttribute");
+
+				if (generateConvertersAttributeSymbol == null)
+				{
+					// Report diagnostic if the attribute is not found
+					context.ReportDiagnostic(DiagnosticDescriptors.GenerateConvertersAttributeNotFound);
+					return;
+				}
+
+				// Retrieve symbols for StrongTypeRecord and StrongTypeClass
+				var strongTypeRecordSymbol = FindTypeByName(compilation, "StrongTypeRecord");
+				var strongTypeClassSymbol = FindTypeByName(compilation, "StrongTypeClass");
+
+				if (strongTypeRecordSymbol == null && strongTypeClassSymbol == null)
+				{
+					// Report diagnostic if base classes are not found
+					context.ReportDiagnostic(DiagnosticDescriptors.BaseClassNotFound);
+					return;
+				}
+
+				foreach (var typeSymbol in types.Distinct())
+				{
+					if (typeSymbol is null)
+					{
+						context.ReportDiagnostic(DiagnosticDescriptors.SymbolCannotBeDetermined);
+						continue;
+					}
+
+					// Ensure the class inherits from StrongTypeRecord or StrongTypeClass
+					if (!InheritsFromStrongType(typeSymbol, strongTypeRecordSymbol, strongTypeClassSymbol))
+					{
+						var location = typeSymbol.Locations.FirstOrDefault() ?? Location.None;
+						var diagnostic = Diagnostic.Create(DiagnosticDescriptors.StrongTypeMustExtendBaseClass, location);
+						spc.ReportDiagnostic(diagnostic);
+						continue;
+					}
+
+					// Extract converter options from the GenerateConvertersAttribute
+					if (!TryGetConvertersFromAttribute(
+						    typeSymbol,
+						    generateConvertersAttributeSymbol,
+						    out var generateValueConverter,
+						    out var generateJsonConverter,
+						    out var generateTypeConverter
+					    ))
+					{
+						var location = typeSymbol.Locations.FirstOrDefault() ?? Location.None;
+						var diagnostic = Diagnostic.Create(DiagnosticDescriptors.GenerateConvertersAttributeNotFound, location);
+						spc.ReportDiagnostic(diagnostic);
+						continue;
+					}
+
+					// Generate the converters class
+					var generatedSource = GenerateConvertersClass(
+						typeSymbol,
+						generateValueConverter,
+						generateJsonConverter,
+						generateTypeConverter
+					);
+					spc.AddSource($"{typeSymbol.Name}.g.cs", SourceText.From(generatedSource, Encoding.UTF8));
+				}
+			}
+		);
 	}
 
-	public void Execute(GeneratorExecutionContext context)
+	/// <summary>
+	/// Determines if a syntax node is a candidate type (class or record with GenerateConverters attribute).
+	/// </summary>
+	private static bool IsCandidateType(
+		SyntaxNode node,
+		CancellationToken cancellationToken)
 	{
-		if (context.SyntaxReceiver is not SyntaxReceiver receiver)
+		return node is TypeDeclarationSyntax typeDeclaration &&
+		       (typeDeclaration is ClassDeclarationSyntax || typeDeclaration is RecordDeclarationSyntax) &&
+		       typeDeclaration.AttributeLists.Any(
+			       attrList =>
+				       attrList.Attributes.Any(attr => attr.Name.ToString().Contains("GenerateConverters"))
+		       );
+	}
+
+	/// <summary>
+	/// Transforms a syntax node into a semantic symbol.
+	/// </summary>
+	private static INamedTypeSymbol? GetSemanticTarget(
+		GeneratorSyntaxContext context,
+		CancellationToken cancellationToken)
+	{
+		if (context.Node is TypeDeclarationSyntax typeDeclaration)
 		{
-			return;
+			var symbol = context.SemanticModel.GetDeclaredSymbol(typeDeclaration, cancellationToken) as INamedTypeSymbol;
+			return symbol;
 		}
 
-		if (receiver.CandidateTypes.Count == 0)
-		{
-			return;
-		}
-
-		// Retrieve the GenerateConvertersAttribute symbol using the corrected helper method
-		var generateConvertersAttributeSymbol = FindTypeByName(context.Compilation, "GenerateConvertersAttribute");
-
-		if (generateConvertersAttributeSymbol == null)
-		{
-			context.ReportDiagnostic(DiagnosticDescriptors.GenerateConvertersAttributeNotFound);
-			return;
-		}
-
-		// Retrieve symbols for StrongTypeRecord and StrongTypeClass using the corrected helper method
-		var strongTypeRecordSymbol = FindTypeByName(context.Compilation, "StrongTypeRecord");
-		var strongTypeClassSymbol = FindTypeByName(context.Compilation, "StrongTypeClass");
-
-		if (strongTypeRecordSymbol == null && strongTypeClassSymbol == null)
-		{
-			context.ReportDiagnostic(DiagnosticDescriptors.BaseClassNotFound);
-			return;
-		}
-
-		foreach (var recordDeclaration in receiver.CandidateTypes)
-		{
-			var semanticModel = context.Compilation.GetSemanticModel(recordDeclaration.SyntaxTree);
-
-			if (semanticModel.GetDeclaredSymbol(recordDeclaration) is not INamedTypeSymbol symbol)
-			{
-				context.ReportDiagnostic(DiagnosticDescriptors.SymbolCannotBeDetermined);
-				continue;
-			}
-
-			// Ensure the class inherits from StrongTypeRecord or StrongTypeClass
-			if (!InheritsFromStrongType(symbol, strongTypeRecordSymbol, strongTypeClassSymbol))
-			{
-				context.ReportDiagnostic(DiagnosticDescriptors.StrongTypeMustExtendBaseClass);
-				continue;
-			}
-
-			if (!TryGetConvertersFromAttribute(
-				    symbol,
-				    generateConvertersAttributeSymbol,
-				    out var generateValueConverter,
-				    out var generateJsonConverter,
-				    out var generateTypeConverter
-			    ))
-			{
-				context.ReportDiagnostic(DiagnosticDescriptors.GenerateConvertersAttributeNotFound);
-				continue;
-			}
-
-			var generatedSource = GenerateConvertersClass(symbol, generateValueConverter, generateJsonConverter, generateTypeConverter);
-			context.AddSource($"{symbol.Name}.g.cs", generatedSource);
-		}
+		return null;
 	}
 
 	/// <summary>
@@ -112,7 +163,9 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		return null;
 	}
 
-	// Ensure the class inherits from StrongTypeRecord or StrongTypeClass
+	/// <summary>
+	/// Ensures the class inherits from StrongTypeRecord or StrongTypeClass
+	/// </summary>
 	private static bool InheritsFromStrongType(
 		INamedTypeSymbol symbol,
 		INamedTypeSymbol? strongTypeRecordSymbol,
@@ -122,7 +175,6 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 
 		while (baseType != null)
 		{
-			// Get the original definition if the base type is generic
 			var baseTypeDefinition = baseType.IsGenericType ? baseType.OriginalDefinition : baseType;
 
 			if (strongTypeRecordSymbol != null && SymbolEqualityComparer.Default.Equals(baseTypeDefinition, strongTypeRecordSymbol))
@@ -137,7 +189,9 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		return false;
 	}
 
-	// Extract converter options from the GenerateConvertersAttribute
+	/// <summary>
+	/// Extract converter options from the GenerateConvertersAttribute
+	/// </summary>
 	private static bool TryGetConvertersFromAttribute(
 		INamedTypeSymbol symbol,
 		INamedTypeSymbol generateConvertersAttributeSymbol,
@@ -163,7 +217,9 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		return false;
 	}
 
-	// Generate the selected converters
+	/// <summary>
+	/// Generates the converters class based on the provided options
+	/// </summary>
 	private static string GenerateConvertersClass(
 		INamedTypeSymbol typeSymbol,
 		bool generateValueConverter,
@@ -198,7 +254,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 			sourceBuilder.AppendLine($"namespace {namespaceName};");
 		}
 
-		// Write the record declaration
+		// Write the record or class declaration
 		sourceBuilder.AppendLine();
 		sourceBuilder.AppendLine(
 			$$"""
@@ -228,7 +284,9 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 		return sourceBuilder.ToString();
 	}
 
-	// Append the ValueConverter code
+	/// <summary>
+	/// Appends the ValueConverter code
+	/// </summary>
 	private static void AppendValueConverter(
 		string recordName,
 		string encapsulatedType,
@@ -247,8 +305,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 	}
 
 	/// <summary>
-	/// Appends the TypeConverter code to the source builder.
-	/// <param name="recordName">The records name</param>
+	/// Appends the JsonConverter code
 	/// </summary>
 	private static void AppendJsonConverter(
 		string recordName,
@@ -269,11 +326,8 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 	}
 
 	/// <summary>
-	/// Appends the TypeConverter code to the source builder.
+	/// Appends the TypeConverter code
 	/// </summary>
-	/// <param name="recordName">The name of the record.</param>
-	/// <param name="encapsulatedType">The type encapsulated by the record.</param>
-	/// <param name="sourceBuilder">The StringBuilder to append the code to.</param>
 	private static void AppendTypeConverter(
 		string recordName,
 		string encapsulatedType,
@@ -292,7 +346,7 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 	}
 
 	/// <summary>
-	/// Retrieves the encapsulated type from the StrongTypeRecord or StrongTypeClass.
+	/// Retrieves the encapsulated type from the StrongTypeRecord or StrongTypeClass
 	/// </summary>
 	private static string GetEncapsulatedType(INamedTypeSymbol recordSymbol)
 	{
@@ -302,7 +356,9 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 			: "int"; // Fallback if the encapsulated type can't be determined
 	}
 
-	// Determine the appropriate base JsonConverter based on the encapsulated type
+	/// <summary>
+	/// Determines the appropriate base JsonConverter based on the encapsulated type
+	/// </summary>
 	private static string GetBaseJsonConverterType(string encapsulatedType)
 	{
 		return encapsulatedType switch
@@ -315,26 +371,5 @@ public class StrongTypeConverterGenerator : ISourceGenerator
 			"System.Guid" => "GuidJsonConverter",
 			_ => throw new InvalidOperationException($"No JsonConverter defined for type {encapsulatedType}")
 		};
-	}
-
-	// Syntax receiver to collect record declarations that have the GenerateConverters attribute
-	private class SyntaxReceiver : ISyntaxReceiver
-	{
-		public List<TypeDeclarationSyntax> CandidateTypes { get; } = [];
-
-		public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
-		{
-			// Check if the node is a class or a record
-			if (syntaxNode is TypeDeclarationSyntax typeDeclaration &&
-			    typeDeclaration is ClassDeclarationSyntax or RecordDeclarationSyntax &&
-			    typeDeclaration.AttributeLists
-				    .Any(
-					    attrList => attrList.Attributes
-						    .Any(attr => attr.Name.ToString().Contains("GenerateConverters"))
-				    ))
-			{
-				CandidateTypes.Add(typeDeclaration);
-			}
-		}
 	}
 }

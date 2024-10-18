@@ -7,10 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MassTransit" Version="8.*" />
-      <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.*" />
-      <PackageReference Include="MassTransit.Newtonsoft" Version="8.*" />
-      <PackageReference Include="MassTransit.RabbitMQ" Version="8.*" />
+      <PackageReference Include="MassTransit" Version="8.3.0" />
+      <PackageReference Include="MassTransit.Azure.ServiceBus.Core" Version="8.3.0" />
+      <PackageReference Include="MassTransit.Newtonsoft" Version="8.3.0" />
+      <PackageReference Include="MassTransit.RabbitMQ" Version="8.3.0" />
     </ItemGroup>
 
     <ItemGroup>

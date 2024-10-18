@@ -94,6 +94,7 @@ jobs:
           - ZEA.Applications.Logging.Metadata.MVC/ZEA.Applications.Logging.Metadata.MVC.csproj
           - ZEA.Applications.WebApis.MVC/ZEA.Applications.WebApis.MVC.csproj
           - ZEA.Applications.WebApis.Swagger/ZEA.Applications.WebApis.Swagger.csproj
+          - ZEA.Applications.Workflows/ZEA.Applications.Workflows.csproj
           
           # Architectures
           - ZEA.Architectures.DDD.Abstractions/ZEA.Architectures.DDD.Abstractions.csproj

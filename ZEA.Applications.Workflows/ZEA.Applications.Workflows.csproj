@@ -1,4 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
@@ -6,11 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.ClaimsValueProvider" Version="2.0.1" />
+      <ProjectReference Include="..\ZEA.Techniques.ADTs\ZEA.Techniques.ADTs.csproj" />
+      <ProjectReference Include="..\ZEA.Techniques.RailwayOrientedProgramming\ZEA.Techniques.RailwayOrientedProgramming.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <None Include="..\CHANGELOG.md" Pack="true" PackagePath="docs\CHANGELOG.md" />
+      <PackageReference Include="MediatR" Version="12.4.1" />
     </ItemGroup>
 
 </Project>

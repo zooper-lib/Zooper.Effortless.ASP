@@ -8,8 +8,8 @@ namespace ZEA.Communications.Messaging.MassTransit.Generators.Sample.Consumers;
 [Consumer("TestTopic", "TestSubscription")]
 public class TestConsumer : IConsumer<TestEventOne>
 {
-	public async Task Consume(ConsumeContext<TestEventOne> context)
+	public Task Consume(ConsumeContext<TestEventOne> context)
 	{
-		throw new System.NotImplementedException();
+		return Task.CompletedTask;
 	}
 }
