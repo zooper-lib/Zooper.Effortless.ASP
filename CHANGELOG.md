@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+[2.2.3] - 2024.10.18
+
+### Added
+
+- **ZEA.Techniques.RailwayOrientedProgramming**
+    - Added extension methods to improve the readability of the Railway Oriented Programming pattern.
+
+- **ZEA.Applications.Workflows**
+    - New project that provides a framework for defining and executing workflows.
+
+### Updated
+
+- **ZEA.Communications.Messaging.MassTransit.Generators.***
+    - Updated all the generator projects to use the newer `IIncrementalGenerator` interface.
+
+---
+
 [2.2.2] - 2024.10.16
 
 ### Fixed
