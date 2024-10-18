@@ -1,60 +1,132 @@
+using System.Collections.Immutable;
 using System.Text;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using ZEA.Communications.Messaging.MassTransit.Attributes;
-using ZEA.Communications.Messaging.MassTransit.Generators.Helpers;
 
 namespace ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus;
 
 [Generator]
-public sealed class ChannelGenerator : ISourceGenerator
+public sealed class ChannelGenerator : IIncrementalGenerator
 {
 	private const string FileName = "MassTransitChannelRegistration";
 	private const string Namespace = "ZEA.MassTransit.AzureServiceBus.Generated";
 	private const string ClassName = "MassTransitChannelRegistration";
 	private const string MethodName = "ConfigureChannels";
+	private const string ChannelAttributeName = "ZEA.Communications.Messaging.MassTransit.Attributes.ChannelAttribute";
 
-	public void Initialize(GeneratorInitializationContext context)
+	public void Initialize(IncrementalGeneratorInitializationContext context)
 	{
-		// Register a syntax receiver that will collect candidate classes
-		context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
+		// Register a syntax provider that filters for class or record declarations with ChannelAttribute
+		var channelTypes = context.SyntaxProvider
+			.CreateSyntaxProvider(
+				predicate: IsSyntaxTargetForGeneration, // Filter syntax nodes
+				transform: GetSemanticTargetForGeneration // Transform to semantic symbols
+			)
+			.Where(static classSymbol => classSymbol != null); // Filter out nulls
+
+		// Combine the compilation with the collected channel symbols
+		var compilationAndChannels = context.CompilationProvider.Combine(channelTypes.Collect());
+
+		// Register the source output
+		context.RegisterSourceOutput(
+			compilationAndChannels,
+			(
+				spc,
+				source) => Execute(source.Left, source.Right, spc)
+		);
 	}
 
-	public void Execute(GeneratorExecutionContext context)
+	/// <summary>
+	/// Predicate to identify candidate classes or records with ChannelAttribute.
+	/// </summary>
+	private static bool IsSyntaxTargetForGeneration(
+		SyntaxNode node,
+		CancellationToken cancellationToken)
 	{
-		// Retrieve the populated receiver 
-		if (context.SyntaxReceiver is not SyntaxReceiver receiver)
+		return node is ClassDeclarationSyntax { AttributeLists.Count: > 0 } or RecordDeclarationSyntax { AttributeLists.Count: > 0 };
+	}
+
+	/// <summary>
+	/// Transforms a syntax node into a semantic symbol if it has ChannelAttribute.
+	/// </summary>
+	private static INamedTypeSymbol? GetSemanticTargetForGeneration(
+		GeneratorSyntaxContext context,
+		CancellationToken cancellationToken)
+	{
+		// Determine if the node is a class or record declaration
+		if (context.Node is ClassDeclarationSyntax classDeclaration)
 		{
-			return;
+			var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration, cancellationToken) as INamedTypeSymbol;
+			return HasChannelAttribute(classSymbol);
+		}
+		else if (context.Node is RecordDeclarationSyntax recordDeclaration)
+		{
+			var recordSymbol = context.SemanticModel.GetDeclaredSymbol(recordDeclaration, cancellationToken) as INamedTypeSymbol;
+			return HasChannelAttribute(recordSymbol);
 		}
 
-		// Get the ChannelAttribute symbol
-		var attributeSymbol = NamedTypeSymbolHelper.FindTypeByName(context.Compilation, nameof(ChannelAttribute));
+		return null;
+	}
 
-		if (attributeSymbol == null)
+	/// <summary>
+	/// Checks if the symbol has the ChannelAttribute.
+	/// </summary>
+	private static INamedTypeSymbol? HasChannelAttribute(INamedTypeSymbol? symbol)
+	{
+		if (symbol == null)
+			return null;
+
+		foreach (var attribute in symbol.GetAttributes())
+		{
+			if (attribute.AttributeClass == null)
+				continue;
+
+			// Use fully qualified string name to avoid direct type reference
+			if (attribute.AttributeClass.ToDisplayString() == ChannelAttributeName)
+			{
+				return symbol;
+			}
+		}
+
+		return null;
+	}
+
+	/// <summary>
+	/// Executes the generation logic.
+	/// </summary>
+	private static void Execute(
+		Compilation compilation,
+		ImmutableArray<INamedTypeSymbol?> channels,
+		SourceProductionContext context)
+	{
+		if (channels.IsDefaultOrEmpty)
+			return;
+
+		// Retrieve the ChannelAttribute symbol using fully qualified string name
+		var channelAttributeSymbol =
+			compilation.GetTypeByMetadataName(ChannelAttributeName);
+
+		if (channelAttributeSymbol == null)
 		{
 			// Attribute not found; nothing to generate
 			return;
 		}
 
 		// Collect all channel information
-		var channels = new List<ChannelInfo>();
+		var channelInfos = new List<ChannelInfo>();
 
-		foreach (var classDeclaration in receiver.CandidateTypes)
+		foreach (var classSymbol in channels.Distinct())
 		{
-			var model = context.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-
-			if (model.GetDeclaredSymbol(classDeclaration) is not INamedTypeSymbol classSymbol)
+			if (classSymbol == null)
 				continue;
 
+			// Retrieve the ChannelAttribute data using fully qualified string name
 			var attributeData = classSymbol.GetAttributes()
-				.FirstOrDefault(ad => ad.AttributeClass?.Equals(attributeSymbol, SymbolEqualityComparer.Default) == true);
+				.FirstOrDefault(ad => SymbolEqualityComparer.Default.Equals(ad.AttributeClass, channelAttributeSymbol));
 
-			if (attributeData is null)
-			{
+			if (attributeData == null)
 				continue;
-			}
 
 			// Extract channel name from the ChannelAttribute
 			var channelName = attributeData.ConstructorArguments.Length > 0 ? attributeData.ConstructorArguments[0].Value as string : null;
@@ -62,8 +134,8 @@ public sealed class ChannelGenerator : ISourceGenerator
 			if (channelName is null)
 				continue;
 
-			channels.Add(
-				new()
+			channelInfos.Add(
+				new ChannelInfo
 				{
 					EventName = classSymbol.ToDisplayString(),
 					ChannelName = channelName
@@ -71,17 +143,15 @@ public sealed class ChannelGenerator : ISourceGenerator
 			);
 		}
 
-		if (channels.Count == 0)
-		{
+		if (channelInfos.Count == 0)
 			return;
-		}
 
 		// Generate the channel registration code
 		var sourceBuilder = new StringBuilder();
 
 		AppendUsings(sourceBuilder);
 		AppendNamespace(sourceBuilder);
-		AppendClass(sourceBuilder, channels);
+		AppendClass(sourceBuilder, channelInfos);
 
 		// Add the generated source to the compilation
 		context.AddSource($"{FileName}.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
@@ -116,12 +186,12 @@ public sealed class ChannelGenerator : ISourceGenerator
 		StringBuilder sourceBuilder,
 		List<ChannelInfo> channels)
 	{
-		sourceBuilder.AppendLine($"public static void {MethodName}(this IServiceBusBusFactoryConfigurator cfg)");
-		sourceBuilder.AppendLine("{");
+		sourceBuilder.AppendLine($"    public static void {MethodName}(this IServiceBusBusFactoryConfigurator cfg)");
+		sourceBuilder.AppendLine("    {");
 
 		AppendChannelList(sourceBuilder, channels);
 
-		sourceBuilder.AppendLine("}");
+		sourceBuilder.AppendLine("    }");
 	}
 
 	private static void AppendChannelList(
@@ -138,32 +208,13 @@ public sealed class ChannelGenerator : ISourceGenerator
 		StringBuilder sourceBuilder,
 		ChannelInfo channel)
 	{
-		sourceBuilder.AppendLine(
-			$"cfg.Message<{channel.EventName}>(x => x.SetEntityName(\"{channel.ChannelName}\"));"
-		);
+		// Use nameof for method names if applicable, but channel names are strings
+		sourceBuilder.AppendLine($"        cfg.Message<{channel.EventName}>(x => x.SetEntityName(\"{channel.ChannelName}\"));");
 	}
 
 	/// <summary>
-	/// Receiver that collects classes with attributes
+	/// Represents information about a channel.
 	/// </summary>
-	private class SyntaxReceiver : ISyntaxReceiver
-	{
-		public List<TypeDeclarationSyntax> CandidateTypes { get; } = [];
-
-		public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
-		{
-			switch (syntaxNode)
-			{
-				case ClassDeclarationSyntax classDeclaration:
-					CandidateTypes.Add(classDeclaration);
-					break;
-				case RecordDeclarationSyntax recordDeclaration:
-					CandidateTypes.Add(recordDeclaration);
-					break;
-			}
-		}
-	}
-
 	private class ChannelInfo
 	{
 		public string EventName { get; init; } = string.Empty;

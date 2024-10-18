@@ -1,41 +1,102 @@
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Text;
-using ZEA.Communications.Messaging.MassTransit.Attributes;
-using ZEA.Communications.Messaging.MassTransit.Generators.Helpers;
 
 namespace ZEA.Communications.Messaging.MassTransit.Generators;
 
 [Generator]
-public class ConsumerRegistrationGenerator : ISourceGenerator
+public class ConsumerRegistrationGenerator : IIncrementalGenerator
 {
-	public void Initialize(GeneratorInitializationContext context)
+	private const string ConsumerNameAttribute = "ZEA.Communications.Messaging.MassTransit.Attributes.ConsumerAttribute";
+	
+	public void Initialize(IncrementalGeneratorInitializationContext context)
 	{
-		// Register a syntax receiver that will collect candidate classes
-		context.RegisterForSyntaxNotifications(() => new SyntaxReceiver());
+		// Register a syntax provider that filters for class declarations with ConsumerAttribute
+		var consumerClasses = context.SyntaxProvider
+			.CreateSyntaxProvider(
+				predicate: IsCandidateClass, // Filter syntax nodes
+				transform: GetSemanticTarget // Transform to semantic symbols
+			)
+			.Where(static classSymbol => classSymbol != null)!; // Filter out nulls
+
+		// Combine the compilation with the collected consumer symbols
+		var compilationAndConsumers = context.CompilationProvider.Combine(consumerClasses.Collect());
+
+		// Register the source output
+		context.RegisterSourceOutput(
+			compilationAndConsumers,
+			(
+				spc,
+				source) => Execute(source.Left, source.Right, spc)
+		);
 	}
 
-	public void Execute(GeneratorExecutionContext context)
+	/// <summary>
+	/// Predicate to identify candidate classes with ConsumerAttribute.
+	/// </summary>
+	private static bool IsCandidateClass(
+		SyntaxNode node,
+		CancellationToken cancellationToken)
 	{
-		// Retrieve the populated receiver 
-		if (context.SyntaxReceiver is not SyntaxReceiver receiver)
+		return node is ClassDeclarationSyntax { AttributeLists.Count: > 0 };
+	}
+
+	/// <summary>
+	/// Transforms a syntax node into a semantic symbol if it has ConsumerAttribute.
+	/// </summary>
+	private static INamedTypeSymbol? GetSemanticTarget(
+		GeneratorSyntaxContext context,
+		CancellationToken cancellationToken)
+	{
+		var classDeclaration = (ClassDeclarationSyntax)context.Node;
+		var classSymbol = context.SemanticModel.GetDeclaredSymbol(classDeclaration, cancellationToken) as INamedTypeSymbol;
+
+		if (classSymbol == null)
+			return null;
+
+		// Check if the class has the ConsumerAttribute using fully qualified string name
+		foreach (var attribute in classSymbol.GetAttributes())
 		{
-			return;
+			if (attribute.AttributeClass == null)
+				continue;
+
+			// Use fully qualified string name to identify the attribute
+			if (attribute.AttributeClass.ToDisplayString() == ConsumerNameAttribute)
+			{
+				return classSymbol;
+			}
 		}
 
-		// Get the ConsumerAttribute symbol
-		var attributeSymbol = NamedTypeSymbolHelper.FindTypeByName(context.Compilation, nameof(ConsumerAttribute));
+		return null;
+	}
 
-		if (attributeSymbol == null)
+	/// <summary>
+	/// Executes the generation logic.
+	/// </summary>
+	private static void Execute(
+		Compilation compilation,
+		ImmutableArray<INamedTypeSymbol?> consumers,
+		SourceProductionContext context)
+	{
+		if (consumers.IsDefaultOrEmpty)
+			return;
+
+		// Retrieve the ConsumerAttribute symbol using fully qualified string name
+		var consumerAttributeSymbol = compilation.GetTypeByMetadataName(ConsumerNameAttribute);
+
+		if (consumerAttributeSymbol == null)
 		{
 			// Attribute not found; nothing to generate
 			return;
 		}
 
-		// Get the IConsumer<T> symbol from MassTransit
-		var consumerInterfaceSymbol = context.Compilation.GetTypeByMetadataName("MassTransit.IConsumer`1");
+		// Retrieve the IConsumer<T> symbol from MassTransit
+		var consumerInterfaceSymbol = compilation.GetTypeByMetadataName("MassTransit.IConsumer`1");
 
 		if (consumerInterfaceSymbol == null)
 		{
@@ -44,23 +105,21 @@ public class ConsumerRegistrationGenerator : ISourceGenerator
 		}
 
 		// Collect all consumer information
-		var consumers = new List<ConsumerInfo>();
+		var consumerInfos = new List<ConsumerInfo>();
 
-		foreach (var classDeclaration in receiver.CandidateClasses)
+		foreach (var classSymbol in consumers.Distinct())
 		{
-			var model = context.Compilation.GetSemanticModel(classDeclaration.SyntaxTree);
-			var classSymbol = model.GetDeclaredSymbol(classDeclaration) as INamedTypeSymbol;
-
-			if (classSymbol is null)
+			if (classSymbol == null)
 				continue;
 
+			// Retrieve the ConsumerAttribute data using fully qualified string name
 			var attributeData = classSymbol.GetAttributes()
-				.FirstOrDefault(ad => ad.AttributeClass?.Equals(attributeSymbol, SymbolEqualityComparer.Default) == true);
+				.FirstOrDefault(ad => SymbolEqualityComparer.Default.Equals(ad.AttributeClass, consumerAttributeSymbol));
 
-			if (attributeData is null)
+			if (attributeData == null)
 				continue;
 
-			// Extract attribute arguments (optional, depending on whether needed for Consumer registration)
+			// Extract attribute arguments
 			var entityName = attributeData.ConstructorArguments.Length > 0 ? attributeData.ConstructorArguments[0].Value as string : null;
 			var subscriptionName = attributeData.ConstructorArguments.Length > 1
 				? attributeData.ConstructorArguments[1].Value as string
@@ -70,26 +129,30 @@ public class ConsumerRegistrationGenerator : ISourceGenerator
 				continue;
 
 			// Get the message type from IConsumer<T>
-			var interfaceName = GetConsumerInterface(classSymbol, consumerInterfaceSymbol);
+			var interfaceType = classSymbol.AllInterfaces.FirstOrDefault(
+				i =>
+					SymbolEqualityComparer.Default.Equals(i.OriginalDefinition, consumerInterfaceSymbol)
+			);
 
-			if (interfaceName == "object")
-				continue; // Skip if message type not found
+			if (interfaceType == null || interfaceType.TypeArguments.Length != 1)
+				continue;
 
-			consumers.Add(
-				new()
+			var messageType = interfaceType.TypeArguments[0];
+			var messageTypeName = messageType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
+
+			consumerInfos.Add(
+				new ConsumerInfo
 				{
 					ClassName = classSymbol.ToDisplayString(),
-					InterfaceName = interfaceName,
+					InterfaceName = messageTypeName,
 					EntityName = entityName,
 					SubscriptionName = subscriptionName
 				}
 			);
 		}
 
-		if (consumers.Count == 0)
-		{
+		if (consumerInfos.Count == 0)
 			return;
-		}
 
 		// Generate the Consumer registration code
 		var sourceBuilder = new StringBuilder(
@@ -97,67 +160,36 @@ public class ConsumerRegistrationGenerator : ISourceGenerator
 			using MassTransit;
 			using Microsoft.Extensions.DependencyInjection;
 
-			namespace MassTransitSourceGenerator.Generated;
-
-			public static class MassTransitConsumersRegistration
+			namespace MassTransitSourceGenerator.Generated
 			{
-			    public static void AddMassTransitConsumers(this IBusRegistrationConfigurator cfg)
+			    public static class MassTransitConsumersRegistration
 			    {
-			    
+			        public static void AddMassTransitConsumers(this IBusRegistrationConfigurator cfg)
+			        {
+
 			"""
 		);
 
-		foreach (var consumer in consumers)
+		foreach (var consumer in consumerInfos)
 		{
-			sourceBuilder.AppendLine(
-				$"    cfg.AddConsumer<{consumer.ClassName}>();"
-			);
+			sourceBuilder.AppendLine($"            cfg.AddConsumer<{consumer.ClassName}>();");
 		}
 
 		sourceBuilder.AppendLine(
 			"""
+			        }
 			    }
 			}
 			"""
 		);
+
 		// Add the generated source to the compilation
 		context.AddSource("MassTransitConsumersRegistration.g.cs", SourceText.From(sourceBuilder.ToString(), Encoding.UTF8));
 	}
 
-	private static string GetConsumerInterface(
-		INamedTypeSymbol classSymbol,
-		INamedTypeSymbol consumerInterfaceSymbol)
-	{
-		// Find the IConsumer<T> interface and get T
-		var implementedInterface = classSymbol.AllInterfaces.FirstOrDefault(
-			i => SymbolEqualityComparer.Default.Equals(i.OriginalDefinition, consumerInterfaceSymbol)
-		);
-
-		if (implementedInterface == null)
-			return "object"; // Fallback
-
-		var messageType = implementedInterface.TypeArguments[0];
-		// Return the fully qualified name to avoid namespace issues
-		return messageType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-	}
-
 	/// <summary>
-	/// Receiver that collects classes with attributes
+	/// Represents information about a consumer.
 	/// </summary>
-	private class SyntaxReceiver : ISyntaxReceiver
-	{
-		public List<Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax> CandidateClasses { get; } = [];
-
-		public void OnVisitSyntaxNode(SyntaxNode syntaxNode)
-		{
-			// Look for classes with attributes
-			if (syntaxNode is Microsoft.CodeAnalysis.CSharp.Syntax.ClassDeclarationSyntax { AttributeLists.Count: > 0 } classDeclaration)
-			{
-				CandidateClasses.Add(classDeclaration);
-			}
-		}
-	}
-
 	private class ConsumerInfo
 	{
 		public string ClassName { get; init; } = string.Empty;

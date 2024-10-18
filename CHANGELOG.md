@@ -16,6 +16,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - **ZEA.Applications.Workflows**
     - New project that provides a framework for defining and executing workflows.
 
+### Updated
+
+- **ZEA.Communications.Messaging.MassTransit.Generators.***
+    - Updated all the generator projects to use the newer `IIncrementalGenerator` interface.
+
 ---
 
 [2.2.2] - 2024.10.16
