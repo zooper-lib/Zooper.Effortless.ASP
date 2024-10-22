@@ -27,12 +27,32 @@ public sealed class MultiTypeSerializationBinder : ISerializationBinder
 		Assembly[]? assemblies = null)
 	{
 		// If no assemblies are provided, scan all loaded assemblies in the current application domain.
-		assemblies = assemblies is { Length: > 0 } ? assemblies : AppDomain.CurrentDomain.GetAssemblies();
+		assemblies = assemblies is { Length: > 0 } ? assemblies : baseTypes.Select(t => t.Assembly).Distinct().ToArray();
 
 		// Cache all types that implement the provided base types, ensuring they are neither interfaces nor abstract classes.
 		_typeCache = assemblies
-			.SelectMany(assembly => assembly.GetTypes())
-			.Where(type => baseTypes.Any(baseType => baseType.IsAssignableFrom(type)) && type is { IsInterface: false, IsAbstract: false })
+			.SelectMany(
+				assembly =>
+				{
+					try
+					{
+						return assembly.GetTypes();
+					}
+					catch (ReflectionTypeLoadException ex)
+					{
+						// Return the types that were successfully loaded
+						return ex.Types.Where(t => t != null);
+					}
+					catch (Exception)
+					{
+						return [];
+					}
+				}
+			)
+			.Where(
+				type => type != null && baseTypes.Any(baseType => baseType.IsAssignableFrom(type)) &&
+				        type is { IsInterface: false, IsAbstract: false }
+			)
 			.ToDictionary(GetTypeNameWithoutNamespace, type => type);
 	}
 
