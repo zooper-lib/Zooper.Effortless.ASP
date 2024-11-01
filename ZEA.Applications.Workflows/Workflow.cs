@@ -19,7 +19,7 @@ public abstract class Workflow<TRequest, TContext, TResponse, TError>(IServicePr
 	/// <summary>
 	/// List of pre-processing behavior types to execute before the workflow execution.
 	/// </summary>
-	protected abstract List<Type> PreProcessBehaviors { get; }
+	protected virtual List<Type> PreProcessBehaviors { get; } = [];
 
 	/// <summary>
 	/// Handles the workflow execution for the given request and returns either a response or an error.
@@ -70,5 +70,6 @@ public abstract class Workflow<TRequest, TContext, TResponse, TError>(IServicePr
 	/// </summary>
 	/// <param name="error">The error that caused the failure.</param>
 	/// <returns>An Either type representing failure with the provided error.</returns>
+	// ReSharper disable once MemberCanBePrivate.Global
 	protected Either<TResponse, TError> Failure(TError error) => Either<TResponse, TError>.FromRight(error);
 }
