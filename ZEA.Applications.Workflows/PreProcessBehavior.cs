@@ -3,20 +3,24 @@ using ZEA.Techniques.ADTs.Helpers;
 
 namespace ZEA.Applications.Workflows;
 
-public class PreProcessBehavior<TRequest, TResponse, TError> : IPipelineBehavior<TRequest, Either<TResponse, TError>>
-	where TRequest : IRequest<Either<TResponse, TError>>, IPreProcessBehavior<TRequest, TError>
+public class PreProcessingBehavior<TRequest, TResponse>(IEnumerable<IPreProcessor<TRequest, TResponse>> preProcessors)
+	: IPipelineBehavior<TRequest, TResponse>
+	where TRequest : IRequest<TResponse>
 {
-	public async Task<Either<TResponse, TError>> Handle(
+	public async Task<TResponse> Handle(
 		TRequest request,
-		RequestHandlerDelegate<Either<TResponse, TError>> next,
+		RequestHandlerDelegate<TResponse> next,
 		CancellationToken cancellationToken)
 	{
-		var preProcessResult = await request.ExecuteAsync(request, cancellationToken);
-
-		if (preProcessResult.IsRight)
+		foreach (var preProcessor in preProcessors)
 		{
-			// Pre-processing failed, return the error
-			return Either<TResponse, TError>.FromRight(preProcessResult.Right!);
+			var result = await preProcessor.ProcessAsync(request, cancellationToken);
+
+			if (result != null)
+			{
+				// Pre-processing failed, return the error response
+				return result;
+			}
 		}
 
 		// Pre-processing succeeded, proceed to the next behavior or handler

@@ -7,7 +7,7 @@ namespace ZEA.Applications.Workflows;
 /// Represents the base class for defining a workflow handler that processes a request
 /// and returns either a successful response or an error. Implements MediatR's IRequestHandler interface.
 /// </summary>
-/// <param name="serviceProvider">The service provider used to retrieve the instances of the <see cref="PreProcessBehavior{TRequest,TResponse,TError}"/></param>
+/// <param name="serviceProvider">The service provider used to retrieve the instances of the <see cref="PreProcessingBehavior{TRequest,TResponse}"/></param>
 /// <typeparam name="TRequest">The type of the workflow request.</typeparam>
 /// <typeparam name="TContext">The type of the context shared across workflow steps.</typeparam>
 /// <typeparam name="TResponse">The type of the response returned on successful execution.</typeparam>
@@ -34,19 +34,19 @@ public abstract class Workflow<TRequest, TContext, TResponse, TError>(IServicePr
 		// Execute pre-processing behaviors
 		foreach (var behaviorType in PreProcessBehaviors)
 		{
-			var behavior = (IPreProcessBehavior<TRequest, TError>?)serviceProvider.GetService(behaviorType);
+			var behavior = (IPreProcessor<TRequest, TError>?)serviceProvider.GetService(behaviorType);
 
 			if (behavior == null)
 			{
 				throw new InvalidOperationException($"Unable to resolve pre-process behavior of type {behaviorType.FullName}");
 			}
 
-			var result = await behavior.ExecuteAsync(request, cancellationToken);
+			var result = await behavior.ProcessAsync(request, cancellationToken);
 
-			if (result.IsRight)
+			if (result != null)
 			{
 				// Pre-processing failed, return the error
-				return Failure(result.Right!);
+				return Failure(result);
 			}
 		}
 
