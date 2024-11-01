@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+[2.3.0] - 2024.11.01
+
+### Added
+
+- **ZEA.Applications.Workflows**
+    - Added base classes for executing a behavior before the workflow starts.
+
+---
+
+[2.2.4]
+
+### Fixed
+
+- **ZEA.Serializations.NewtonsoftJson**
+    - Fixed the `MultiTypeSerializationBinder`.
+
+---
+
 [2.2.3] - 2024.10.18
 
 ### Added
