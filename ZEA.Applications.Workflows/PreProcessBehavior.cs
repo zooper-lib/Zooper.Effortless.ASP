@@ -1,35 +1,34 @@
 using MediatR;
-using ZEA.Techniques.ADTs.Helpers;
 
 namespace ZEA.Applications.Workflows;
 
 /// <summary>
 /// Pipeline behavior that executes pre-processing steps before the request is handled.
-/// It uses `Either` to represent the outcome of each pre-processor.
-/// If any pre-processor returns an error, the pipeline short-circuits and returns that error directly as the response.
+/// It allows for validation, authorization, or any custom logic to occur.
+/// If any pre-processor returns a non-null response, the pipeline short-circuits and returns that response immediately.
 /// </summary>
 /// <typeparam name="TRequest">The type of the request message.</typeparam>
-/// <typeparam name="TSuccessDto">The type of the success DTO.</typeparam>
-/// <typeparam name="TError">The type representing the error.</typeparam>
-public class PreProcessingBehavior<TRequest, TSuccessDto, TError>(
-	IEnumerable<IPreProcessor<TRequest, TError>> preProcessors)
-	: IPipelineBehavior<TRequest, Either<TSuccessDto, TError>>
-	where TRequest : IRequest<Either<TSuccessDto, TError>>
+/// <typeparam name="TResponse">The type of the response message.</typeparam>
+public class PreProcessingBehavior<TRequest, TResponse>(
+	IEnumerable<IPreProcessor<TRequest, TResponse>> preProcessors)
+	: IPipelineBehavior<TRequest, TResponse>
+	where TRequest : IRequest<TResponse>
 {
-	public async Task<Either<TSuccessDto, TError>> Handle(
+	public async Task<TResponse> Handle(
 		TRequest request,
-		RequestHandlerDelegate<Either<TSuccessDto, TError>> next,
+		RequestHandlerDelegate<TResponse> next,
 		CancellationToken cancellationToken)
 	{
 		foreach (var preProcessor in preProcessors)
 		{
 			var result = await preProcessor.ProcessAsync(request, cancellationToken);
 
-			if (result.IsRight)
+			if (result != null)
 			{
-				// Pre-processing failed, return the error response directly
-				return Either<TSuccessDto, TError>.FromRight(result.Right!);
+				// Pre-processing failed, return the error response
+				return result;
 			}
+			// Pre-processing succeeded, continue to the next pre-processor
 		}
 
 		// All pre-processing succeeded, proceed to the next behavior or handler
