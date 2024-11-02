@@ -11,7 +11,8 @@ namespace ZEA.Applications.Workflows;
 /// <typeparam name="TContext">The type of the context shared across workflow steps.</typeparam>
 /// <typeparam name="TResponse">The type of the response returned on successful execution.</typeparam>
 /// <typeparam name="TError">The type of the error returned on failure.</typeparam>
-public abstract class Workflow<TRequest, TContext, TResponse, TError> : IRequestHandler<TRequest, Either<TResponse, TError>>
+public abstract class Workflow<TRequest, TContext, TResponse, TError>
+	: IRequestHandler<TRequest, Either<TResponse, TError>>
 	where TRequest : WorkflowRequest<TResponse, TError>
 {
 	/// <summary>
@@ -36,5 +37,6 @@ public abstract class Workflow<TRequest, TContext, TResponse, TError> : IRequest
 	/// </summary>
 	/// <param name="error">The error that caused the failure.</param>
 	/// <returns>An Either type representing failure with the provided error.</returns>
+	// ReSharper disable once MemberCanBePrivate.Global
 	protected Either<TResponse, TError> Failure(TError error) => Either<TResponse, TError>.FromRight(error);
 }
