@@ -1,0 +1,9 @@
+﻿{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "DebugRoslynSourceGenerator": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "../ZEA.Techniques.DiscriminatedUnions.Sample/ZEA.Techniques.DiscriminatedUnions.Sample.csproj"
+    }
+  }
+}
