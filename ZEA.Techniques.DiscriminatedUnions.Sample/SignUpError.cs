@@ -1,5 +1,4 @@
 using ZEA.Techniques.DiscriminatedUnions.Generators.Attributes;
-using OneOf;
 
 namespace ZEA.Techniques.DiscriminatedUnions.Sample;
 

@@ -59,11 +59,20 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 			return;
 		}
 
-		var model = compilation.GetSemanticModel(classDeclarations.First().SyntaxTree);
-
 		foreach (var classDecl in classDeclarations)
 		{
+			// Get the SemanticModel for the syntax tree that contains the current class declaration
+			var model = compilation.GetSemanticModel(classDecl.SyntaxTree);
+
+			// Now, use the SemanticModel to get the symbol for the current class declaration
 			var classSymbol = model.GetDeclaredSymbol(classDecl) as INamedTypeSymbol;
+
+			if (classSymbol == null)
+			{
+				continue;
+			}
+
+			// Proceed with the rest of your code generation logic
 			var variants = classSymbol.GetMembers()
 				.OfType<IMethodSymbol>()
 				.Where(
@@ -99,10 +108,8 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 		sb.AppendLine();
 
 		GenerateVariantMethods(sb, className, variants);
-		sb.AppendLine();
 
 		GenerateVariantClasses(sb, className, variants);
-		sb.AppendLine();
 
 		sb.AppendLine("    }");
 		sb.AppendLine("}");
@@ -162,8 +169,8 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 				.ToList();
 			var ctorParameters = string.Join(", ", parameters.Select(p => $"{p.Type.ToDisplayString()} {p.Name}"));
 			var assignments = parameters.Select(p => $"                this.{FirstCharToUpper(p.Name)} = {p.Name};").ToList();
-
-			// Make the variant classes public
+			
+			sb.AppendLine();
 			sb.AppendLine($"        public class {variantTypeName}");
 			sb.AppendLine("        {");
 
@@ -192,7 +199,7 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 			}
 
 			sb.AppendLine("        }");
-			sb.AppendLine();
+			
 		}
 	}
 
