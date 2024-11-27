@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
@@ -105,11 +104,6 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 		GenerateVariantClasses(sb, className, variants);
 		sb.AppendLine();
 
-		// GenerateMatchMethod(sb, className, variants);
-		// sb.AppendLine();
-		//
-		// GenerateSwitchMethod(sb, className, variants);
-
 		sb.AppendLine("    }");
 		sb.AppendLine("}");
 
@@ -200,71 +194,6 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 			sb.AppendLine("        }");
 			sb.AppendLine();
 		}
-	}
-
-	private void GenerateMatchMethod(
-		StringBuilder sb,
-		string className,
-		List<IMethodSymbol> variants)
-	{
-		sb.AppendLine($"        public T Match<T>(");
-
-		for (int i = 0; i < variants.Count; i++)
-		{
-			var variant = variants[i];
-			var variantName = variant.Name;
-			var variantTypeName = $"{variantName}Variant";
-			// Use Func<VariantType, T> for all variants
-			var funcType = $"Func<{variantTypeName}, T> {FirstCharToLower(variantName)}";
-			sb.AppendLine($"            {funcType}{(i < variants.Count - 1 ? "," : "")}");
-		}
-
-		sb.AppendLine("        )");
-		sb.AppendLine("        {");
-		sb.Append("            return base.Match(");
-
-		for (int i = 0; i < variants.Count; i++)
-		{
-			var variantName = variants[i].Name;
-			sb.Append(FirstCharToLower(variantName));
-			if (i < variants.Count - 1)
-				sb.Append(", ");
-		}
-
-		sb.AppendLine(");");
-		sb.AppendLine("        }");
-	}
-
-	private void GenerateSwitchMethod(
-		StringBuilder sb,
-		string className,
-		List<IMethodSymbol> variants)
-	{
-		sb.AppendLine($"        public void Switch(");
-
-		for (int i = 0; i < variants.Count; i++)
-		{
-			var variant = variants[i];
-			var variantName = variant.Name;
-			var variantTypeName = $"{variantName}Variant";
-			var actionType = $"Action<{variantTypeName}> {FirstCharToLower(variantName)}";
-			sb.AppendLine($"            {actionType}{(i < variants.Count - 1 ? "," : "")}");
-		}
-
-		sb.AppendLine("        )");
-		sb.AppendLine("        {");
-		sb.Append("            base.Switch(");
-
-		for (int i = 0; i < variants.Count; i++)
-		{
-			var variantName = variants[i].Name;
-			sb.Append(FirstCharToLower(variantName));
-			if (i < variants.Count - 1)
-				sb.Append(", ");
-		}
-
-		sb.AppendLine(");");
-		sb.AppendLine("        }");
 	}
 
 	// Helper methods

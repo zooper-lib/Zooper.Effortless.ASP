@@ -3,6 +3,9 @@ using OneOf;
 
 namespace ZEA.Techniques.DiscriminatedUnions.Sample;
 
+/// <summary>
+/// A sample class which shows how to use the DiscriminatedUnion attribute.
+/// </summary>
 [DiscriminatedUnion]
 public partial class SignUpError
 {
