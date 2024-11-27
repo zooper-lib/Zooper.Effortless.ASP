@@ -132,6 +132,7 @@ jobs:
           
           # Techniques
           - ZEA.Techniques.ADTs/ZEA.Techniques.ADTs.csproj
+          - ZEA.Techniques.DiscriminatedUnions.Generators/ZEA.Techniques.DiscriminatedUnions.Generators.csproj
           - ZEA.Techniques.RailwayOrientedProgramming/ZEA.Techniques.RailwayOrientedProgramming.csproj
           - ZEA.Techniques.StrongTypes/ZEA.Techniques.StrongTypes.csproj
           - ZEA.Techniques.StrongTypes.Generators/ZEA.Techniques.StrongTypes.Generators.csproj
