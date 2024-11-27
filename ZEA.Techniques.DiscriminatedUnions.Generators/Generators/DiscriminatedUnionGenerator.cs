@@ -39,13 +39,17 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 	{
 		var classDecl = (ClassDeclarationSyntax)context.Node;
 
-		if (classDecl.AttributeLists.SelectMany(al => al.Attributes)
-		    .Any(attr => attr.Name.ToString() == "DiscriminatedUnion"))
-		{
-			return classDecl;
-		}
+		var hasAttribute = classDecl.AttributeLists
+			.SelectMany(al => al.Attributes)
+			.Any(
+				attr =>
+				{
+					var name = attr.Name.ToString();
+					return name is "DiscriminatedUnion" or "DiscriminatedUnionAttribute";
+				}
+			);
 
-		return null;
+		return hasAttribute ? classDecl : null;
 	}
 
 	private void Execute(
@@ -59,16 +63,31 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 			return;
 		}
 
-		var model = compilation.GetSemanticModel(classDeclarations.First().SyntaxTree);
-
 		foreach (var classDecl in classDeclarations)
 		{
+			// Get the SemanticModel for the syntax tree that contains the current class declaration
+			var model = compilation.GetSemanticModel(classDecl.SyntaxTree);
+
+			// Now, use the SemanticModel to get the symbol for the current class declaration
 			var classSymbol = model.GetDeclaredSymbol(classDecl) as INamedTypeSymbol;
+
+			if (classSymbol == null)
+			{
+				continue;
+			}
+
+			// Proceed with the rest of your code generation logic
 			var variants = classSymbol.GetMembers()
 				.OfType<IMethodSymbol>()
 				.Where(
 					method => method.GetAttributes()
-						.Any(attr => attr.AttributeClass.Name == "Variant")
+						.Any(
+							attr =>
+							{
+								var name = attr.AttributeClass?.Name;
+								return name is "VariantAttribute" or "Variant";
+							}
+						)
 				)
 				.ToList();
 
@@ -99,10 +118,8 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 		sb.AppendLine();
 
 		GenerateVariantMethods(sb, className, variants);
-		sb.AppendLine();
 
 		GenerateVariantClasses(sb, className, variants);
-		sb.AppendLine();
 
 		sb.AppendLine("    }");
 		sb.AppendLine("}");
@@ -163,7 +180,7 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 			var ctorParameters = string.Join(", ", parameters.Select(p => $"{p.Type.ToDisplayString()} {p.Name}"));
 			var assignments = parameters.Select(p => $"                this.{FirstCharToUpper(p.Name)} = {p.Name};").ToList();
 
-			// Make the variant classes public
+			sb.AppendLine();
 			sb.AppendLine($"        public class {variantTypeName}");
 			sb.AppendLine("        {");
 
@@ -192,7 +209,6 @@ public class DiscriminatedUnionGenerator : IIncrementalGenerator
 			}
 
 			sb.AppendLine("        }");
-			sb.AppendLine();
 		}
 	}
 

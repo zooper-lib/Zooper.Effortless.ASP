@@ -109,4 +109,18 @@ public class Either<TLeft, TRight>
 
 		throw new InvalidOperationException("Both Left and Right cannot be null.");
 	}
+
+	/// <summary>
+	/// Implicitly converts a <typeparamref name="TLeft"/> value to an <see cref="Either{TLeft, TRight}"/> instance.
+	/// </summary>
+	/// <param name="left">The Left value to convert.</param>
+	/// <returns>An <see cref="Either{TLeft, TRight}"/> instance containing the Left value.</returns>
+	public static implicit operator Either<TLeft, TRight>(TLeft left) => FromLeft(left);
+
+	/// <summary>
+	/// Implicitly converts a <typeparamref name="TRight"/> value to an <see cref="Either{TLeft, TRight}"/> instance.
+	/// </summary>
+	/// <param name="right">The Right value to convert.</param>
+	/// <returns>An <see cref="Either{TLeft, TRight}"/> instance containing the Right value.</returns>
+	public static implicit operator Either<TLeft, TRight>(TRight right) => FromRight(right);
 }
