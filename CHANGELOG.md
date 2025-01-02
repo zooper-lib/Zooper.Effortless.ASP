@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+[2.6.0] - 2025.01.02
+
+- Implemented a Workflow Builder for the `ZEA.Applications.Workflows` project which is a lightweight builder that allows
+  you to define workflows in a more fluent way.
+
+---
+
 [2.5.0] - 2024.11.27
 
 - Added implicit operators to the `Either` class to make it easier to work with.
