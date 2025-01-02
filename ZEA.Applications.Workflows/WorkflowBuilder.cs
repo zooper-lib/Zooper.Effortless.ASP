@@ -97,7 +97,6 @@ public sealed class WorkflowBuilder<TRequest, TContext, TSuccess, TError>
 		TRequest request,
 		CancellationToken token)
 	{
-		// If contextFactory can return null, consider throwing or handle accordingly:
 		var ctx = _contextFactory(request)
 		          ?? throw new ArgumentNullException(nameof(request), "Context factory returned null.");
 
@@ -107,18 +106,14 @@ public sealed class WorkflowBuilder<TRequest, TContext, TSuccess, TError>
 
 			if (result.IsLeft)
 			{
-				// If TError can be null, consider default! or throw.
 				return result.Left
 				       ?? throw new ArgumentNullException(nameof(result), "Step returned a null TError.");
 			}
 
-			// If TContext can be null, consider default! or throw.
 			ctx = result.Right
 			      ?? throw new ArgumentNullException(nameof(result), "Step returned a null TContext.");
 		}
 
-		// If TSuccess can be null, ensure the resultSelector can't produce a null value
-		// or handle it similarly with a null check.
 		return _resultSelector(ctx);
 	}
 }
