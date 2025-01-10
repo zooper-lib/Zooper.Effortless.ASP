@@ -8,33 +8,115 @@ namespace ZEA.Applications.Workflows;
 /// or fails with a <typeparamref name="TError"/>.
 /// </summary>
 /// <typeparam name="TRequest">The type of the request input.</typeparam>
-/// <typeparam name="TContext">The type of the context used to carry intermediate data.</typeparam>
+/// <typeparam name="TPayload">The type of the payload used to carry intermediate data.</typeparam>
 /// <typeparam name="TSuccess">The type of the success result.</typeparam>
 /// <typeparam name="TError">The type of the error result.</typeparam>
-public sealed class WorkflowBuilder<TRequest, TContext, TSuccess, TError>
+public sealed class WorkflowBuilder<TRequest, TPayload, TSuccess, TError>
 {
-	private readonly Func<TRequest, TContext> _contextFactory;
-	private readonly Func<TContext, TSuccess> _resultSelector;
-	private readonly List<Func<TContext, CancellationToken, Task<Either<TError, TContext>>>> _steps;
+	private readonly Func<TRequest, TPayload> _contextFactory;
+	private readonly Func<TPayload, TSuccess> _resultSelector;
+
+	private readonly List<Func<TRequest, CancellationToken, Task<Either<TError, TRequest>>>> _preSteps;
+	private readonly List<Func<TPayload, CancellationToken, Task<Either<TError, TPayload>>>> _steps;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="WorkflowBuilder{TRequest, TContext, TSuccess, TError}"/> class.
 	/// </summary>
 	/// <param name="contextFactory">
 	/// Factory function that takes a request of type <typeparamref name="TRequest"/>
-	/// and produces a context of type <typeparamref name="TContext"/>.
+	/// and produces a context of type <typeparamref name="TPayload"/>.
 	/// </param>
 	/// <param name="resultSelector">
-	/// Selector function that converts the final <typeparamref name="TContext"/>
+	/// Selector function that converts the final <typeparamref name="TPayload"/>
 	/// into a success result of type <typeparamref name="TSuccess"/>.
 	/// </param>
 	public WorkflowBuilder(
-		Func<TRequest, TContext> contextFactory,
-		Func<TContext, TSuccess> resultSelector)
+		Func<TRequest, TPayload> contextFactory,
+		Func<TPayload, TSuccess> resultSelector)
 	{
 		_contextFactory = contextFactory;
 		_resultSelector = resultSelector;
+
+		_preSteps = [];
 		_steps = [];
+	}
+
+	/// <summary>
+	/// Adds a single asynchronous pre-step that operates on the raw <typeparamref name="TRequest"/>.
+	/// </summary>
+	/// <param name="preStep">
+	/// A function that receives <typeparamref name="TRequest"/> and returns
+	/// either an updated request or an error, asynchronously.
+	/// </param>
+	/// <returns>
+	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
+	/// </returns>
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddPreStep(
+		Func<TRequest, CancellationToken, Task<Either<TError, TRequest>>> preStep)
+	{
+		_preSteps.Add(preStep);
+		return this;
+	}
+
+	/// <summary>
+	/// Adds a single synchronous pre-step that operates on the raw <typeparamref name="TRequest"/>.
+	/// </summary>
+	/// <param name="preStep">
+	/// A function that receives <typeparamref name="TRequest"/> and returns
+	/// either an updated request or an error, synchronously.
+	/// </param>
+	/// <returns>
+	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
+	/// </returns>
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddPreStep(Func<TRequest, Either<TError, TRequest>> preStep)
+	{
+		_preSteps.Add(
+			(
+				req,
+				_) => Task.FromResult(preStep(req))
+		);
+		return this;
+	}
+
+	/// <summary>
+	/// Adds multiple asynchronous pre-steps that operate on the raw <typeparamref name="TRequest"/>.
+	/// </summary>
+	/// <param name="preSteps">
+	/// One or more functions that each take <typeparamref name="TRequest"/> and return
+	/// either an updated request or an error, asynchronously.
+	/// </param>
+	/// <returns>
+	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
+	/// </returns>
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddPreSteps(
+		params Func<TRequest, CancellationToken, Task<Either<TError, TRequest>>>[] preSteps)
+	{
+		_preSteps.AddRange(preSteps);
+		return this;
+	}
+
+	/// <summary>
+	/// Adds multiple synchronous pre-steps that operate on the raw <typeparamref name="TRequest"/>.
+	/// </summary>
+	/// <param name="preSteps">
+	/// One or more functions that each take <typeparamref name="TRequest"/> and return
+	/// either an updated request or an error, synchronously.
+	/// </param>
+	/// <returns>
+	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
+	/// </returns>
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddPreSteps(params Func<TRequest, Either<TError, TRequest>>[] preSteps)
+	{
+		foreach (var step in preSteps)
+		{
+			_preSteps.Add(
+				(
+					req,
+					_) => Task.FromResult(step(req))
+			);
+		}
+
+		return this;
 	}
 
 	/// <summary>
@@ -50,8 +132,8 @@ public sealed class WorkflowBuilder<TRequest, TContext, TSuccess, TError>
 	/// The current <see cref="WorkflowBuilder{TRequest, TContext, TSuccess, TError}"/>
 	/// instance for fluent chaining.
 	/// </returns>
-	public WorkflowBuilder<TRequest, TContext, TSuccess, TError> UseStep(
-		Func<TContext, CancellationToken, Task<Either<TError, TContext>>> step)
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> UseStep(
+		Func<TPayload, CancellationToken, Task<Either<TError, TPayload>>> step)
 	{
 		_steps.Add(step);
 		return this;
@@ -72,7 +154,7 @@ public sealed class WorkflowBuilder<TRequest, TContext, TSuccess, TError>
 	/// Uses <see cref="Task.FromResult{TResult}(TResult)"/> to avoid warnings 
 	/// about lack of 'await' in an <c>async</c> method.
 	/// </remarks>
-	public WorkflowBuilder<TRequest, TContext, TSuccess, TError> UseStep(Func<TContext, Either<TError, TContext>> step)
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> UseStep(Func<TPayload, Either<TError, TPayload>> step)
 	{
 		_steps.Add(
 			(
@@ -83,9 +165,51 @@ public sealed class WorkflowBuilder<TRequest, TContext, TSuccess, TError>
 	}
 
 	/// <summary>
-	/// Executes the workflow by creating the initial context from the request,
-	/// running each step in sequence, and finally converting the resulting
-	/// context to a success value.
+	/// Adds multiple asynchronous steps to the workflow, each operating on <typeparamref name="TPayload"/>.
+	/// </summary>
+	/// <param name="steps">
+	/// One or more functions that each transform the payload into an <see cref="Either{TError, TPayload}"/>,
+	/// asynchronously.
+	/// </param>
+	/// <returns>
+	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
+	/// </returns>
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddSteps(
+		params Func<TPayload, CancellationToken, Task<Either<TError, TPayload>>>[] steps)
+	{
+		_steps.AddRange(steps);
+		return this;
+	}
+
+	/// <summary>
+	/// Adds multiple synchronous steps to the workflow, each operating on <typeparamref name="TPayload"/>.
+	/// </summary>
+	/// <param name="steps">
+	/// One or more functions that each transform the payload into an <see cref="Either{TError, TPayload}"/>,
+	/// synchronously.
+	/// </param>
+	/// <returns>
+	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
+	/// </returns>
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddSteps(params Func<TPayload, Either<TError, TPayload>>[] steps)
+	{
+		foreach (var step in steps)
+		{
+			_steps.Add(
+				(
+					ctx,
+					_) => Task.FromResult(step(ctx))
+			);
+		}
+
+		return this;
+	}
+
+	/// <summary>
+	/// Executes the workflow by creating the initial payload from the request,
+	/// running each pre-step in sequence on the request, then
+	/// running each normal step in sequence on the payload,
+	/// and finally converting the resulting payload to a success value.
 	/// </summary>
 	/// <param name="request">The request object of type <typeparamref name="TRequest"/>.</param>
 	/// <param name="token">A <see cref="CancellationToken"/> for optional cancellation.</param>
@@ -97,9 +221,22 @@ public sealed class WorkflowBuilder<TRequest, TContext, TSuccess, TError>
 		TRequest request,
 		CancellationToken token)
 	{
+		// Run pre-steps on the raw TRequest
+		foreach (var preStep in _preSteps)
+		{
+			var preResult = await preStep(request, token).ConfigureAwait(false);
+
+			if (preResult.IsLeft)
+				return preResult.Left ?? throw new ArgumentNullException(nameof(preResult), "Pre-Step returned a null TError.");
+
+			request = preResult.Right ?? throw new ArgumentNullException(nameof(preResult), "Pre-Step returned a null TRequest.");
+		}
+
+		// Create the initial context
 		var ctx = _contextFactory(request)
 		          ?? throw new ArgumentNullException(nameof(request), "Context factory returned null.");
 
+		// Run each step in sequence
 		foreach (var step in _steps)
 		{
 			var result = await step(ctx, token).ConfigureAwait(false);
@@ -114,6 +251,7 @@ public sealed class WorkflowBuilder<TRequest, TContext, TSuccess, TError>
 			      ?? throw new ArgumentNullException(nameof(result), "Step returned a null TContext.");
 		}
 
+		// Convert the final context to a success result
 		return _resultSelector(ctx);
 	}
 }
