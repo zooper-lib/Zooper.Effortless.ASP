@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+[2.8.0] - 2025.01.11
+
+- Renamed some methods of the `WorkflowBuilder` in the `ZEA.Applications.Workflows` project to make them more consistent.
+- Added interfaces `IWorkflowStep` and `IWorkflowCondition` to the `ZEA.Applications.Workflows` project.
+
+---
+
 [2.7.0] - 2025.01.10
 
 - Added pre-steps for the `WorkflowBuilder` in the `ZEA.Applications.Workflows` project.
