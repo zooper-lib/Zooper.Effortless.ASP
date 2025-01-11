@@ -51,7 +51,7 @@ public sealed class WorkflowBuilder<TRequest, TPayload, TSuccess, TError>
 	/// <returns>
 	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
 	/// </returns>
-	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddPreStep(
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> UseCondition(
 		Func<TRequest, CancellationToken, Task<Either<TError, TRequest>>> preStep)
 	{
 		_preSteps.Add(preStep);
@@ -68,7 +68,7 @@ public sealed class WorkflowBuilder<TRequest, TPayload, TSuccess, TError>
 	/// <returns>
 	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
 	/// </returns>
-	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddPreStep(Func<TRequest, Either<TError, TRequest>> preStep)
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> UseCondition(Func<TRequest, Either<TError, TRequest>> preStep)
 	{
 		_preSteps.Add(
 			(
@@ -88,7 +88,7 @@ public sealed class WorkflowBuilder<TRequest, TPayload, TSuccess, TError>
 	/// <returns>
 	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
 	/// </returns>
-	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddPreSteps(
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> UseConditions(
 		params Func<TRequest, CancellationToken, Task<Either<TError, TRequest>>>[] preSteps)
 	{
 		_preSteps.AddRange(preSteps);
@@ -105,7 +105,7 @@ public sealed class WorkflowBuilder<TRequest, TPayload, TSuccess, TError>
 	/// <returns>
 	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
 	/// </returns>
-	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddPreSteps(params Func<TRequest, Either<TError, TRequest>>[] preSteps)
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> UseConditions(params Func<TRequest, Either<TError, TRequest>>[] preSteps)
 	{
 		foreach (var step in preSteps)
 		{
@@ -174,7 +174,7 @@ public sealed class WorkflowBuilder<TRequest, TPayload, TSuccess, TError>
 	/// <returns>
 	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
 	/// </returns>
-	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddSteps(
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> UseSteps(
 		params Func<TPayload, CancellationToken, Task<Either<TError, TPayload>>>[] steps)
 	{
 		_steps.AddRange(steps);
@@ -191,7 +191,7 @@ public sealed class WorkflowBuilder<TRequest, TPayload, TSuccess, TError>
 	/// <returns>
 	/// The current <see cref="WorkflowBuilder{TRequest, TPayload, TSuccess, TError}"/> instance for fluent chaining.
 	/// </returns>
-	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> AddSteps(params Func<TPayload, Either<TError, TPayload>>[] steps)
+	public WorkflowBuilder<TRequest, TPayload, TSuccess, TError> UseSteps(params Func<TPayload, Either<TError, TPayload>>[] steps)
 	{
 		foreach (var step in steps)
 		{
