@@ -13,7 +13,7 @@ namespace ZEA.Architectures.DDD.Modelling.Classes;
 /// </summary>
 public abstract class EntityClass<TId> : IEquatable<EntityClass<TId>> where TId : notnull
 {
-	public TId Id { get; init; }
+	public TId Id { get; protected set; }
 
 #pragma warning disable CS8618
 	protected EntityClass() { }
