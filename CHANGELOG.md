@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+[3.0.0] - 2025.03.03
+
+- Updated all packages to dotnet 9
+
+---
+
 [2.8.1] - 2025.03.26
 
 - Made the setters of the ID field of `EntityClass` and `EntityRecord` protected set.
