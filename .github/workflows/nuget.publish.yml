@@ -12,7 +12,7 @@ permissions:
   id-token: write      # Optional, based on requirements
 
 env:
-  DOTNET_VERSION: '8.x'  # Define the .NET SDK version here
+  DOTNET_VERSION: '9.x'  # Define the .NET SDK version here
 
 jobs:
   setup:
