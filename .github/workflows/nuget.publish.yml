@@ -115,10 +115,6 @@ jobs:
           - ZEA.Communications.Messaging.MassTransit/ZEA.Communications.Messaging.MassTransit.csproj
           - ZEA.Communications.Messaging.MassTransit.AzureServiceBus/ZEA.Communications.Messaging.MassTransit.AzureServiceBus.csproj
           - ZEA.Communications.Messaging.MassTransit.RabbitMq/ZEA.Communications.Messaging.MassTransit.RabbitMq.csproj
-          # Communications - Messaging - MassTransit - Generators
-          - ZEA.Communications.Messaging.MassTransit.Generators/ZEA.Communications.Messaging.MassTransit.Generators.csproj
-          - ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus/ZEA.Communications.Messaging.MassTransit.Generators.AzureServiceBus.csproj
-          - ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq/ZEA.Communications.Messaging.MassTransit.Generators.RabbitMq.csproj
           
           # Configurations
           - ZEA.Configurations.Abstractions/ZEA.Configurations.Abstractions.csproj
@@ -132,10 +128,7 @@ jobs:
           
           # Techniques
           - ZEA.Techniques.ADTs/ZEA.Techniques.ADTs.csproj
-          - ZEA.Techniques.DiscriminatedUnions.Generators/ZEA.Techniques.DiscriminatedUnions.Generators.csproj
           - ZEA.Techniques.RailwayOrientedProgramming/ZEA.Techniques.RailwayOrientedProgramming.csproj
-          - ZEA.Techniques.StrongTypes/ZEA.Techniques.StrongTypes.csproj
-          - ZEA.Techniques.StrongTypes.Generators/ZEA.Techniques.StrongTypes.Generators.csproj
           
           # Validations
           - ZEA.Validations.Abstractions/ZEA.Validations.Abstractions.csproj

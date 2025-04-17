@@ -1,9 +1,0 @@
-﻿{
-  "$schema": "https://json.schemastore.org/launchsettings.json",
-  "profiles": {
-    "DebugRoslynSourceGenerator": {
-      "commandName": "DebugRoslynComponent",
-      "targetProject": "../ZEA.Architecture.Patterns.StrongTypes.Generator.Sample/ZEA.Architecture.Patterns.StrongTypes.Generator.Sample.csproj"
-    }
-  }
-}
