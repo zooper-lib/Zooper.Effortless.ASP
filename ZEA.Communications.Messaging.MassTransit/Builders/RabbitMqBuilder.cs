@@ -3,7 +3,7 @@ using System.Text.Json;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using ZEA.Communications.Messaging.MassTransit.Attributes;
+using Zooper.Cheetah.Attributes;
 
 namespace ZEA.Communications.Messaging.MassTransit.Builders;
 
@@ -85,12 +85,10 @@ public class RabbitMqBuilder(
 	[Obsolete]
 	public void Build(IServiceCollection services)
 	{
-		services.AddMassTransit(
-			configurator =>
+		services.AddMassTransit(configurator =>
 			{
 				configurator.AddConsumers(_consumerAssemblies.ToArray());
-				configurator.UsingRabbitMq(
-					(
+				configurator.UsingRabbitMq((
 						context,
 						cfg) =>
 					{
@@ -179,8 +177,7 @@ public class RabbitMqBuilder(
 
 		// Configure each queue with its consumers
 		foreach (var kvp in consumersByQueueName)
-			_endpointConfigurations.Add(
-				(
+			_endpointConfigurations.Add((
 					cfg,
 					ctx) =>
 				{
@@ -228,8 +225,7 @@ public class RabbitMqBuilder(
 
 		// Configure each exchange with its consumers
 		foreach (var kvp in consumersByExchange)
-			_endpointConfigurations.Add(
-				(
+			_endpointConfigurations.Add((
 					cfg,
 					ctx) =>
 				{

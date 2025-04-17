@@ -2,8 +2,8 @@
 using System.Text;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
-using ZEA.Communications.Messaging.MassTransit.Attributes;
 using ZEA.Communications.Messaging.MassTransit.Builders;
+using Zooper.Cheetah.Attributes;
 
 namespace ZEA.Communications.Messaging.MassTransit.Extensions;
 
